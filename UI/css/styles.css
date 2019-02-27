@@ -497,7 +497,7 @@ section {
     background-position: center;
     background-size: cover;
     background: linear-gradient(to bottom, rgba(2, 1, 17, 0.6) 0%, rgba(2, 1, 17, 0.6) 75%, rgba(2, 1, 17, 0.87) 100%),
-        url('/UI/images/COPY.jpg') no-repeat;
+        url('../images/COPY.jpg') no-repeat;
 }
 
 
