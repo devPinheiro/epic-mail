@@ -1,0 +1,895 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+body {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif
+}
+
+.main {
+    background: #fbfbfb;
+}
+
+/* ---------------------------- Form ---------------- */
+
+.form {
+    padding: 50px 80px;
+}
+
+.form-group label {
+    display: block;
+    padding: 5px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-group input {
+    display: block;
+    width: 100%;
+    padding: 5px 0;
+    margin-bottom: 15px;
+    font-size: 14px;
+    height: 25px;
+    border-radius: 2px;
+    border: none;
+}
+
+.form-group button {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 2px;
+    margin-top: 25px;
+    border: none;
+    background-color: #e68016;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 2px 1px 12px rgb(52, 50, 72);
+}
+
+.form>.signup_options {
+    padding-top: 20px;
+    font-size: 14px;
+}
+
+.signup_options>p>span {
+    color: #e68016;
+}
+
+/* ------------------------------ compose-mail ------------ */
+section {
+    background: #ffffff;
+}
+
+.compose-mail {
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0px 0px 2px 1px #f9f9f9;
+}
+
+.compose-mail-form {
+    width: 100%;
+    padding: 25px 5px;
+}
+
+.form-g label {
+    display: block;
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.form-g input {
+    width: 95%;
+    padding: 5px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    height: 25px;
+    border-radius: 2px;
+    border: 1px solid rgb(238, 238, 238);
+}
+
+.form-g textarea {
+
+    width: 95%;
+    padding: 5px;
+    font-family: 'Monserat', sans-serif;
+    margin: 25px 0;
+    font-size: 14px;
+    border-radius: 2px;
+    border: 1px solid rgb(238, 238, 238);
+}
+
+.form-g button {
+    display: inline;
+    /* width: 100%; */
+    padding: 10px 20px;
+    border-radius: 2px;
+    margin-top: 25px;
+    border: none;
+    background-color: #e68016;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0px 0px 2px 1px rgb(52, 50, 72, 0.1);
+}
+
+.form-g .draft-btn {
+    float: right
+}
+
+
+/* ------------------------ Text ----------------- */
+.text-dark {
+    color: rgb(52, 50, 72);
+}
+
+.text-light {
+    color: #ffffff;
+}
+
+.text-center {
+    text-align: center
+}
+
+.text-muted {
+    color: #242323ca;
+}
+
+/* --------------------------- SVG -------------------- */
+.svg {
+    padding-top: 75px;
+}
+
+/* ----------------- Dropdown ------------ */
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-fill {
+    display: none;
+    margin: 15px 0;
+    padding: 10px 0;
+    position: absolute;
+    right: 20px;
+    background-color: #ffffff;
+    min-width: 150px;
+    z-index: 2;
+    transition: ease-in 0.6s;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px 1px rgba(216, 216, 216, 0.465);
+}
+
+
+.dropdown-fill a {
+    padding: 10px 15px;
+    display: block;
+    font-size: 12px;
+    text-decoration: none;
+    color: #222222;
+}
+
+.dropdown-fill a:hover {
+    background-color: #fbfbfb;
+}
+
+.dropdown:hover .dropdown-fill {
+    display: block;
+}
+
+.dropdown_icon {
+    font-size: 16px;
+    padding-right: 5px;
+}
+
+.icon-lg-nav {
+    font-size: 24px;
+    padding: 5px 15px;
+    margin-top: 15px;
+}
+
+.item span {
+    font-size: 20px;
+}
+
+.un-read {
+    border-left: 1px solid #e65916;
+}
+
+.read .title {
+    font-weight: unset !important;
+}
+
+/* --------inbox list ---------- */
+.box-top a {
+    /* text-decoration: none; */
+    /* text-transform: none; */
+    color: #222222;
+}
+
+
+/* ------------------------Floating Button -------------- */
+
+
+.floating_btn {
+    height: 60px;
+    width: 60px;
+    border-radius: 50px;
+    background-color: #e68016;
+    color: #ffffff;
+    text-align: center;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    box-shadow: 1px 1px 2px 2px rgb(212, 212, 212)
+}
+
+.icon-lg {
+    font-size: 24px;
+}
+
+
+.ion-ios-compose-outline:before {
+    content: "\f418";
+    margin-top: 17px;
+}
+
+.ion-ios-personadd:before {
+    margin-top: 17px;
+}
+
+/* -------------- Group ---------- */
+
+.contact-list {
+    display: inline-flex;
+    width: 100%;
+}
+
+.contact {
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    margin: 20px 5px;
+    box-shadow: 1px 1px 1px 3px #f8f8f8;
+}
+
+/* ---------------------- App -------------- */
+
+.app {
+    padding: 20px;
+}
+
+
+.app-link {
+    list-style: none;
+    color: rgb(174, 171, 207);
+    padding: 10px 50px
+}
+
+.icon {
+    padding-right: 10px;
+}
+
+.app-link li {
+    padding: 10px 5px;
+}
+
+.app-link a {
+    color: rgb(174, 171, 207);
+}
+
+.app-link li:hover {
+
+    background-color: rgba(90, 88, 111, 0.22);
+}
+
+.sidebar {
+    background-color: rgb(52, 50, 72);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar h1 {
+    margin: 16px 5px;
+}
+
+.sidebar hr {
+    margin: 0;
+    border-color: rgba(78, 77, 88, 0.16);
+}
+
+.navbar .form-group input {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    margin: 15px 20px;
+    font-size: 14px;
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+    background-color: #eeeded;
+}
+
+.app-title {
+    border-color: #f1f1f1;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+
+.mail-app>.box {
+    padding: 10px 2px;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+
+}
+
+.mail-app>.box>.box-top .date {
+    float: right;
+    padding-right: 10px;
+}
+
+.mail-app>.box>.box-top .title {
+    font-weight: bold
+}
+
+.mail-app .box-body p {
+    font-weight: 500;
+    margin: 2px 0;
+
+}
+
+.mail-app>.box>.box-top>.box-body span {
+    font-size: 12px;
+}
+
+.box {
+    display: inline-flex;
+    width: 100%;
+    padding: 10px 3px !important;
+}
+
+.box-top {
+    width: 100%;
+}
+
+.mail-action {
+    padding: 10px 10px 0 0px;
+}
+
+.mail-action>input {
+    height: 40px;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mail-action-btn span {
+    padding: 5px 10px;
+    color: #e68016;
+    cursor: pointer;
+}
+
+/* ----------------------container --------------- */
+.container-grid-mail-action {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 2fr 1fr;
+}
+
+.container-grid-footer {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.container-grid-3 {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.container-grid-1 {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 300px 2fr;
+}
+
+.container-grid-2 {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.col-1 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.col-2 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.col-3 {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+/* ------------------------- Container Nav ------ */
+
+.main-brand {
+    display: none;
+}
+
+.navbar {
+    background: #ffffff;
+    box-shadow: 9px -11px 20px 4px rgba(64, 62, 62, 0.522);
+    /* padding-top: 10px; */
+}
+
+.container-nav {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 1fr auto;
+
+}
+
+.col-brand {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.col-navlink {
+    grid-column: 2;
+    grid-row: 1;
+    display: inline-flex;
+}
+
+.link>p,
+.brand>p {
+    padding: 10px 25px;
+}
+
+.nav-link {
+    display: inline-flex;
+}
+
+.nav-link .link-item {
+    padding: 10px 15px;
+    list-style-type: none;
+}
+
+.brand {
+    padding-left: 15px;
+}
+
+/* -----------------------------Container Signup -----------------------------*/
+.container-signup {
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 1fr 2fr;
+    height: 100vh;
+}
+
+.col-sp-1 {
+    grid-column: 1;
+    grid-row: 1;
+    background: linear-gradient(to bottom, rgb(52, 50, 72) 0%, rgb(63, 61, 86) 75%, rgb(63, 61, 86) 100%);
+    color: #fff;
+}
+
+.col-1-lg {
+    margin: 0 auto;
+}
+
+.col-sp-2 {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+
+/* ------------------------------ Hero ----------------- */
+
+.hero {
+    background-position: center;
+    background-size: cover;
+    background: linear-gradient(to bottom, rgba(2, 1, 17, 0.6) 0%, rgba(2, 1, 17, 0.6) 75%, rgba(2, 1, 17, 0.87) 100%),
+        url('/UI/images/COPY.jpg') no-repeat;
+}
+
+
+.hero-l {
+    margin: 0 auto;
+    padding: 100px 30px
+}
+
+.hero-l .btn_cta {
+    margin-top: 45px;
+}
+
+.btn-hero {
+    padding: 15px 35px;
+    border-radius: 5px;
+    border: 1px solid #e68016;
+    color: #ffffff;
+    background-color: rgb(230, 128, 22);
+    cursor: pointer;
+}
+
+.btn-hero:hover {
+    box-shadow: 1px 1px 10px 2px rgba(52, 50, 72, 0.129);
+    transition: ease-in 0.2s;
+}
+
+.hero-r img {
+    width: 500px;
+    height: 250px;
+    padding: 50px;
+}
+
+.section_a {
+    padding: 80px 10px;
+}
+
+.section_b {
+    padding: 60px 10px;
+    background-color: #fbfbfb;
+}
+
+/* --------- cta -------- */
+
+.cta {
+    height: 200px;
+    padding: 20px 10px;
+    background-color: #fbfbfb;
+}
+
+.cta .text-center {
+    padding-top: 20px;
+}
+
+.reply {
+    cursor: pointer;
+}
+
+/* ------------------------- Footer -------------------- */
+.footer {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.footer .nav-linl {
+    list-style: none;
+    padding: 0;
+}
+
+.footer .nav-linl li {
+    text-decoration: none;
+    padding: 10px;
+}
+
+.footer .nav-linl li a{
+    text-decoration: none;
+    color: #222222;
+}
+
+/* .nav-link li a {
+    text-decoration: none;
+    color: #222222;
+} */
+
+
+.btn-item {
+    list-style-type: none;
+    padding: 10px 15px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.btn-signin {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid rgb(52, 50, 72);
+    color: rgb(52, 50, 72);
+    background-color: #ffffff;
+    transition: ease-in-out 0.3s;
+}
+
+.btn-signup {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(52, 50, 72);
+    color: #ffffff;
+    transition: ease-in-out 0.3s;
+}
+
+.btn-signup:hover,
+.btn-signin:hover {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: ease-in-out 0.2s;
+}
+
+/* ---------- close-sidebar ---*/
+.close-sidebar {
+    display: none;
+}
+
+/* ---------user img */
+.thread {
+    padding: 3px;
+    background: #fdfdfd;
+}
+
+.contact-box {
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.no-border {
+    border: none !important;
+}
+
+.box-mail-body {
+    line-height: 25px;
+    margin: 45px 10px !important;
+}
+
+.box-contact {
+    display: inline-flex;
+    padding: 5px 10px;
+
+}
+
+.box-contact span {
+    font-weight: 600;
+}
+
+.box-contact .title {
+    margin-top: 10px;
+}
+
+.box-contact img {
+    margin-right: 10px;
+}
+
+.box-contact p {
+    margin: 5px 0;
+}
+
+.user_img {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+}
+
+/* -------------------------- Alert Notification ------------*/
+.success,
+.error {
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    margin: 5px 0 25px 0;
+}
+
+.success {
+    background: rgba(78, 208, 78, 0.39);
+}
+
+.cancel {
+    color: rgba(255, 30, 30, 0.64)
+}
+
+.error {
+    background: rgba(255, 30, 30, 0.639);
+}
+
+
+
+/* --------------------------- Media Query --------------------- */
+
+@media(max-width:1100px) {
+    .container-signup {
+        display: grid;
+        grid-gap: 1px;
+        grid-template-columns: 1fr 1fr;
+        height: 100vh;
+    }
+
+    .form {
+        padding: 50px 40px;
+    }
+
+    svg {
+        width: 400px;
+        height: 400px;
+    }
+
+    .container-grid-3 {
+        display: grid;
+        grid-gap: 1px;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+
+}
+
+
+@media(max-width:899px) {
+    .link {
+        display: none;
+    }
+    .container-main{
+        margin-top: 80px;
+        
+    }
+    .container-signup {
+        display: grid;
+        grid-gap: 1px;
+        grid-template-columns: 1fr 1fr;
+        height: 100vh;
+    }
+
+    .form {
+        padding: 50px 40px;
+    }
+
+    svg {
+        width: 300px;
+        height: 300px;
+    }
+
+    .container-grid-1,
+    .container-grid-2,
+    .container-grid-footer,
+    .container-nav {
+        display: block;
+    }
+
+    .section_a,
+    .section_b {
+        text-align: center;
+    }
+
+    .section_b,
+    .section_a,
+    .hero-l,
+    .hero-r {
+        padding: 30px 20px;
+    }
+
+    .hero-r img {
+        display: none;
+    }
+
+    .footer {
+        padding: 30px 10px;
+        text-align: center;
+    }
+
+    .navbar {
+        box-shadow: 9px -11px 20px 4px rgba(64, 62, 62, 0.522);
+        padding-top: 10px;
+        position: fixed;
+        top: 0px;
+        background-color: #ffffff;
+        width: 100%;
+    }
+
+    .app {
+        margin-top: 90px;
+    }
+
+    .sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 2;
+        top: 0;
+        background-color: rgb(52, 50, 72);
+        overflow-x: hidden;
+        transition: 0.2s;
+    }
+
+    .sidebar h1 {
+        font-size: 14px;
+
+    }
+
+    .icon-lg-nav {
+        font-size: 18px;
+        padding: 5px 10px;
+
+    }
+
+    .app-link {
+        padding: 10px 15px 10px 40px;
+    }
+
+
+
+    .item span {
+        font-size: 14px;
+    }
+
+    .main {
+        background: #fbfbfb;
+        transition: margin-left 0.2s;
+    }
+
+
+    .main-brand {
+        display: inline-flex;
+        padding: 0px 20px;
+    }
+
+    .main-brand p {
+        text-align: center;
+        padding: 0 70px;
+        margin: 0 auto;
+    }
+
+    .navbar .form-group input {
+        display: block;
+        width: 90%;
+        padding: 6px 0;
+        margin: 16px 10px;
+        font-size: 14px;
+        height: 25px;
+        border-radius: 5px;
+        border: none;
+        background-color: #eeeded;
+    }
+
+    .container-grid-3 {
+        display: grid;
+        grid-gap: 1px;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .container-grid-3 .contact {
+        width: 100%;
+    }
+}
+
+@media(max-width:650px) {
+    .container-signup {
+        display: grid;
+        grid-gap: 1px;
+        grid-template-columns: 1fr 0;
+        height: 100vh;
+    }
+
+    .col-sp-2 {
+        display: none;
+
+    }
+
+    svg {
+        width: 200px;
+        height: 200px;
+    }
+
+    .nav-link {
+        display: inline-flex;
+        margin: 9px 0;
+        padding: 0;
+    }
+
+    .container-grid-3 {
+        margin: 0 auto;
+        display: block;
+
+    }
+
+    .container-grid-3 .contact {
+        width: 100%;
+        padding: 15px 0px;
+    }
+
+}
