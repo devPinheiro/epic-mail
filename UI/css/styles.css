@@ -721,7 +721,7 @@ a {
 
 
 @media(max-width:899px) {
-    .link {
+    .linker {
         display: none;
     }
     .container-main{
