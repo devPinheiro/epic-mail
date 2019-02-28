@@ -418,6 +418,10 @@ section {
 
 /* ------------------------- Container Nav ------ */
 
+.app-title  span h4 {
+    margin: 10px 0 15px 0; 
+}
+
 .main-brand {
     display: none;
 }
@@ -825,7 +829,7 @@ a {
 
     .main-brand {
         display: inline-flex;
-        padding: 0px 20px;
+        padding: 5px 20px;
     }
 
     .main-brand p {
@@ -890,6 +894,25 @@ a {
     .container-grid-3 .contact {
         width: 100%;
         padding: 15px 0px;
+    }
+
+    .nav-link .link-item {
+        padding: 10px 15px 10px 60px;
+        list-style-type: none;
+    }
+
+    .app-title .container-grid-mail-action span h4 {
+        margin: 10px 0 15px 0;
+    }
+
+    .compose-mail {
+        padding: 10px 10px;
+        margin: 20px auto;
+        box-shadow: 0px 0px 2px 1px #f9f9f9;
+    }
+
+    .app {
+        padding: 5px 8px;
     }
 
 }
