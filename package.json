@@ -1,0 +1,27 @@
+{
+  "name": "epic-mail",
+  "version": "1.0.0",
+  "description": "an email web app that helps people exchange messages/information over the internet.",
+  "main": "app.js",
+  "scripts": {
+    "test": "none",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devPinheiro/epic-mail.git"
+  },
+  "keywords": [
+    "web",
+    "app",
+    "EPIC",
+    "mail",
+    "communication"
+  ],
+  "author": "Pinheiro Samuel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devPinheiro/epic-mail/issues"
+  },
+  "homepage": "https://github.com/devPinheiro/epic-mail#readme"
+}
