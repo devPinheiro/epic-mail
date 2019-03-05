@@ -20,7 +20,7 @@ $('#signup-form').addEventListener('submit', (e) => {
     // let's do a little validation
     if (email !== '') {
 
-        showAlertSignup("success", `Your email is ${email} and password is ${password}`);
+        showAlertSignup("success", `Successfully Registered`);
         // Timeout after 5s
         setTimeout(function () {
             window.location = 'inbox.html';

@@ -17,7 +17,7 @@ $('#reset-form').addEventListener('submit', (e) => {
     let checkEmail = reg.test(email); // returns a boolean 
     if (checkEmail) {
         $('#email').style.border = '';
-        showAlert("success", `Your email is ${email}`);
+        showAlert("success", `Password successfully reset - check your mail`);
 
     } else {
         $('#email').style.border = "1px solid #ff1e1e";
