@@ -1,4 +1,5 @@
 node_modules
-src/config
-coverage
 .nyc_output
+coverage
+package-lock.json
+src/config
