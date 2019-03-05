@@ -66,5 +66,62 @@ export default {
             });
         }
        
+    },
+
+    login(req, res) {
+        try {
+
+            let isUserExisting;
+
+            // validate user input
+            if (req.body.email !== '' && req.body.password !== '' && typeof req.body.email === 'string') {
+
+                let email = req.body.email;
+                let password = req.body.password;
+
+                // check if the user exists
+                user.forEach((userObj) => {
+                    if (email === userObj.email && password === userObj.password) {
+                       isUserExisting = true;
+                    }
+                });
+
+                if(isUserExisting){
+                    // generate token
+                    let tokenArray = [{
+                        token: tokenizer()
+                    }];
+                    // send response to clientside
+                    return res.status(200).json({
+                        status: 200,
+                        data: tokenArray
+                    });
+
+                } else{
+                     // send response to clientside
+                     return res.status(404).json({
+                         status: 404,
+                         error: "user does not exist"
+                     });
+                }
+
+                
+
+            } else {
+                // send response to clientside
+                return res.status(400).json({
+                    status: 400,
+                    error: "enter valid credentials"
+                });
+            }
+        } catch (err) {
+
+            // send response to clientside
+            return res.status(500).json({
+                status: 500,
+                data: err
+            });
+        }
+
     }
 } 

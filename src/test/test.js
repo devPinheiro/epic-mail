@@ -73,6 +73,65 @@ chai.use(chaiHttp);
 });
 
 
+ // POST user login test
+ describe('POST user login test', () => {
+
+     it('It should allow new users sign in', (done) => {
+         // using chai-http plugin
+         chai.request(app)
+             .post('/api/v1/auth/login/')
+             .send({
+                 email: "tester@test.com",
+                 password: "tester"
+             })
+             .end((err, res) => {
+                 expect(err).to.be.null;
+                 res.should.have.status(200);
+                 res.body.should.have.property('status');
+                 res.body.should.have.property('data');
+                 done();
+             })
+     });
+
+     it('It should respond with an error if user does not exists', (done) => {
+         // using chai-http plugin
+         chai.request(app)
+             .post('/api/v1/auth/login')
+             .send({
+                 email: "tester@no-reply.com",
+                 password: "tester"
+             })
+             .end((err, res) => {
+                 expect(err).to.be.null;
+                 res.should.have.status(404);
+                 res.body.should.have.property('status');
+                 res.body.should.have.property('error');
+                 done();
+             })
+     })
+
+     it('It should respond with an error if user credentials are incorrect', (done) => {
+         // using chai-http plugin
+         chai.request(app)
+             .post('/api/v1/auth/login')
+             .send({
+                 email: "",
+                 password: "tester"
+             })
+             .end((err, res) => {
+                 expect(err).to.be.null;
+                 res.should.have.status(400);
+                 res.body.should.have.property('status');
+                 res.body.should.have.property('error');
+                 done();
+             })
+     })
+
+
+ });
+
+
+
 
 
 
