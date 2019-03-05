@@ -1,0 +1,26 @@
+{
+    "presets": [
+        [
+            "env",
+            {
+                "targets": {
+                    "node": "current",
+                    "chrome": "66",
+                    "firefox": "70"
+                }
+            }
+        ]
+    ],
+    "env": {
+        "test": {
+            "plugins": [
+                "istanbul"
+            ]
+        },
+        "production": {
+            "plugins": [
+                "istanbul"
+            ]
+        }
+    }
+}
