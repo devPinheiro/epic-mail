@@ -6,18 +6,13 @@
                 "targets": {
                     "node": "current",
                     "chrome": "66",
-                    "firefox": "70"
+                    "firefox": "60"
                 }
             }
         ]
     ],
     "env": {
         "test": {
-            "plugins": [
-                "istanbul"
-            ]
-        },
-        "production": {
             "plugins": [
                 "istanbul"
             ]
