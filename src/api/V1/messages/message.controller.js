@@ -52,5 +52,26 @@ export default {
 
         }
      
-    }
+    },
+
+     allMessages(req, res) {
+
+         try {
+                 // send response to clientside
+                 return res.status(200).json({
+                     status: 200,
+                     data: message
+                 });
+
+         } catch (error) {
+
+             // send response to clientside
+             return res.status(404).json({
+                 status: 404,
+                 data: "no messages found"
+             });
+
+         }
+
+     }
 }
