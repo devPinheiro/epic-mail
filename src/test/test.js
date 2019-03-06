@@ -131,7 +131,49 @@ chai.use(chaiHttp);
  });
 
 
+ // POST create / send email 
+ describe('POST  create / send email ', () => {
 
+     it('It should allow user create / send email ', (done) => {
+         // using chai-http plugin
+         chai.request(app)
+             .post('/api/v1/messages/')
+             .send({
+                 subject: "Congratulations",
+                 message: "You have been accepted into the fellowship",
+                 status: "sent",
+                 parentMessageId: 1
+             })
+             .end((err, res) => {
+                 expect(err).to.be.null;
+                 res.should.have.status(201);
+                 res.body.should.have.property('status');
+                 res.body.should.have.property('data');
+                 done();
+             })
+     });
+
+
+     it('It should respond with an error if user credentials are incorrect', (done) => {
+         // using chai-http plugin
+         chai.request(app)
+              .post('/api/v1/messages/')
+                .send({
+                    subject: "",
+                    message: "You have been accepted into the fellowship",
+                    status: "sent",
+                    parentMessageId: 1
+                })
+             .end((err, res) => {
+                 expect(err).to.be.null;
+                 res.should.have.status(400);
+                 res.body.should.have.property('status');
+                 res.body.should.have.property('error');
+                 done();
+             })
+     })
+
+ });
 
 
 
