@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for src/app.js</title>
+    <title>Code coverage report for src/api/V1/inbox/inbox.controller.js</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="..\prettify.css" />
-    <link rel="stylesheet" href="..\base.css" />
+    <link rel="stylesheet" href="..\..\..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\..\..\base.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(..\sort-arrow-sprite.png);
+            background-image: url(..\..\..\..\sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -16,28 +16,28 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="..\index.html">All files</a> / <a href="index.html">src</a> app.js
+      <a href="..\..\..\..\index.html">All files</a> / <a href="index.html">src/api/V1/inbox</a> inbox.controller.js
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>9/9</span>
+        <span class='fraction'>4/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>2/2</span>
+        <span class='fraction'>1/2</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/1</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>9/9</span>
+        <span class='fraction'>3/4</span>
       </div>
     </div>
     <p class="quiet">
@@ -74,20 +74,16 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -97,8 +93,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -106,55 +101,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import express from "express";
-import logger from "morgan";
-import { apiRouter }  from "./api/V1";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import message from "../messages/message.model";
 &nbsp;
-/**
- * 
- * instantiate express app
- *  */
-const app = express();
+export default {
 &nbsp;
+    unreadMessages(req, res) {
 &nbsp;
-/**
- * 
- * setup port
- *  */
-const PORT = process.env.PORT || 3000;
-const hostname = "localhost";
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (message.length !== 0) {
 &nbsp;
-/**
- * set up middleware
- * @method express.json() parses incoming requests with JSON payloads based on body-parser
- * 
- * @method express.urlencoded() parses incoming requests with urlencode payloads based on body-parser
- *  */
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(logger('dev'));
+            // get only sent messages
+            const unread = message.filter((msg) =&gt; msg.status === "unread");
 &nbsp;
-// api endpoints
-app.use('/api/v1', apiRouter);
+            // send response to clientside
+            return res.status(200).json({
+                status: 200,
+                data: unread
+            });
+&nbsp;
+        } else {
+            // send response to clientside
+<span class="cstat-no" title="statement not covered" >            return res.status(404).json({</span>
+                status: 404,
+                data: "no unread messages found"
+            });
+        }
+&nbsp;
+    },
 &nbsp;
 &nbsp;
-app.listen(PORT, hostname,()=&gt;{
-  console.log(`server listening on https://${hostname}:${PORT}`)
-});
-&nbsp;
-export default app;</pre></td></tr>
+}</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
@@ -163,7 +139,7 @@ export default app;</pre></td></tr>
   generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Mar 06 2019 15:28:15 GMT+0100 (W. Central Africa Standard Time)
 </div>
 </div>
-<script src="..\prettify.js"></script>
+<script src="..\..\..\..\prettify.js"></script>
 <script>
 window.onload = function () {
         if (typeof prettyPrint === 'function') {
@@ -171,7 +147,7 @@ window.onload = function () {
         }
 };
 </script>
-<script src="..\sorter.js"></script>
-<script src="..\block-navigation.js"></script>
+<script src="..\..\..\..\sorter.js"></script>
+<script src="..\..\..\..\block-navigation.js"></script>
 </body>
 </html>

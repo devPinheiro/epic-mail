@@ -212,6 +212,24 @@ chai.use(chaiHttp);
 
   });
 
+   // GET all unread messages
+   describe('GET fetch unread messages ', () => {
+
+       it('It should fetch unread messages ', (done) => {
+           // using chai-http plugin
+           chai.request(app)
+               .get('/api/v1/messages/unread')
+               .end((err, res) => {
+                   expect(err).to.be.null;
+                   res.should.have.status(200);
+                   res.body.should.have.property('status');
+                   res.body.should.have.property('data');
+                   done();
+               })
+       });
+
+   });
+
 
 
 

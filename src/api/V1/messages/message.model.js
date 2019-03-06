@@ -30,7 +30,7 @@ export default [
           senderId: 1,
           receieverId: 2,
           parentMessageId: 1,
-          status: "inbox"
+          status: "unread"
       },
 
        {
@@ -41,6 +41,6 @@ export default [
            senderId: 1,
            receieverId: 2,
            parentMessageId: 1,
-           status: "inbox"
+           status: "unread"
        }
 ]
