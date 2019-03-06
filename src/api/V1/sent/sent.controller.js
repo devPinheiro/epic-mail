@@ -2,27 +2,26 @@ import message from "../messages/message.model";
 
 export default {
   
-
     sentMessages(req, res) {
 
-        try {
-            const sent = message.filter((msg) => msg.status === "sent");
+            if(message.length !== 0){
 
-            // send response to clientside
-            return res.status(200).json({
-                status: 200,
-                data: sent
-            });
+                // get only sent messages
+                const sent = message.filter((msg) => msg.status === "sent");
 
-        } catch (error) {
+                // send response to clientside
+                return res.status(200).json({
+                    status: 200,
+                    data: sent
+                });
 
-            // send response to clientside
-            return res.status(404).json({
-                status: 404,
-                data: "no sent messages found"
-            });
-
-        }
+            } else {
+                 // send response to clientside
+                 return res.status(404).json({
+                     status: 404,
+                     data: "no sent messages found"
+                 });
+            }      
 
     },
 
