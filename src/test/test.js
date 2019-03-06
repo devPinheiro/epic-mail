@@ -176,6 +176,25 @@ chai.use(chaiHttp);
  });
 
 
+  // GET all received messages
+  describe('GET fetch all received messages ', () => {
+
+      it('It should fetch all received messages ', (done) => {
+          // using chai-http plugin
+          chai.request(app)
+              .get('/api/v1/messages/')
+              .end((err, res) => {
+                  expect(err).to.be.null;
+                  res.should.have.status(200);
+                  res.body.should.have.property('status');
+                  res.body.should.have.property('data');
+                  done();
+              })
+      });
+
+  });
+
+
 
  // Custom Error Handling Tests
  describe('Check for any wrong endpoints', () => {
