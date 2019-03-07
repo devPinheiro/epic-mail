@@ -6,7 +6,7 @@ node_js:
   - node
 
 script:
-  - nyc report --reporter=text-lcov npm test
+  - nyc report --reporter=text-lcov
 
 after_success: npm run coverage
 
