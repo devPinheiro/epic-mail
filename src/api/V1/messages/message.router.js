@@ -5,3 +5,4 @@ export const messageRouter = express.Router();
 messageRouter.post('/', messageController.compose);          
 messageRouter.get('/', messageController.allMessages);
 messageRouter.get('/:id', messageController.getOneMessage);
+messageRouter.delete('/:id', messageController.deleteOneMessage);
