@@ -3,3 +3,4 @@ package-lock.json
 .env
 coverage
 .nyc_output
+epic.gif
