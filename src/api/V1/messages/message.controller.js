@@ -114,5 +114,50 @@ export default {
       },
 
 
+      deleteOneMessage(req, res) {
+
+          try {
+
+              // get message id
+              const id = req.params.id;
+
+              // fetch message using id
+              let singleMessage = message.find((msg) => msg.id == id);
+
+              // if message does not exists
+              if (singleMessage) {
+                  // remove from db
+                  message.splice(id, 1);
+
+                  // send response to clientside
+                  return res.status(200).json({
+                      status: 200,
+                      data: {
+                          message: "messsage deleted successfully"
+                      }
+                  });
+              } else {
+                // send response to clientside
+                return res.status(404).json({
+                    status: 404,
+                    error: "message does not exist"
+                });
+              }
+
+              
+
+
+          } catch (error) {
+
+              // send response to clientside
+              return res.status(500).json({
+                  status: 500,
+                  error: error
+              });
+
+          }
+
+      },
+
 
 }

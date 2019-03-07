@@ -263,6 +263,38 @@ chai.use(chaiHttp);
   });
 
 
+   //DELETE delete specific mail message
+   describe('DELETE delete specific mail message ', () => {
+
+       it('It should delete specific mail message ', (done) => {
+           // using chai-http plugin
+           chai.request(app)
+               .delete('/api/v1/messages/2')
+               .end((err, res) => {
+                   expect(err).to.be.null;
+                   res.should.have.status(200);
+                   res.body.should.have.property('status');
+                   res.body.should.have.property('data');
+                   done();
+               })
+       });
+
+       it('It should resturn an error for wrong <message-id> ', (done) => {
+           // using chai-http plugin
+           chai.request(app)
+               .delete('/api/v1/messages/7')
+               .end((err, res) => {
+                   expect(err).to.be.null;
+                   res.should.have.status(404);
+                   res.body.should.have.property('status');
+                   res.body.should.have.property('error');
+                   expect(res.body.error).to.be.equal("message does not exist");
+                   done();
+               })
+       });
+
+   });
+
 
 
  // Custom Error Handling Tests
