@@ -19,7 +19,7 @@ export default {
                  // send response to clientside
                  return res.status(404).json({
                      status: 404,
-                     data: "no sent messages found"
+                     error: "no sent messages found"
                  });
             }      
 

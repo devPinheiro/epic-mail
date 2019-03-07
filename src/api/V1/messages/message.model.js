@@ -32,7 +32,6 @@ export default [
           parentMessageId: 1,
           status: "unread"
       },
-
        {
            id: 4,
            createdOn: Date(),

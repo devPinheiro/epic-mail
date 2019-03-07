@@ -1,4 +1,13 @@
+sudo: false
+
 language: node_js
+
 node_js:
-  - 8.11.3 
+  - node
+
+script:
+  - npm test
+  - nyc report --reporter=text-lcov
+
 after_success: npm run coverage
+

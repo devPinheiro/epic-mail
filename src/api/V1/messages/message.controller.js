@@ -47,7 +47,7 @@ export default {
             // send response to clientside
             return res.status(500).json({
                 status: 500,
-                data: error
+                error: error
             });
 
         }
@@ -68,12 +68,51 @@ export default {
              // send response to clientside
              return res.status(404).json({
                  status: 404,
-                 data: "no messages found"
+                 error: "no messages found"
              });
 
          }
 
      },
+
+      getOneMessage(req, res) {
+
+          try {
+
+              // get message id
+              const id  = req.params.id;
+              
+              // fetch message using id
+                let singleMessage = message.find((msg)=> msg.id == id);
+
+                // if message does not exists
+                if(!singleMessage){
+                     // send response to clientside
+                     return res.status(404).json({
+                         status: 404,
+                         error: "message does not exist"
+                     });
+                }
+
+                // send response to clientside
+                return res.status(200).json({
+                    status: 200,
+                    data: singleMessage
+                });
+             
+
+          } catch (error) {
+
+              // send response to clientside
+              return res.status(500).json({
+                  status: 500,
+                  error: error
+              });
+
+          }
+
+      },
+
 
 
 }

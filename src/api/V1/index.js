@@ -10,6 +10,7 @@ export const apiRouter = express.Router();
 // user route
 apiRouter.use('/auth', userRouter);
 //messages route
-apiRouter.use('/messages', messageRouter);
-apiRouter.use('/messages/sent', sentRouter);
+apiRouter.use('/messages', sentRouter);
 apiRouter.use('/messages', inboxRouter);
+apiRouter.use('/messages', messageRouter);
+

@@ -230,6 +230,38 @@ chai.use(chaiHttp);
 
    });
 
+  // GET fetch single message
+  describe('GET fetch single message ', () => {
+
+      it('It should fetch single message ', (done) => {
+          // using chai-http plugin
+          chai.request(app)
+              .get('/api/v1/messages/2')
+              .end((err, res) => {
+                  expect(err).to.be.null;
+                  res.should.have.status(200);
+                  res.body.should.have.property('status');
+                  res.body.should.have.property('data');
+                  done();
+              })
+      });
+
+       it('It should resturn an error for wrong <message-id> ', (done) => {
+           // using chai-http plugin
+           chai.request(app)
+               .get('/api/v1/messages/3e')
+               .end((err, res) => {
+                   expect(err).to.be.null;
+                   res.should.have.status(404);
+                   res.body.should.have.property('status');
+                   res.body.should.have.property('error');
+                   expect(res.body.error).to.be.equal("message does not exist");
+                   done();
+               })
+       });
+
+  });
+
 
 
 

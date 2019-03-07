@@ -31,14 +31,14 @@ export default {
                    user.push(userEntry);
 
                    // generate token
-                   const tokenArray = [{
+                   const tokenObj = {
                        token: tokenizer()
-                   }];
+                   };
 
                    // send response to clientside
                    return res.status(201).json({
                        status: 201,
-                       data: tokenArray
+                       data: tokenObj
                    });
                 } else {
                     // send response to clientside
@@ -62,7 +62,7 @@ export default {
             // send response to clientside
             return res.status(500).json({
                 status: 500,
-                data: err
+                error: err
             });
         }
        
@@ -88,13 +88,13 @@ export default {
 
                 if(isUserExisting){
                     // generate token
-                    let tokenArray = [{
+                    let tokenObj = {
                         token: tokenizer()
-                    }];
+                    };
                     // send response to clientside
                     return res.status(200).json({
                         status: 200,
-                        data: tokenArray
+                        data: tokenObj
                     });
 
                 } else{
@@ -119,7 +119,7 @@ export default {
             // send response to clientside
             return res.status(500).json({
                 status: 500,
-                data: err
+                error: err
             });
         }
 
