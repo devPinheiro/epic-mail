@@ -19,7 +19,7 @@ export default {
             // send response to clientside
             return res.status(404).json({
                 status: 404,
-                data: "no unread messages found"
+                error: "no unread messages found"
             });
         }
 
