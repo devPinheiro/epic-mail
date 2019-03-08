@@ -1,6 +1,6 @@
 # epic-mail 
 [![Build Status](https://travis-ci.org/devPinheiro/epic-mail.svg?branch=develop)](https://travis-ci.org/devPinheiro/epic-mail) 
-[![Coverage Status](https://coveralls.io/repos/github/devPinheiro/epic-mail/badge.svg?branch=ch-fix-coveralls-integration-164479662)](https://coveralls.io/github/devPinheiro/epic-mail?branch=ch-fix-coveralls-integration-164479662) <a href="https://codeclimate.com/github/devPinheiro/epic-mail/maintainability"><img src="https://api.codeclimate.com/v1/badges/7cb0d211aa719f740fec/maintainability" /></a>
+[![Coverage Status](https://coveralls.io/repos/github/devPinheiro/epic-mail/badge.svg?branch=ch-fix-coveralls-integration-164479662)](https://coveralls.io/github/devPinheiro/epic-mail?branch=ch-fix-coveralls-integration-164479662)
 
 
 an email web app that helps people exchange messages/information over the internet.
@@ -22,7 +22,7 @@ an email web app that helps people exchange messages/information over the intern
 
 ###  UI View
 
-![](epic.gif)
+![](http://g.recordit.co/hwwHAD13cJ.gif)
 
 
 ### API Endpoint
