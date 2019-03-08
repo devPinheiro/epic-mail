@@ -21,4 +21,6 @@ deploy:
   provider: heroku
   api_key: 04ae57a8-c206-407a-b6cc-c3b37cfbbaca
   app: epic-mail
+  on:
+    branch: develop
 
