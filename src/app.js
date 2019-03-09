@@ -14,7 +14,7 @@ const app = express();
  * setup port
  *  */
 const PORT = process.env.PORT || 4000;
-const hostname = 'localhost';
+const hostname = '0.0.0.0';
 
 /**
  * set up middleware
