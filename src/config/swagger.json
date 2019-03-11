@@ -1,0 +1,343 @@
+{
+    "swagger": "2.0",
+    "title": "EPIC Mail API Documentation",
+    "description": "This is an email web app that helps people exchange messages/information over the internet.",
+    "version": "2.0.0",
+    "explore": "true",
+    "host": "localhost:4000",
+    "basePath": "/api/v1",
+    "tags": [
+        {
+            "name": "Messages",
+            "description": "API endpoints for all messages"
+        },
+        {
+            "name": "Users",
+            "description": "API endpoints for users"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "User Login"
+                ],
+                "summary": "POST API endpoint for user login",
+                "description": "User Login",
+                "parameters": [
+                    {
+                        "name": "login",
+                        "description": "Login params ",
+                        "in": "body",
+                        "required": "true"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully"
+                    }
+                }
+            }
+        },
+        "/auth/signup": {
+            "post": {
+                "tags": [
+                    "Create new User"
+                ],
+                "summary": "POST API endpoint for creating new user",
+                "description": "Create new users",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "description": "User params to create new user",
+                        "in": "body",
+                        "required": "true"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "New user created"
+                    }
+                }
+            }
+        },
+        "/messages": {
+            "post": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "POST API endpoint for creating new messages",
+                "description": "Create email and send",
+                "parameters": [
+                    {
+                        "name": "message",
+                        "description": "Message params to create new message",
+                        "in": "body",
+                        "required": "true"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "new message created"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "GET API endpoint for getting all received mails",
+                "description": "Get all received mails",
+                "parameters": [
+                    {
+                        "name": "messages",
+                        "type": "string",
+                        "description": "fetch all received message/mail fom database",
+                        "in": "path"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "all received mails"
+                    }
+                }
+            }
+        },
+         "/messages/sent": {
+             "parameters": [{
+                 "name": "messages",
+                 "type": "string",
+                 "in": "path",
+                 "description": "status of the message/mail"
+             }],
+             "get": {
+                 "tags": [
+                     "Messages"
+                 ],
+                 "summary": "GET API endpoint for getting all sent message/mail",
+                 "description": "fetch all sent message/mail fom database",
+                 "produces": [
+                     "application/json"
+                 ],
+                 "responses": {
+                     "200": {
+                         "description": "found sent message/mail"
+                     }
+                 }
+             }
+            },
+            "/messages/unread": {
+                "parameters": [{
+                    "name": "messages",
+                    "type": "string",
+                    "in": "path",
+                    "description": "status of the message/mail"
+                }],
+                "get": {
+                    "tags": [
+                        "Messages"
+                    ],
+                    "summary": "GET API endpoint for getting all unread message/mail",
+                    "description": "fetch all unread message/mail fom database",
+                    "produces": [
+                        "application/json"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "found unread message/mail"
+                        }
+                    }
+                }
+            },
+        "/messages/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "type": "string",
+                    "in": "path",
+                    "required": "true",
+                    "description": "id of the message"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "GET API endpoint for getting one message/mail",
+                "description": "fetch one message/mail fom database",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Found new message/mail"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "DELETE API endpoint for deleting one message/mail",
+                "description": "delete one message/mail fom database",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "message/mail deleted successfully"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Login": {
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "LoginR": {
+            "properties": {
+                "status": {
+                    "type": "integer"
+                },
+                "data": {
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "SignupR": {
+            "properties": {
+                "status": {
+                    "type": "integer"
+                },
+                "data": {
+                    "token": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "User": {
+            "required": [
+                "firstName",
+                "lastName",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Message": {
+            "required": [
+                "id"
+                
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "createdOn": {
+                    "type": "Datetime"
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "senderId": {
+                    "type": "integer"
+                },
+                "receiverId": {
+                    "type": "integer"
+                },
+                "parentMessageId": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "Messages": {
+              "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "createdOn": {
+                    "type": "Datetime"
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "senderId": {
+                    "type": "integer"
+                },
+                "receiverId": {
+                    "type": "integer"
+                },
+                "parentMessageId": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
