@@ -26,7 +26,7 @@ body {
 .form-group input {
     display: block;
     width: 100%;
-    padding: 5px 0;
+    padding: 5px 0 5px 3px;
     margin-bottom: 15px;
     font-size: 14px;
     height: 25px;
@@ -37,7 +37,7 @@ body {
 .form-group button {
     display: block;
     width: 100%;
-    padding: 10px 0;
+    padding: 15px 0;
     border-radius: 2px;
     margin-top: 25px;
     border: none;
@@ -301,7 +301,7 @@ section {
 .navbar .form-group input {
     display: block;
     width: 100%;
-    padding: 10px 0;
+    padding: 10px 0 10px 10px;
     margin: 15px 20px;
     font-size: 14px;
     height: 25px;
@@ -472,12 +472,12 @@ section {
 .container-signup {
     display: grid;
     grid-gap: 1px;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 2fr 1fr;
     height: 100vh;
 }
 
 .col-sp-1 {
-    grid-column: 1;
+    grid-column: 2;
     grid-row: 1;
     background: linear-gradient(to bottom, rgb(52, 50, 72) 0%, rgb(63, 61, 86) 75%, rgb(63, 61, 86) 100%);
     color: #fff;
@@ -488,7 +488,7 @@ section {
 }
 
 .col-sp-2 {
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 1;
     text-align: center;
     background-color: #ffffff;
@@ -840,8 +840,8 @@ a {
 
     .navbar .form-group input {
         display: block;
-        width: 90%;
-        padding: 6px 0;
+        width: 100%;
+        padding: 6px 0 6px 6px;
         margin: 16px 10px;
         font-size: 14px;
         height: 25px;
@@ -861,17 +861,22 @@ a {
     }
 }
 
+@media(min-width:700px) and (max-width:800px){
+  .col-navlink {
+      padding-left: 95px;
+  }
+}
+
 @media(max-width:650px) {
     .container-signup {
         display: grid;
         grid-gap: 1px;
-        grid-template-columns: 1fr 0;
+        grid-template-columns: 0 1fr ;
         height: 100vh;
     }
 
     .col-sp-2 {
         display: none;
-
     }
 
     svg {
@@ -915,4 +920,46 @@ a {
         padding: 5px 8px;
     }
 
+}
+@media(min-width:351px) and (max-width:380px) {
+    .navbar .form-group input {
+        display: block;
+        width: 120%;
+        padding: 6px 0 6px 6px;
+        margin: 16px 10px;
+        font-size: 14px;
+        height: 25px;
+        border-radius: 5px;
+        border: none;
+        background-color: #eeeded;
+    }
+
+    .nav-link .link-item {
+        padding: 15px 15px 10px 30px;
+        list-style-type: none;
+        margin-left: 50px;
+    }
+
+    .main-brand p {
+        padding: 0 100px;
+    }
+}
+
+@media(min-width:320px) and (max-width:350px) {
+  .navbar .form-group input {
+      display: block;
+      width: 90%;
+      padding: 6px 0 6px 6px;
+      margin: 16px 10px;
+      font-size: 14px;
+      height: 25px;
+      border-radius: 5px;
+      border: none;
+      background-color: #eeeded;
+  }
+
+  .nav-link .link-item {
+      padding: 15px 15px 10px 30px;
+      list-style-type: none;
+  }
 }

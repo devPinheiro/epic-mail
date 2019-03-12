@@ -42,7 +42,7 @@ let showAlert = (classN, message) => {
       let checkEmail = reg.test(email);	// returns a boolean 
       if (checkEmail) {
           $('#email').style.border = '';
-         showAlert("success", `Successfully signd in`);
+         showAlert("success", `Successfully signed in`);
          // Timeout after 5s
           setTimeout(function () {
             window.location = 'inbox.html';
