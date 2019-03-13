@@ -1,8 +1,9 @@
 import express from 'express';
 import logger from 'morgan';
 import swagger from 'swagger-ui-express';
-import { apiRouter } from './api/V1';
 import swaggerDocument from './config/swagger.json';
+import userRoute from './api/V1/router/userRouter';
+import messageRoute from './api/V1/router/messageRouter';
 
 /**
  *
@@ -16,7 +17,6 @@ const app = express();
  * setup port
  *  */
 const PORT = process.env.PORT || 4000;
-const hostname = '0.0.0.0';
 
 /**
  * set up middleware
@@ -29,7 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger('dev'));
 
 // api endpoints
-app.use('/api/v1', apiRouter);
+app.use('/api/v1', userRoute);
+app.use('/api/v1', messageRoute);
 
 // swagger api docs endpoint
 const options = {
@@ -46,8 +47,6 @@ app.use((req, res, next) => {
 });
 
 
-app.listen(PORT, hostname, () => {
-  console.log(`server listening on https://${hostname}:${PORT}`);
-});
-
+app.listen(PORT);
+console.log(`server listening on ${PORT}`);
 export default app;

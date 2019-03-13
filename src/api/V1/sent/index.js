@@ -1,1 +1,0 @@
-export { sentRouter } from './sent.router';
