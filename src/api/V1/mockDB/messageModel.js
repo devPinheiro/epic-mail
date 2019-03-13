@@ -1,6 +1,8 @@
+import uuid from 'uuid';
+
 export default [
   {
-    id: 1,
+    id: uuid(),
     createdOn: Date(),
     subject: 'Andela Bootcamp 42',
     message: 'Congratulations, you just made it to Andela...',
@@ -11,7 +13,7 @@ export default [
   },
 
   {
-    id: 2,
+    id: uuid(),
     createdOn: Date(),
     subject: 'Andela Bootcamp 42',
     message: 'Congratulations, you just made it to Andela...',
@@ -22,7 +24,7 @@ export default [
   },
 
   {
-    id: 3,
+    id: uuid(),
     createdOn: Date(),
     subject: 'Andela Bootcamp 42',
     message: 'Congratulations, you just made it to Andela...',
@@ -32,7 +34,7 @@ export default [
     status: 'unread',
   },
   {
-    id: 4,
+    id: uuid(),
     createdOn: Date(),
     subject: 'Andela Bootcamp 42',
     message: 'Congratulations, you just made it to Andela...',

@@ -16,7 +16,7 @@ const app = express();
  *
  * setup port
  *  */
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4100;
 
 /**
  * set up middleware

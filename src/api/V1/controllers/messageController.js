@@ -1,4 +1,5 @@
-import message from '../models/messageModel';
+import uuid from 'uuid';
+import message from '../mockDB/messageModel';
 
 class MessageController {
   static composeMessage(req, res) {
@@ -10,7 +11,7 @@ class MessageController {
     // validate user input
     if (req.body.subject !== '' && req.body.message !== '' && typeof req.body.subject === 'string') {
       // set message entry object properties with values
-      newMessage.id = message.length + 1;
+      newMessage.id = uuid();
       newMessage.createdOn = today.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -79,22 +80,21 @@ class MessageController {
     // get message id
     const { id } = req.params;
 
-    // fetch message using id
-    const oneMessage = message.find(msg => msg.id == id);
+    message.map((msg, index) => {
+      if (msg.id === id) {
+        // remove from db
+        message.splice(index, 1);
 
-    // if message does not exists
-    if (oneMessage) {
-      // remove from db
-      message.splice(id, 1);
+        // send response to clientside
+        return res.status(200).json({
+          status: 200,
+          data: {
+            message: 'message deleted successfully',
+          },
+        });
+      }
+    });
 
-      // send response to clientside
-      return res.status(200).json({
-        status: 200,
-        data: {
-          message: 'messsage deleted successfully',
-        },
-      });
-    }
     // send response to clientside
     return res.status(404).json({
       status: 404,
@@ -107,11 +107,13 @@ class MessageController {
       // get only unread messages
       const unread = message.filter(msg => msg.status === 'unread');
 
-      // send response to clientside
-      return res.status(200).json({
-        status: 200,
-        data: unread,
-      });
+      if (unread) {
+        // send response to clientside
+        return res.status(200).json({
+          status: 200,
+          data: unread,
+        });
+      }
     }
     // send response to clientside
     return res.status(404).json({
@@ -125,11 +127,13 @@ class MessageController {
       // get only sent messages
       const sent = message.filter(msg => msg.status === 'sent');
 
+      if (sent) {
       // send response to clientside
-      return res.status(200).json({
-        status: 200,
-        data: sent,
-      });
+        return res.status(200).json({
+          status: 200,
+          data: sent,
+        });
+      }
     }
     // send response to clientside
     return res.status(404).json({
