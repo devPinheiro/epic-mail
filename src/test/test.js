@@ -16,11 +16,11 @@ describe('POST register a new user test', () => {
     chai.request(app)
       .post('/api/v1/auth/signup/')
       .send({
-        firstName: "tester",
-        lastName: "tester",
-        email: "tester@test.com",
-        password: "tester",
-        role: "admin"
+        firstName: 'tester',
+        lastName: 'tester',
+        email: 'tester@test.com',
+        password: 'tester',
+        role: 'admin'
       })
       .end((err, res) => {      
         expect(err).to.be.null;
@@ -36,11 +36,11 @@ describe('POST register a new user test', () => {
     chai.request(app)
       .post('/api/v1/auth/signup/')
       .send({
-        firstName: "tester",
-        lastName: "tester",
-        email: "tester@test.com",
-        password: "tester",
-        role: "admin"
+        firstName: 'tester',
+        lastName: 'tester',
+        email: 'tester@test.com',
+        password: 'tester',
+        role: 'admin'
       })
       .end((err, res) => {      
         expect(err).to.be.null;
@@ -56,11 +56,11 @@ describe('POST register a new user test', () => {
     chai.request(app)
       .post('/api/v1/auth/signup/')
       .send({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "tester",
-        role: "admin"
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: 'tester',
+        role: 'admin'
       })
       .end((err, res) => {      
         expect(err).to.be.null;
@@ -83,8 +83,8 @@ describe('POST user login test', () => {
     chai.request(app)
       .post('/api/v1/auth/login/')
       .send({
-        email: "tester@test.com",
-        password: "tester"
+        email: 'tester@test.com',
+        password: 'tester'
       })
       .end((err, res) => {
         expect(err).to.be.null;
@@ -100,8 +100,8 @@ describe('POST user login test', () => {
     chai.request(app)
       .post('/api/v1/auth/login')
       .send({
-        email: "tester@no-reply.com",
-        password: "tester"
+        email: 'tester@no-reply.com',
+        password: 'tester'
       })
       .end((err, res) => {
         expect(err).to.be.null;
@@ -117,8 +117,8 @@ describe('POST user login test', () => {
     chai.request(app)
       .post('/api/v1/auth/login')
       .send({
-        email: "",
-        password: "tester"
+        email: '',
+        password: 'tester'
       })
       .end((err, res) => {
         expect(err).to.be.null;
@@ -141,9 +141,9 @@ describe('POST  create / send email ', () => {
     chai.request(app)
       .post('/api/v1/messages/')
       .send({
-        subject: "Congratulations",
-        message: "You have been accepted into the fellowship",
-        status: "sent",
+        subject: 'Congratulations',
+        message: 'You have been accepted into the fellowship',
+        status: 'sent',
         parentMessageId: 1
       })
       .end((err, res) => {
@@ -161,9 +161,9 @@ describe('POST  create / send email ', () => {
     chai.request(app)
       .post('/api/v1/messages/')
       .send({
-        subject: "",
-        message: "You have been accepted into the fellowship",
-        status: "sent",
+        subject: '',
+        message: 'You have been accepted into the fellowship',
+        status: 'sent',
         parentMessageId: 1
       })
       .end((err, res) => {
@@ -258,7 +258,7 @@ describe('GET fetch single message ', () => {
         res.should.have.status(404);
         res.body.should.have.property('status');
         res.body.should.have.property('error');
-        expect(res.body.error).to.be.equal("message does not exist");
+        expect(res.body.error).to.be.equal('message does not exist');
         done();
       })
   });
@@ -275,9 +275,8 @@ describe('DELETE delete specific mail message ', () => {
       .delete(`/api/v1/messages/${id}`)
       .end((err, res) => {
         expect(err).to.be.null;
-        res.should.have.status(200);
-        res.body.should.have.property('status');
-        res.body.should.have.property('data');
+        res.should.have.status(204);
+        res.should.have.property('status');
         done();
       })
   });
@@ -291,7 +290,7 @@ describe('DELETE delete specific mail message ', () => {
         res.should.have.status(404);
         res.body.should.have.property('status');
         res.body.should.have.property('error');
-        expect(res.body.error).to.be.equal("message does not exist");
+        expect(res.body.error).to.be.equal('message does not exist');
         done();
       })
   });
