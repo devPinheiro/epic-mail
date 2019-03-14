@@ -20,7 +20,7 @@ class MessageController {
       newMessage.subject = req.body.subject;
       newMessage.message = req.body.message;
       newMessage.parentMessageId = req.body.parentMessageId;
-      newMessage.status = req.body.status;
+      newMessage.status = 'sent';
 
       // push to mock db
       message.push(newMessage);
@@ -40,10 +40,12 @@ class MessageController {
 
   static getAllMessages(req, res) {
     if (message.length !== 0) {
+
+      const receivedMessage = message.filter(msg => msg.status !== 'sent' && msg.status !== 'draft');
       // send response to clientside
       return res.status(200).json({
         status: 200,
-        data: message,
+        data: receivedMessage,
       });
     }
     // send response to clientside
