@@ -40,7 +40,6 @@ class MessageController {
 
   static getAllMessages(req, res) {
     if (message.length !== 0) {
-
       const receivedMessage = message.filter(msg => msg.status !== 'sent' && msg.status !== 'draft');
       // send response to clientside
       return res.status(200).json({
@@ -81,22 +80,22 @@ class MessageController {
   static deleteMessage(req, res) {
     // get message id
     const { id } = req.params;
+    // fetch message using id
+    const singleMessage = message.find(msg => msg.id == id);
 
-    message.map((msg, index) => {
-      if (msg.id === id) {
-        // remove from db
-        message.splice(index, 1);
-
-        // send response to clientside
-        return res.status(200).json({
-          status: 200,
-          data: {
-            message: 'message deleted successfully',
-          },
-        });
-      }
-    });
-
+    if (singleMessage) {
+      message.map((msg, index) => {
+        if (msg.id === id) {
+          // remove from db
+          message.splice(index, 1);
+        }
+      });
+      // send response to clientside
+      return res.status(204).send({
+        status: 204,
+        data: [],
+      });
+    }
     // send response to clientside
     return res.status(404).json({
       status: 404,
