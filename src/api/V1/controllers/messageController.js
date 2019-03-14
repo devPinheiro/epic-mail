@@ -40,10 +40,12 @@ class MessageController {
 
   static getAllMessages(req, res) {
     if (message.length !== 0) {
+
+      const receivedMessage = message.filter(msg => msg.status !== 'sent' && msg.status !== 'draft');
       // send response to clientside
       return res.status(200).json({
         status: 200,
-        data: message,
+        data: receivedMessage,
       });
     }
     // send response to clientside
