@@ -91,8 +91,8 @@ class MessageController {
         }
       });
       // send response to clientside
-      return res.status(200).json({
-        status: 200,
+      return res.status(204).json({
+        status: 204,
         data: {
           message: 'message deleted successfully',
         },
