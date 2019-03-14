@@ -20,7 +20,7 @@ class MessageController {
       newMessage.subject = req.body.subject;
       newMessage.message = req.body.message;
       newMessage.parentMessageId = req.body.parentMessageId;
-      newMessage.status = req.body.status;
+      newMessage.status = 'sent';
 
       // push to mock db
       message.push(newMessage);
