@@ -1,10 +1,12 @@
 {
     "swagger": "2.0",
-    "title": "EPIC Mail API Documentation",
-    "description": "This is an email web app that helps people exchange messages/information over the internet.",
-    "version": "2.0.0",
+    "info":{
+        "title": "EPIC Mail API",
+        "description": "This is an email web app that helps people exchange messages/information over the internet.",
+        "version": "2.0.0"
+    },
     "explore": "true",
-    "host": "localhost:4000",
+    "host": "localhost:4100",
     "basePath": "/api/v1",
     "tags": [
         {
@@ -205,7 +207,7 @@
                     "application/json"
                 ],
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "message/mail deleted successfully"
                     }
                 }
