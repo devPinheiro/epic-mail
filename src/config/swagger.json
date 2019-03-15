@@ -6,7 +6,7 @@
         "version": "2.0.0"
     },
     "explore": "true",
-    "host": "https://epic-mail-devp.herokuapp.com/",
+    "host": "https://epic-mail-devp.herokuapp.com",
     "basePath": "/api/v1",
     "tags": [
         {
