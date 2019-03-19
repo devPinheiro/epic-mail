@@ -26,7 +26,7 @@ an email web app that helps people exchange messages/information over the intern
 
 
 ### API Endpoint
-the working API endpoints
+all working API endpoints
 
 <table>
 
@@ -62,12 +62,6 @@ the working API endpoints
 
 <tr>
    <td>GET</td>
-   <td>/api/v1/messages/unread</td>
-   <td>fetch all unread emails for a user</td>
-</tr>
-
-<tr>
-   <td>GET</td>
    <td>/api/v1/messages/sent</td>
    <td>fetch all sent emails for a user</td>
 </tr>
@@ -90,4 +84,21 @@ the working API endpoints
    <td>delete an email in a user's inbox</td>
 </tr>
 
+<tr>
+   <td>POST</td>
+   <td>/api/v1/reset</td>
+   <td>user can reset password</td>
+</tr>
+
+<tr>
+   <td>GET</td>
+   <td>/api/v1/confirmReset/:email&:password</td>
+   <td>user can activate reset password through this endpoint</td>
+</tr>
+
+<tr>
+   <td>GET</td>
+   <td>/api/v1/api-docs</td>
+   <td>Swagger API documentation</td>
+</tr>
 </table>

@@ -1,4 +1,4 @@
-import user from '../mockDB/userModel';
+import user from '../models/userModel';
 import tokenizer from '../helper/jwt-token';
 
 class UserController {

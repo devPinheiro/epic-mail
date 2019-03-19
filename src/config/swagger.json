@@ -1,6 +1,6 @@
 {
     "swagger": "2.0",
-    "info":{
+    "info": {
         "title": "EPIC Mail API",
         "description": "This is an email web app that helps people exchange messages/information over the internet.",
         "version": "2.0.0"
@@ -8,8 +8,7 @@
     "explore": "true",
     "host": "epic-mail-devp.herokuapp.com",
     "basePath": "/api/v1",
-    "tags": [
-        {
+    "tags": [{
             "name": "Messages",
             "description": "API endpoints for all messages"
         },
@@ -35,14 +34,12 @@
                 ],
                 "summary": "POST API endpoint for user login",
                 "description": "User Login",
-                "parameters": [
-                    {
-                        "name": "login",
-                        "description": "Login params ",
-                        "in": "body",
-                        "required": "true"
-                    }
-                ],
+                "parameters": [{
+                    "name": "login",
+                    "description": "Login params ",
+                    "in": "body",
+                    "required": "true"
+                }],
                 "produces": [
                     "application/json"
                 ],
@@ -60,14 +57,12 @@
                 ],
                 "summary": "POST API endpoint for creating new user",
                 "description": "Create new users",
-                "parameters": [
-                    {
-                        "name": "user",
-                        "description": "User params to create new user",
-                        "in": "body",
-                        "required": "true"
-                    }
-                ],
+                "parameters": [{
+                    "name": "user",
+                    "description": "User params to create new user",
+                    "in": "body",
+                    "required": "true"
+                }],
                 "produces": [
                     "application/json"
                 ],
@@ -85,14 +80,61 @@
                 ],
                 "summary": "POST API endpoint for creating new messages",
                 "description": "Create email and send",
-                "parameters": [
-                    {
-                        "name": "message",
-                        "description": "Message params to create new message",
-                        "in": "body",
-                        "required": "true"
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "createdOn": {
+                                    "type": "Datetime",
+                                    "example": "Datetime"
+                                },
+                                "subject": {
+                                    "type": "string",
+                                    "example": "Andela"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "You have made it to the Fellowship"
+                                },
+                                "senderId": {
+                                    "type": "integer",
+                                    "example": 2
+                                },
+                                "receiverId": {
+                                    "type": "integer",
+                                    "example": 2
+                                },
+                                "parentMessageId": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "example": "sent"
+                                }
+                            },
+                            "example": {
+                                "subject": "I have a serious bug again",
+                                "message": "You have been accepted into the fellowship",
+                                "status": "sent",
+                                "parentMessageId": 1,
+                                "senderId": 2
+                            }
+                        }
                     }
-                ],
+                },
+
+                "parameters": [{
+                    "name": "message",
+                    "description": "Message params to create new message",
+                    "in": "body",
+                    "required": "true"
+                }],
                 "produces": [
                     "application/json"
                 ],
@@ -108,14 +150,12 @@
                 ],
                 "summary": "GET API endpoint for getting all received mails",
                 "description": "Get all received mails",
-                "parameters": [
-                    {
-                        "name": "messages",
-                        "type": "string",
-                        "description": "fetch all received message/mail fom database",
-                        "in": "path"
-                    }
-                ],
+                "parameters": [{
+                    "name": "messages",
+                    "type": "string",
+                    "description": "fetch all received message/mail fom database",
+                    "in": "path"
+                }],
                 "produces": [
                     "application/json"
                 ],
@@ -126,62 +166,60 @@
                 }
             }
         },
-         "/messages/sent": {
-             "parameters": [{
-                 "name": "messages",
-                 "type": "string",
-                 "in": "path",
-                 "description": "status of the message/mail"
-             }],
-             "get": {
-                 "tags": [
-                     "Messages"
-                 ],
-                 "summary": "GET API endpoint for getting all sent message/mail",
-                 "description": "fetch all sent message/mail fom database",
-                 "produces": [
-                     "application/json"
-                 ],
-                 "responses": {
-                     "200": {
-                         "description": "found sent message/mail"
-                     }
-                 }
-             }
-            },
-            "/messages/unread": {
-                "parameters": [{
-                    "name": "messages",
-                    "type": "string",
-                    "in": "path",
-                    "description": "status of the message/mail"
-                }],
-                "get": {
-                    "tags": [
-                        "Messages"
-                    ],
-                    "summary": "GET API endpoint for getting all unread message/mail",
-                    "description": "fetch all unread message/mail fom database",
-                    "produces": [
-                        "application/json"
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "found unread message/mail"
-                        }
+        "/messages/sent": {
+            "parameters": [{
+                "name": "messages",
+                "type": "string",
+                "in": "path",
+                "description": "status of the message/mail"
+            }],
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "GET API endpoint for getting all sent message/mail",
+                "description": "fetch all sent message/mail fom database",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "found sent message/mail"
                     }
                 }
-            },
-        "/messages/{id}": {
-            "parameters": [
-                {
-                    "name": "id",
-                    "type": "string",
-                    "in": "path",
-                    "required": "true",
-                    "description": "id of the message"
+            }
+        },
+        "/messages/unread": {
+            "parameters": [{
+                "name": "messages",
+                "type": "string",
+                "in": "path",
+                "description": "status of the message/mail"
+            }],
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "GET API endpoint for getting all unread message/mail",
+                "description": "fetch all unread message/mail fom database",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "found unread message/mail"
+                    }
                 }
-            ],
+            }
+        },
+        "/messages/{id}": {
+            "parameters": [{
+                "name": "id",
+                "type": "string",
+                "in": "path",
+                "required": "true",
+                "description": "id of the message"
+            }],
             "get": {
                 "tags": [
                     "Messages"
@@ -214,130 +252,130 @@
             }
         }
     },
-    "definitions": {
-        "Login": {
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
-            }
-        },
-        "LoginR": {
-            "properties": {
-                "status": {
-                    "type": "integer"
-                },
-                "data": {
-                    "token": {
+    "components": {
+        "schemas": {
+            "Login": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
                         "type": "string"
                     }
                 }
-            }
-        },
-        "SignupR": {
-            "properties": {
-                "status": {
-                    "type": "integer"
-                },
-                "data": {
-                    "token": {
+            },
+            "LoginR": {
+                "properties": {
+                    "status": {
+                        "type": "integer"
+                    },
+                    "data": {
+                        "token": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "SignupR": {
+                "properties": {
+                    "status": {
+                        "type": "integer"
+                    },
+                    "data": {
+                        "token": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "Message": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "createdOn": {
+                        "type": "Datetime"
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "senderId": {
+                        "type": "integer"
+                    },
+                    "receiverId": {
+                        "type": "integer"
+                    },
+                    "parentMessageId": {
+                        "type": "integer"
+                    },
+                    "status": {
                         "type": "string"
                     }
                 }
-            }
-        },
-        "User": {
-            "required": [
-                "firstName",
-                "lastName",
-                "email",
-                "password"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
+            },
+            "Messages": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "createdOn": {
+                        "type": "Datetime"
+                    },
+                    "subject": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "senderId": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "receiverId": {
+                        "type": "integer"
+                    },
+                    "parentMessageId": {
+                        "type": "integer"
+                    },
+                    "status": {
+                        "type": "string"
+                    }
                 },
-                "firstName": {
-                    "type": "string"
-                },
-                "lastName": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "integer"
-                }
-            }
-        },
-        "Message": {
-            "required": [
-                "id"
-                
-            ],
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "createdOn": {
-                    "type": "Datetime"
-                },
-                "subject": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "senderId": {
-                    "type": "integer"
-                },
-                "receiverId": {
-                    "type": "integer"
-                },
-                "parentMessageId": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "Messages": {
-              "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "createdOn": {
-                    "type": "Datetime"
-                },
-                "subject": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                },
-                "senderId": {
-                    "type": "integer"
-                },
-                "receiverId": {
-                    "type": "integer"
-                },
-                "parentMessageId": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "string"
+                "example": {
+                    "subject": "I have a serious bug again",
+                    "message": "You have been accepted into the fellowship",
+                    "status": "sent",
+                    "parentMessageId": 1,
+                    "senderId": 2
                 }
             }
         }
