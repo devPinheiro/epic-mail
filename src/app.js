@@ -2,8 +2,8 @@ import express from 'express';
 import logger from 'morgan';
 import swagger from 'swagger-ui-express';
 import swaggerDocument from './config/swagger.json';
-import userRoute from './api/V1/router/userRouter';
-import messageRoute from './api/V1/router/messageRouter';
+import userRoute from './api/V1/routes/userRouter';
+import messageRoute from './api/V1/routes/messageRouter';
 
 /**
  *
@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger('dev'));
 
 // api endpoints
+app.get('/', (req, res) => res.status(200).json('Welcome to EPIC mail'));
 app.use('/api/v1', userRoute);
 app.use('/api/v1', messageRoute);
 

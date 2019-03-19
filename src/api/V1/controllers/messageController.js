@@ -1,5 +1,5 @@
 import uuid from 'uuid';
-import message from '../mockDB/messageModel';
+import message from '../models/messageModel';
 
 class MessageController {
   static composeMessage(req, res) {
