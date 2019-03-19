@@ -750,9 +750,12 @@ a {
 
 
 @media(max-width:899px) {
-    .linker {
-        display: none;
+    .container-nav {
+        display: grid;
+        grid-gap: 1px;
+        grid-template-columns: 300px auto;
     }
+    
     .container-main{
         margin-top: 80px;
         
@@ -982,6 +985,22 @@ a {
       border: none;
       background-color: #eeeded;
   }
+  .container-nav-sm {
+      display: grid !important;
+      grid-gap: 1px !important;
+      grid-template-columns: 200px auto !important;
+  }
+  .container-nav {
+      display: block;
+      grid-gap: 1px;
+      grid-template-columns: 1fr auto;
+    }
+
+    .container-grid-mail-action {
+        display: block;
+        grid-gap: 1px;
+        grid-template-columns: 2fr 1fr;
+    }
 
   .nav-link .link-item {
       padding: 15px 15px 10px 30px;
