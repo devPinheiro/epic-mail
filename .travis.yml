@@ -7,11 +7,12 @@ language: node_js
 node_js:
   - node
 before_script:
+  - psql -c 'create database epic_devp;' -U postgres
   - npm i -g nyc
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-  - psql -c 'create database travis_ci_table;' -U postgres
+ 
 script:
   - npm run test 
 after_script:
