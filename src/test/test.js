@@ -4,7 +4,7 @@ import app from '../app';
 import tables from '../api/V1/models/db';
 
 const should = chai.should();
-const expect = chai.expect;
+const {expect} = chai;
 chai.use(chaiHttp);
 
 
@@ -16,7 +16,7 @@ describe('POST register a new user test', () => {
   it('It should allow new users sign up', (done) => {
     // using chai-http plugin
     chai.request(app)
-      .post('/api/v1/auth/signup/')
+      .post('/api/v1/auth/signup')
       .send({
         firstName: 'tester',
         lastName: 'tester',
@@ -26,7 +26,7 @@ describe('POST register a new user test', () => {
       })
       .end((err, res) => {
         expect(err).to.be.null;
-        res.should.have.status(400);
+        res.should.have.status(201);
         res.body.should.have.property('status');
         res.body.should.have.property('data');
         done();
@@ -250,10 +250,10 @@ describe('GET fetch single message ', () => {
       .set('x-access-token', token)
       .end((err, res) => {
         expect(err).to.be.null;
-        res.should.have.status(404);
+        res.should.have.status(400);
         res.body.should.have.property('status');
         res.body.should.have.property('error');
-        expect(res.body.error).to.be.equal('message does not exist');
+        expect(res.body.error.id[0]).to.be.equal('The id must be a number.');
         done();
       });
   });
@@ -271,7 +271,6 @@ describe('DELETE delete specific mail message ', () => {
         expect(err).to.be.null;
         res.should.have.status(200);
         res.should.have.property('status');
-        res.should.have.property('data');
         done();
       });
   });
@@ -291,7 +290,6 @@ describe('DELETE delete specific mail message ', () => {
       });
   });
 });
-
 
 
 // Custom Error Handling Tests

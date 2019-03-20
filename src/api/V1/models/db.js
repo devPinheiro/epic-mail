@@ -67,15 +67,20 @@ const createInbox = `CREATE TABLE IF NOT EXISTS
                           FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE
                         );`;
 
-const dropTablesQuery = `                    
-                        DROP TABLE IF EXISTS inbox;
-                        DROP TABLE IF EXISTS sent;
-                        DROP TABLE IF EXISTS messages;
+const dropInboxQuery = `                    
+                        DROP TABLE IF EXISTS inbox;                       
+                        `;
+const dropSentQuery = `                    
+                        DROP TABLE IF EXISTS sent;                      
+                        `;
+const dropMessagesQuery = `                    
+                        DROP TABLE IF EXISTS messages;                       
+                        `;
+const dropUsersQuery = `                    
                         DROP TABLE IF EXISTS users;                        
                         `;
-
 // create all tables
-const createTablesQuery = `${dropTablesQuery}  ${createMessage} ${createInbox} ${createSent} ${createUser}`;
+const createTablesQuery = `${dropInboxQuery} ${dropSentQuery}  ${dropMessagesQuery}  ${dropUsersQuery} ${createMessage} ${createInbox} ${createSent} ${createUser}`;
 
 const createAllTables = () => {
   pool.query(createTablesQuery, (err, res) => {
