@@ -1,147 +1,326 @@
-import uuid from 'uuid';
-import message from '../models/messageModel';
+import moment from 'moment';
+import db from '../models/index';
+import validator from '../helper/validator';
+import queryBuilder from '../helper/queryBuilder';
+
 
 class MessageController {
-  static composeMessage(req, res) {
-    const today = new Date();
-
-    // empty object to store created messages
-    const newMessage = {};
+  // Implement async func for create method
+  static async composeMessage(req, res) {
+    /**
+     *
+     * @param {*} req
+     * @param {*} res
+     *
+     * 1. query receiver id using his/her mail
+     * 2. if user exists, insert first into message table
+     *    then insert also into inbox of thr receiver
+     *    then insert into sent table of the receiver
+     */
 
     // validate user input
-    if (req.body.subject !== '' && req.body.message !== '' && typeof req.body.subject === 'string') {
-      // set message entry object properties with values
-      newMessage.id = uuid();
-      newMessage.createdOn = today.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-      newMessage.subject = req.body.subject;
-      newMessage.message = req.body.message;
-      newMessage.parentMessageId = req.body.parentMessageId;
-      newMessage.status = 'sent';
-
-      // push to mock db
-      message.push(newMessage);
-
-      // send response to clientside
-      return res.status(201).json({
-        status: 201,
-        data: newMessage,
+    const { success, error } = validator.messageValidate(req.body);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
       });
     }
-    // send response to clientside
-    return res.status(400).json({
-      status: 400,
-      error: 'enter valid input',
-    });
-  }
+    // let's try and catch for the async func in case the promise fail to resolve
+    try {
+    // fetch id of the reciver
+      const receiverId = await queryBuilder.receiverId(req.body.receiverId);
+      if (receiverId) {
+        // Insert into db
+        const insertMessageString = `INSERT INTO
+                           messages(subject, message, parent_message_id, status, created_on)
+                           VALUES($1, $2, $3, $4, $5) 
+                           returning *`;
 
-  static getAllMessages(req, res) {
-    if (message.length !== 0) {
-      const receivedMessage = message.filter(msg => msg.status !== 'sent' && msg.status !== 'draft');
+        const messageValues = [
+          req.body.subject,
+          req.body.message,
+          1,
+          'sent',
+          moment(new Date()),
+        ];
+
+        /**
+         * TODO - if statement for Draft and Sent Messages
+         *
+         *
+         *
+         *
+
+         */
+        const { rows } = await db.query(insertMessageString, messageValues);
+        const msgId = rows[0].id;
+
+        // insert into inbox
+        const inboxValues = [
+          msgId,
+          receiverId,
+          0,
+          'unread',
+        ];
+
+        // insert into inbox table
+        const { insertBox } = await queryBuilder.insertInbox(inboxValues);
+
+        // fetch id of the sender
+        const senderId = await queryBuilder.senderId(req.user.id);
+        const sentValues = [
+          msgId,
+          senderId,
+          0,
+        ];
+        // insert into sent tables
+        const { sentBox } = await queryBuilder.insertSent(sentValues);
+        if (insertBox && sentBox) {
+          // send response to clientside
+          return res.status(201).json({
+            status: 201,
+            data: rows[0],
+          });
+        }
+      }
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error: 'receiver does not exist',
+      });
+
+      // catch any error if promise fail to resolve
+    } catch (err) {
       // send response to clientside
-      return res.status(200).json({
-        status: 200,
-        data: receivedMessage,
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
       });
     }
-    // send response to clientside
-    return res.status(404).json({
-      status: 404,
-      error: 'no messages found',
-    });
   }
 
-  static getOneMessage(req, res) {
-    // get message id
+  // Implement async method for received all mails
+  static async getInboxMessage(req, res) {
+    /**
+      *
+      * @param {*} req
+      * @param {*} res
+      *
+      */
+
+    try {
+      const { allInbox } = await queryBuilder.fetchAllInbox(req.user.id);
+      if (allInbox) {
+        return res.status(200).json({
+          status: 200,
+          data: allInbox,
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'no messages found',
+      });
+    } catch (error) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
+
+  // Implement async method for all unread mails
+  static async getUnreadMessage(req, res) {
+    /**
+     *
+     * @param {*} req
+     * @param {*} res
+     *
+     */
+
+    try {
+      const { allUnread } = await queryBuilder.fetchAllUnread(req.user.id);
+      if (allUnread) {
+        return res.status(200).json({
+          status: 200,
+          data: allUnread,
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'no messages found',
+      });
+    } catch (error) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
+
+
+  // Implement async method for all sent mails
+  static async getSentMessage(req, res) {
+    /**
+     *
+     * @param {*} req
+     * @param {*} res
+     *
+     */
+
+    try {
+      const { allSent } = await queryBuilder.fetchAllSent(req.user.id);
+      if (allSent) {
+        return res.status(200).json({
+          status: 200,
+          data: allSent,
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'no messages found',
+      });
+    } catch (error) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
+
+  // Implement async method for fetching one mail
+  static async getOneMessage(req, res) {
+    /**
+     *
+     * @param {*} req
+     * @param {*} res
+     *
+     */
+    // validate user input
     const { id } = req.params;
+    const { success, error } = validator.paramsValidate(id);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
 
-    // fetch message using id
-    const singleMessage = message.find(msg => msg.id == id);
-
-    // if message does not exists
-    if (!singleMessage) {
-      // send response to clientside
+    try {
+      // update this message to read'
+      const read = await queryBuilder.updateReadMessage(id);
+      // fetch message
+      const { singleMessage } = await queryBuilder.fetchOneMessage(id, req.user.id);
+      if (singleMessage && read) {
+        return res.status(200).json({
+          status: 200,
+          data: singleMessage,
+        });
+      }
       return res.status(404).json({
         status: 404,
         error: 'message does not exist',
       });
+    } catch (err) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
     }
-
-    // send response to clientside
-    return res.status(200).json({
-      status: 200,
-      data: singleMessage,
-    });
   }
 
-  static deleteMessage(req, res) {
-    // get message id
+  // Implement async method for all deleting a mail
+  static async deleteMessage(req, res) {
+    /**
+      *
+      * @param {*} req
+      * @param {*} res
+      *
+      */
+    // validate user input
     const { id } = req.params;
-    // fetch message using id
-    const singleMessage = message.find(msg => msg.id == id);
-
-    if (singleMessage) {
-      message.map((msg, index) => {
-        if (msg.id === id) {
-          // remove from db
-          message.splice(index, 1);
-        }
-      });
-      // send response to clientside
-      return res.status(204).send({
-        status: 204,
-        data: [],
+    const { success, error } = validator.paramsValidate(id);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
       });
     }
-    // send response to clientside
-    return res.status(404).json({
-      status: 404,
-      error: 'message does not exist',
-    });
-  }
 
-  static unreadMessage(req, res) {
-    if (message.length !== 0) {
-      // get only unread messages
-      const unread = message.filter(msg => msg.status === 'unread');
-
-      if (unread) {
-        // send response to clientside
+    try {
+      // set this message to delete = true
+      const { singleMessage } = await queryBuilder.deleteInboxMessage(id);
+      // fetch message
+      if (singleMessage) {
         return res.status(200).json({
           status: 200,
-          data: unread,
+          data: {
+            message: 'message deleted successfuly',
+          },
         });
       }
-    }
-    // send response to clientside
-    return res.status(404).json({
-      status: 404,
-      error: 'no unread messages found',
-    });
-  }
-
-  static sentMessage(req, res) {
-    if (message.length !== 0) {
-      // get only sent messages
-      const sent = message.filter(msg => msg.status === 'sent');
-
-      if (sent) {
+      return res.status(404).json({
+        status: 404,
+        error: 'message does not exist',
+      });
+    } catch (err) {
       // send response to clientside
-        return res.status(200).json({
-          status: 200,
-          data: sent,
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
+
+  // Implement async method for retracting a mail
+  static async retractMessage(req, res) {
+    /**
+      *
+      * @param {*} req
+      * @param {*} res
+      *
+      */
+    // validate user input
+    const { id } = req.params;
+    const { success, error } = validator.paramsValidate(id);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
+
+    try {
+      // set this message to delete = true
+      const { singleMessage } = await queryBuilder.deleteSentMessage(id);
+      // fetch message
+      if (singleMessage) {
+        return res.status(204).json({
+          status: 204,
+          data: {
+            message: 'message deleted successfuly',
+          },
         });
       }
+      return res.status(404).json({
+        status: 404,
+        error: 'message does not exist',
+      });
+    } catch (err) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
     }
-    // send response to clientside
-    return res.status(404).json({
-      status: 404,
-      error: 'no sent messages found',
-    });
   }
 }
-
 export default MessageController;

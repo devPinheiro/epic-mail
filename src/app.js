@@ -5,6 +5,7 @@ import swaggerDocument from './config/swagger.json';
 import userRoute from './api/V1/routes/userRouter';
 import messageRoute from './api/V1/routes/messageRouter';
 
+
 /**
  *
  * instantiate express app
@@ -25,27 +26,21 @@ const PORT = process.env.PORT || 4100;
  * @method express.urlencoded() parses incoming requests with urlencode payloads
  *  */
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+  extended: true,
+}));
 app.use(logger('dev'));
 
 // api endpoints
 app.get('/', (req, res) => res.status(200).json('Welcome to EPIC mail'));
-app.use('/api/v1', userRoute);
-app.use('/api/v1', messageRoute);
+app.use('/api/v1/auth', userRoute);
+app.use('/api/v1/messages', messageRoute);
 
 // swagger api docs endpoint
 const options = {
   explorer: true,
 };
 app.use('/api-docs', swagger.serve, swagger.setup(swaggerDocument, options));
-
-app.use((req, res, next) => {
-  const error = new Error('Not found');
-  res.status(404).json({
-    message: 'Invalid route',
-  });
-  next(error);
-});
 
 
 app.listen(PORT);
