@@ -1,239 +1,87 @@
-const { Pool } = require('pg');
-const dotenv = require('dotenv');
+import { Pool } from 'pg';
+import dotenv from 'dotenv';
+import config from '../config';
 
 dotenv.config();
 
+let conString;
+if (process.env.NODE_env === 'test') {
+  conString = config.test.db;
+} else if (process.env.NODE_env === 'development') {
+  conString = config.development.db;
+} else if (process.env.NODE_env === 'production') {
+  conString = config.production.db;
+}
+
+// Create an instance of pool for connection
 const pool = new Pool({
-  connectionString: process.env.DATABASE_CLOUD_URL,
+  connectionString: conString,
 });
 
 pool.on('connect', () => {
+  console.log('connected to the db');
 });
 
-// Create User Table
-const createUserTable = () => {
-  const queryString = `CREATE TABLE IF NOT EXISTS
-                        users(
-                          id UUID PRIMARY KEY,
-                          email VARCHAR(128) NOT NULL,
-                          first_name VARCHAR(128) NOT NULL,
-                          last_name VARCHAR(128) NOT NULL,
-                          password VARCHAR(128) NOT NULL,
-                          role VARCHAR(128) NOT NULL
-                        )`;
-
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-// Drop Tables
-const dropUserTables = () => {
-  const queryString = 'DROP TABLE IF EXISTS users';
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
 // Create Message Table
-const createMessageTable = () => {
-  const queryString = `CREATE TABLE IF NOT EXISTS
+const createMessage = `
+                     CREATE TABLE IF NOT EXISTS
                       messages(
-                        id UUID PRIMARY KEY,
+                        id SERIAL PRIMARY KEY,
                         subject VARCHAR(128) NOT NULL,
                         message VARCHAR(128) NOT NULL,
-                        parent_message_id UUID NOT NULL,
+                        parent_message_id INTEGER NOT NULL,
                         status VARCHAR(10) NOT NULL,
                         created_on TIMESTAMP,
                         FOREIGN KEY (parent_message_id) REFERENCES messages (id) ON DELETE CASCADE
-                      )`;
+                        );`;
 
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
+// Create User Table
+const createUser = `
+                    CREATE TABLE IF NOT EXISTS
+                    users(
+                        id SERIAL PRIMARY KEY,
+                        email VARCHAR(128) NOT NULL,
+                        first_name VARCHAR(128) NOT NULL,
+                        last_name VARCHAR(128) NOT NULL,
+                        password VARCHAR(128) NOT NULL,
+                        role VARCHAR(128) NOT NULL
+                       );`;
 
-
-// Drop Tables
-const dropMessageTables = () => {
-  const queryString = 'DROP TABLE IF EXISTS messages';
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-// Create Contacts Table
-const createContactsTable = () => {
-  const queryString = `CREATE TABLE IF NOT EXISTS
-                        contacts(
-                          id UUID PRIMARY KEY,
-                          email VARCHAR(128) NOT NULL,
-                          first_name VARCHAR(128) NOT NULL,
-                          last_name VARCHAR(128) NOT NULL,
-                          owner_id UUID NOT NULL,
-                          FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
-                        )`;
-
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-
-// Contact Tables
-const dropContactTables = () => {
-  const queryString = 'DROP TABLE IF EXISTS contacts';
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-// Create Inbox Table
-const createInboxTable = () => {
-  const queryString = `CREATE TABLE IF NOT EXISTS
-                        inbox(
-                          message_id UUID PRIMARY KEY,
-                          receiver_id UUID NOT NULL,
-                          delete UUID NOT NULL,
-                          status VARCHAR(128),
-                          FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE
-                        )`;
-
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-// Drop Tables
-const dropInboxTables = () => {
-  const queryString = 'DROP TABLE IF EXISTS inbox';
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-// Create Sent Table
-const createSentTable = () => {
-  const queryString = `CREATE TABLE IF NOT EXISTS
+const createSent = `CREATE TABLE IF NOT EXISTS
                         sent(
-                            message_id UUID PRIMARY KEY,
-                            sender_id UUID NOT NULL,
-                            delete UUID NOT NULL,
-                            status VARCHAR(128),
+                            id SERIAL,
+                            message_id INTEGER PRIMARY KEY,
+                            sender_id INTEGER NOT NULL,
+                            delete INTEGER NOT NULL,
                             FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE
 
-                        )`;
+                        );`;
 
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
+const createInbox = `CREATE TABLE IF NOT EXISTS
+                        inbox(
+                          id SERIAL,
+                          message_id INTEGER PRIMARY KEY,
+                          receiver_id INTEGER NOT NULL,
+                          delete INTEGER NOT NULL,
+                          status VARCHAR(128),
+                          FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE
+                        );`;
 
-
-// Drop Tables
-const dropSentTables = () => {
-  const queryString = 'DROP TABLE IF EXISTS sent';
-  pool.query(queryString)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-
-pool.on('remove', () => {
-  process.exit(0);
-});
+const dropTablesQuery = `                    
+                        DROP TABLE IF EXISTS inbox;
+                        DROP TABLE IF EXISTS sent;
+                        DROP TABLE IF EXISTS messages;
+                        DROP TABLE IF EXISTS users;                        
+                        `;
 
 // create all tables
+const createTablesQuery = `${dropTablesQuery}  ${createMessage} ${createInbox} ${createSent} ${createUser}`;
+
 const createAllTables = () => {
-  createUserTable();
-  createMessageTable();
-  createInboxTable();
-  createSentTable();
-  createContactsTable();
+  pool.query(createTablesQuery, (err, res) => {
+    console.log(err, res);
+    pool.end();
+  });
 };
 
-// drop all tables
-const dropAllTables = () => {
-  dropMessageTables();
-  dropUserTables();
-  dropContactTables();
-  dropSentTables();
-  dropInboxTables();
-};
-
-module.exports = {
-  createAllTables,
-  createUserTable,
-  createMessageTable,
-  createInboxTable,
-  createSentTable,
-  createContactsTable,
-  dropUserTables,
-  dropMessageTables,
-  dropSentTables,
-  dropInboxTables,
-  dropContactTables,
-  dropAllTables,
-};
-
-require('make-runnable');
+export default createAllTables();
