@@ -125,7 +125,7 @@ class GroupController {
     }
   }
 
-// Implement async method for update group
+  // Implement async method for update group
   static async updateGroup(req, res) {
     // validate user input
     const { name } = req.body;
@@ -167,6 +167,64 @@ class GroupController {
       return res.status(500).json({
         status: 500,
         error: 'server internal error',
+      });
+    }
+  }
+
+   // Implement add user to group
+  static async addUserToGroup(req, res) {
+    /**
+     * check if user exists
+     */
+    const { groupId } = req.params;
+
+    const groupIdn = groupId.trim();
+    const { success, error } = validator.resetValidate(req.body);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
+    const { group } = await queryBuilder.checkGroupExists(groupIdn);
+    if (!group) {
+      return res.status(404).json({
+        status: 404,
+        error: 'group does not exists',
+      });
+    }
+    const { user } = await queryBuilder.checkUser(req.body.email);
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        error: 'user does not exists',
+      });
+    }
+    // if user already exists in db
+    const { alUser } = await queryBuilder.checkUserExistGroup(user.id, groupIdn);
+    if (alUser) {
+      return res.status(400).json({
+        status: 400,
+        error: 'user already exist in group',
+      });
+    }
+    try {
+      const { addUser } = await queryBuilder.insertUserGroup(user, groupIdn);
+      if (!addUser) {
+        return res.status(400).json({
+          status: 400,
+          error: 'user can not be added to this group',
+        });
+      }
+      return res.status(201).json({
+        status: 201,
+        data: addUser,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: 500,
+        error: 'internal server error',
       });
     }
   }
