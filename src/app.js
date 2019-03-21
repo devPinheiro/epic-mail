@@ -4,6 +4,7 @@ import swagger from 'swagger-ui-express';
 import swaggerDocument from './config/swagger.json';
 import userRoute from './api/V1/routes/userRouter';
 import messageRoute from './api/V1/routes/messageRouter';
+import groupRoute from './api/V1/routes/groupRouter.js';
 
 
 /**
@@ -35,6 +36,7 @@ app.use(logger('dev'));
 app.get('/', (req, res) => res.status(200).json('Welcome to EPIC mail'));
 app.use('/api/v1/auth', userRoute);
 app.use('/api/v1/messages', messageRoute);
+app.use('/api/v1/groups', groupRoute);
 
 // swagger api docs endpoint
 const options = {
