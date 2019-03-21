@@ -33,6 +33,26 @@ describe('POST register a new user test', () => {
       });
   });
 
+  it('It should allow another new user sign up', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send({
+        firstName: 'sam',
+        lastName: 'sammy',
+        email: 'sam@sammy.com',
+        password: 'tester',
+        role: 'admin',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(201);
+        res.body.should.have.property('status');
+        res.body.should.have.property('data');
+        done();
+      });
+  });
+
   it('It should respond with an error if user exists', (done) => {
     // using chai-http plugin
     chai.request(app)
@@ -335,7 +355,6 @@ describe('Password reset', () => {
         done();
       });
   });
-
 });
 
 let groupId;
@@ -410,33 +429,6 @@ describe('Groups test', () => {
       });
   });
 
-  it('It should delete a specific group ', (done) => {
-    // using chai-http plugin
-    chai.request(app)
-      .delete(`/api/v1/groups/${groupId}`)
-      .set('x-access-token', token)
-      .end((err, res) => {
-        expect(err).to.be.null;
-        res.should.have.status(200);
-        res.should.have.property('status');
-        done();
-      });
-  });
-
-  it('It should resturn an error for wrong groupid ', (done) => {
-    // using chai-http plugin
-    chai.request(app)
-      .delete('/api/v1/groups/75')
-      .set('x-access-token', token)
-      .end((err, res) => {
-        expect(err).to.be.null;
-        res.should.have.status(404);
-        res.body.should.have.property('status');
-        res.body.should.have.property('error');
-        done();
-      });
-  });
-
   it('check for wrong input', (done) => {
     // using chai-http plugin
     chai.request(app)
@@ -467,7 +459,7 @@ describe('Groups test', () => {
       });
   });
 
-   it('check if group exists', (done) => {
+  it('update group name', (done) => {
     // using chai-http plugin
     chai.request(app)
       .patch(`/api/v1/groups/${groupId}/testteam`)
@@ -477,11 +469,108 @@ describe('Groups test', () => {
       })
       .end((err, res) => {
         expect(err).to.be.null;
-        res.should.have.status(400);
+        res.should.have.status(200);
         done();
       });
   });
 });
+
+// Add User to Group Test
+describe('Add User to Group Test', () => {
+  it('check for wrong input', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post(`/api/v1/groups/${groupId}/users`)
+      .set('x-access-token', token)
+      .send({
+        email: 'tester@test',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(400);
+        done();
+      });
+  });
+  
+  it('check if group exists', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/groups/7/users')
+      .set('x-access-token', token)
+      .send({
+        email: 'tester@test.com',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+  
+  it('check if user exists', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post(`/api/v1/groups/${groupId}/users`)
+      .set('x-access-token', token)
+      .send({
+        email: 'tester@tessst.com',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+  it('add new user to group', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post(`/api/v1/groups/${groupId}/users`)
+      .set('x-access-token', token)
+      .send({
+        email: 'tester@test.com',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(201);
+        done();
+      });
+  });
+
+});
+
+
+// delete group
+describe('DELETE group tests', () => {
+  it('It should delete a specific group ', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .delete(`/api/v1/groups/${groupId}`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(200);
+        res.should.have.property('status');
+        done();
+      });
+  });
+
+  it('It should resturn an error for wrong groupid ', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .delete('/api/v1/groups/75')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(404);
+        res.body.should.have.property('status');
+        res.body.should.have.property('error');
+        done();
+      });
+  });
+});
+
 
 // Custom Error Handling Tests
 describe('Check for any wrong endpoints', () => {

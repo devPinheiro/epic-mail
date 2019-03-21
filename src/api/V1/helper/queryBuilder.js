@@ -235,5 +235,33 @@ export default {
     const group = rows[0];
     return { group };
   },
-  
+
+  async checkUserExistGroup(userId, groupId) {
+    /**
+       * check if group exist in db checkUserExistGroup
+       */
+    const queryString = 'SELECT * FROM group_members WHERE user_id = $1 AND group_id = $2';
+    const { rows } = await db.query(queryString, [userId, groupId]);
+    const alUser = rows[0];
+    return { alUser };
+  },
+  async checkGroupExists(groupId) {
+    /**
+       * check if group exist in db checkUserExistGroup
+       */
+    const queryString = 'SELECT * FROM groups WHERE id = $1 ';
+    const { rows } = await db.query(queryString, [groupId]);
+    const group = rows[0];
+    return { group };
+  },
+  async insertUserGroup(user, groupId) {
+    const queryString = `INSERT INTO 
+                         group_members (user_id, group_id, user_role)
+                         VALUES ($1, $2, $3) 
+                         returning *`;
+    const { rows } = await db.query(queryString, [user.id, groupId, 'member']);
+    const addUser = rows;
+    return { addUser };
+  },
+
 };
