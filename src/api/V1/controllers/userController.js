@@ -127,8 +127,8 @@ class UserController {
     // check if user exists
     const { user } = await queryBuilder.checkUser(req.body.email);
     if (!user) {
-      return res.status(400).json({
-        status: 400,
+      return res.status(404).json({
+        status: 404,
         error: 'user does not exists, try signing up first',
       });
     }
