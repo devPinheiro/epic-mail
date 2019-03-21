@@ -316,7 +316,7 @@ describe('Password reset', () => {
       })
       .end((err, res) => {
         expect(err).to.be.null;
-        res.should.have.status(400);
+        res.body.should.have.status(400);
         done();
       });
   });
@@ -331,7 +331,7 @@ describe('Password reset', () => {
       .end((err, res) => {
         expect(err).to.be.null;
         res.should.have.status(200);
-        res.should.have.property('data');
+        res.should.body.have.property('data');
         done();
       });
   });
