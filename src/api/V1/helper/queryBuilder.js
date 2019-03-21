@@ -272,5 +272,13 @@ export default {
     const delUser = rows[0];
     return { delUser };
   },
-
+  async getUsersInGroup(groupId) {
+    /**
+     * get users
+     */
+    const queryString = 'SELECT user_id FROM group_members WHERE group_id = $1';
+    const { rows } = await db.query(queryString, [groupId]);
+    const users = rows;
+    return { users };
+  },
 };

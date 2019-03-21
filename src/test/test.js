@@ -161,7 +161,7 @@ describe('POST  create / send email ', () => {
       .send({
         subject: 'I have a serious bug again',
         message: 'You have been accepted into the fellowship',
-        receiverId: 'tester@test.com',
+        email: 'tester@test.com',
       })
       .end((err, res) => {
         expect(err).to.be.null;
@@ -577,6 +577,60 @@ describe('Delete User From Group Test', () => {
       .end((err, res) => {
         expect(err).to.be.null;
         res.should.have.status(200);
+        done();
+      });
+  });
+
+});
+
+// Send message to user
+describe('Send message to user', () => {
+
+  it('check for wrong inputs', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post(`/api/v1/groups/${groupId}/messages`)
+      .set('x-access-token', token)
+      .send({
+        subject: "",
+        message: "You have been accepted into the Fellowship"
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(400);
+        done();
+      });
+  });
+
+
+  it('check if user exists', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post(`/api/v1/groups/5/messages`)
+      .set('x-access-token', token)
+      .send({
+        subject: "From HR Group 11",
+        message: "You have been accepted into the Fellowship"
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+it('send message to group', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post(`/api/v1/groups/${groupId}/messages/`)
+      .set('x-access-token', token)
+      .send({
+        subject: "From HR Group 11",
+        message: "You have been accepted into the Fellowship"
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(201);
         done();
       });
   });
