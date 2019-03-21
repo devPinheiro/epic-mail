@@ -89,6 +89,41 @@ class GroupController {
       });
     }
   }
+
+  // Implement async method for delete group
+  static async deleteGroup(req, res) {
+    // validate user input
+    const { id } = req.params;
+    const { success, error } = validator.paramsValidate(id);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
+    try {
+      const { deleteGroup } = await queryBuilder.deleteGroup(id, req.user.id);
+      if (deleteGroup) {
+        return res.status(200).json({
+          status: 200,
+          data: {
+            message: 'group deleted successfully',
+          },
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'no group found with id for this user',
+      });
+    } catch (err) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
 }
 
 export default GroupController;

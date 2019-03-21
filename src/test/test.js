@@ -338,6 +338,7 @@ describe('Password reset', () => {
 
 });
 
+let groupId;
 // Group Test
 describe('Groups test', () => {
   it('unauthorized users cannot create a group', (done) => {
@@ -365,6 +366,7 @@ describe('Groups test', () => {
       .end((err, res) => {
         expect(err).to.be.null;
         res.should.have.status(201);
+        groupId = res.body.data.id;
         done();
       });
   });
@@ -405,6 +407,33 @@ describe('Groups test', () => {
       .end((err, res) => {
         expect(err).to.be.null;
         res.should.have.status(401);
+        done();
+      });
+  });
+
+  it('It should delete a specific group ', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .delete(`/api/v1/groups/${groupId}`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(200);
+        res.should.have.property('status');
+        done();
+      });
+  });
+
+  it('It should resturn an error for wrong groupid ', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .delete('/api/v1/groups/75')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(404);
+        res.body.should.have.property('status');
+        res.body.should.have.property('error');
         done();
       });
   });

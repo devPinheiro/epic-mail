@@ -199,4 +199,16 @@ export default {
     const allGroups = rows;
     return { allGroups };
   },
+   async deleteGroup(paramsId, userId) {
+    /**
+     * delete group
+     */
+    const queryString = `DELETE FROM groups    
+                          WHERE id = $1 AND owner_id = $2
+                          returning *
+                          `;
+    const { rows } = await db.query(queryString, [userId, paramsId]);
+    const deleteGroup = rows[0];
+    return { deleteGroup };
+  },
 };
