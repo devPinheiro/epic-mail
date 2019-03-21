@@ -90,4 +90,22 @@ export default {
       error: validation.errors.all(),
     };
   },
+
+  groupParamsValidate(body, groupId) {
+    const value = {
+      id: groupId,
+      name: body[0],
+      paramName: body[1],
+    };
+    const rules = {
+      id: 'required|numeric',
+      name: 'required|string',
+      paramName: 'required|string',
+    };
+    const validation = new Validator(value, rules);
+    return {
+      success: validation.passes(),
+      error: validation.errors.all(),
+    };
+  },
 };

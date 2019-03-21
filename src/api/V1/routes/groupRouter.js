@@ -6,4 +6,5 @@ const groupRoute = express.Router();
 groupRoute.post('/', auth.verifyToken, GroupController.create);
 groupRoute.get('/', auth.verifyToken, GroupController.getAllGroups);
 groupRoute.delete('/:id', auth.verifyToken, GroupController.deleteGroup);
+groupRoute.patch('/:groupId/:name', auth.verifyToken, GroupController.updateGroup);
 export default groupRoute;

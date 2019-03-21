@@ -339,6 +339,7 @@ describe('Password reset', () => {
 });
 
 let groupId;
+
 // Group Test
 describe('Groups test', () => {
   it('unauthorized users cannot create a group', (done) => {
@@ -361,7 +362,7 @@ describe('Groups test', () => {
       .post('/api/v1/groups')
       .set('x-access-token', token)
       .send({
-        name: 'test team',
+        name: 'testteam',
       })
       .end((err, res) => {
         expect(err).to.be.null;
@@ -370,8 +371,6 @@ describe('Groups test', () => {
         done();
       });
   });
-
-
 
   it('check for wrong input', (done) => {
     // using chai-http plugin
@@ -434,6 +433,51 @@ describe('Groups test', () => {
         res.should.have.status(404);
         res.body.should.have.property('status');
         res.body.should.have.property('error');
+        done();
+      });
+  });
+
+  it('check for wrong input', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .patch('/api/v1/groups/sdf/marketing')
+      .set('x-access-token', token)
+      .send({
+        name: 'HR Team',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(400);
+        done();
+      });
+  });
+
+  it('check if group exists', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .patch('/api/v1/groups/34/marketing')
+      .set('x-access-token', token)
+      .send({
+        name: 'HR Team',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(400);
+        done();
+      });
+  });
+
+   it('check if group exists', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .patch(`/api/v1/groups/${groupId}/testteam`)
+      .set('x-access-token', token)
+      .send({
+        name: 'HR Team',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(400);
         done();
       });
   });

@@ -190,7 +190,7 @@ export default {
     const msgs = rows[0];
     return { msgs };
   },
-   async fetchAllGroups(userId) {
+  async fetchAllGroups(userId) {
     /**
      * get user from db
      */
@@ -199,7 +199,7 @@ export default {
     const allGroups = rows;
     return { allGroups };
   },
-   async deleteGroup(paramsId, userId) {
+  async deleteGroup(paramsId, userId) {
     /**
      * delete group
      */
@@ -211,4 +211,29 @@ export default {
     const deleteGroup = rows[0];
     return { deleteGroup };
   },
+  async updateGroup(values, groupId, userId) {
+    /**
+     * update Group
+     */
+    const queryString = `UPDATE
+                          groups 
+                          SET name = $1      
+                          WHERE id = $2
+                          AND owner_id = $3
+                          returning *
+                          `;
+    const { rows } = await db.query(queryString, [values[0], groupId, userId]);
+    const updatedGroup = rows[0];
+    return { updatedGroup };
+  },
+  async checkGroup(values, userId) {
+    /**
+     * check if group exist in db
+     */
+    const queryString = 'SELECT * FROM groups WHERE name = $1 AND owner_id = $2';
+    const { rows } = await db.query(queryString, [values[1], userId]);
+    const group = rows[0];
+    return { group };
+  },
+  
 };
