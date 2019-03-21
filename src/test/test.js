@@ -291,6 +291,53 @@ describe('DELETE delete specific mail message ', () => {
   });
 });
 
+// Passwword Reset Test
+describe('Password reset', () => {
+  it('check if user exists', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/auth/reset')
+      .send({
+        email: 'sa@epicyyy.com',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+  it('check if user enters wrong input', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/auth/reset')
+      .send({
+        email: ''
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.body.should.have.status(400);
+        done();
+      });
+  });
+
+  it('reset users password', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/auth/reset')
+      .send({
+        email: 'tester@test.com',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(200);
+        res.body.should.have.property('data');
+        done();
+      });
+  });
+
+});
+
 
 // Custom Error Handling Tests
 describe('Check for any wrong endpoints', () => {
