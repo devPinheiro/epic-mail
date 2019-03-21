@@ -1,3 +1,4 @@
+import moment from 'moment';
 import db from '../models/index';
 import service from '../helper/service';
 import validate from '../helper/validator';
@@ -104,6 +105,116 @@ class UserController {
       return res.status(500).json({
         status: 500,
         error: 'internal server error',
+      });
+    }
+  }
+
+  static async reset(req, res) {
+    /** *
+     * 1. verify user identity
+     * 2. reset user password
+     * 3. send user a mail
+     *  */
+    // validate user input
+    const { success, error } = validate.resetValidate(req.body);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
+    // check if user exists
+    const { user } = await queryBuilder.checkUser(req.body.email);
+    if (!user) {
+      return res.status(400).json({
+        status: 400,
+        error: 'user does not exists, try signing up first',
+      });
+    }
+    // generate new password for user
+    const newPassword = (Math.random() * 1000).toString(32).substr(3, 8).toUpperCase();
+    // encrypt user password
+    const encryptedPassword = service.encryptPassword(newPassword);
+    // update user password
+    const queryString = `UPDATE users 
+                                     SET  password = $1 
+                                     WHERE id = $2
+                                     returning *`;
+    const values = [
+      encryptedPassword,
+      user.id,
+    ];
+    const { rows } = await db.query(queryString, values);
+    // send user mail
+    const message = `https://epic-mail-devp.herokuapp.com/api/v1/auth/confirmReset/${rows[0].email}&${newPassword}`;
+    const insertMessageString = `INSERT INTO
+                           messages(subject, message, parent_message_id, status, created_on)
+                           VALUES($1, $2, $3, $4, $5) 
+                           returning *`;
+
+    const messageValues = [
+      'Password Reset',
+      message,
+      1,
+      'sent',
+      moment(new Date()),
+    ];
+    const { msgs } = await queryBuilder.sendResetLink(insertMessageString, messageValues);
+    const msgId = msgs.id;
+    // insert into inbox
+    const inboxValues = [
+      msgId,
+      user.id,
+      0,
+      'unread',
+    ];
+
+    // insert into inbox table
+    const { insertBox } = await queryBuilder.insertInbox(inboxValues);
+    if (!insertBox) {
+      return res.status(400).json({
+        status: 400,
+        error: 'wrong credentials',
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      data: {
+        message: 'check your email for password reset link',
+        email: rows[0].email,
+      },
+    }); 
+  }
+
+  static async confirmReset(req, res) {
+    try {
+      // check if user exists
+      const queryString = 'SELECT * FROM users WHERE email = $1';
+      const { rows } = await db.query(queryString, [req.params.email]);
+      if (!rows[0]) {
+        return res.status(400).json({
+          status: 400,
+          error: 'user does not exists',
+        });
+      }
+      // compare user password
+      if (!service.comparePassword(req.params.password, rows[0].password)) {
+        return res.status(400).json({
+          status: 400,
+          error: 'Your reset password is incorrect',
+        });
+      }
+      // genrate token for user
+      const token = service.generateToken(rows[0].id);
+      return res.status(200).json({
+        status: 200,
+        data: token,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        status: 400,
+        data: 'invalid credentials, contact administrator',
       });
     }
   }

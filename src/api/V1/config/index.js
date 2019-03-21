@@ -9,7 +9,7 @@ const config = {
   },
   production: {
     secret: process.env.secret,
-    db: process.env.DATABASE_CLOUD_URI,
+    db: process.env.DATABASE_CLOUD_URL,
     port: process.env.PORT,
   },
   development: {
