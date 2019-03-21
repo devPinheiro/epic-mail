@@ -4,7 +4,7 @@ import app from '../app';
 import tables from '../api/V1/models/db';
 
 const should = chai.should();
-const {expect} = chai;
+const { expect } = chai;
 chai.use(chaiHttp);
 
 
@@ -312,7 +312,7 @@ describe('Password reset', () => {
     chai.request(app)
       .post('/api/v1/auth/reset')
       .send({
-        email: ''
+        email: '',
       })
       .end((err, res) => {
         expect(err).to.be.null;
@@ -338,6 +338,38 @@ describe('Password reset', () => {
 
 });
 
+// Group Test
+describe('Groups test', () => {
+  it('unauthorized users cannot create a group', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/groups')
+      .send({
+        name: 'test team',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(401);
+        done();
+      });
+  });
+
+
+  it('check for wrong input', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/groups')
+      .set('x-access-token', token)
+      .send({
+        name: '',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(400);
+        done();
+      });
+  });
+});
 
 // Custom Error Handling Tests
 describe('Check for any wrong endpoints', () => {
