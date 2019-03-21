@@ -171,7 +171,7 @@ class GroupController {
     }
   }
 
-   // Implement add user to group
+  // Implement add user to group
   static async addUserToGroup(req, res) {
     /**
      * check if user exists
@@ -282,6 +282,85 @@ class GroupController {
     }
   }
 
+  // send message to users of a group
+  static async sendMessage(req, res) {
+    const { groupId } = req.params;
+    const groupIdn = groupId.trim();
+
+    // validate user input
+    const { success, error } = validator.messageValidate(req.body);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
+
+    const { group } = await queryBuilder.checkGroupExists(groupIdn);
+    if (!group) {
+      return res.status(404).json({
+        status: 404,
+        error: 'group does not exists',
+      });
+    }
+
+    try {
+      // send message to users
+      const { users } = await queryBuilder.getUsersInGroup(groupIdn);
+      const insertMessageString = `INSERT INTO
+                           messages(subject, message, parent_message_id, status, created_on)
+                           VALUES($1, $2, $3, $4, $5) 
+                           returning *`;
+
+      const messageValues = [
+        req.body.subject,
+        req.body.message,
+        1,
+        'sent',
+        moment(new Date()),
+      ];
+
+
+      const { rows } = await db.query(insertMessageString, messageValues);
+      const msgId = rows[0].id;
+      users.forEach((item, i) => {
+        if (item[i] === item.user_id) {
+          // insert into inbox
+          const inboxValues = [
+            msgId,
+            item.user_id,
+            0,
+            'unread',
+          ];
+
+          // insert into inbox table
+          queryBuilder.insertInbox(inboxValues);
+
+          // fetch id of the sender
+          const sentValues = [
+            msgId,
+            groupIdn,
+            0,
+          ];
+          // insert into sent tables
+          queryBuilder.insertSent(sentValues);
+        }
+      });
+
+
+      // send response to clientside
+      return res.status(201).json({
+        status: 201,
+        data: rows[0],
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: 500,
+        error: 'internal server error',
+      });
+    }
+  }
 }
 
 export default GroupController;

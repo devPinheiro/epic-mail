@@ -108,4 +108,18 @@ export default {
       error: validation.errors.all(),
     };
   },
+
+  groupBodyValidate(body) {
+    const value = {
+      name: body.name,
+    };
+    const rules = {
+      name: 'required|min:3',
+    };
+    const validation = new Validator(value, rules);
+    return {
+      success: validation.passes(),
+      error: validation.errors.all(),
+    };
+  },
 };

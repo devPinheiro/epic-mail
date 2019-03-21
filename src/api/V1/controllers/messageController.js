@@ -27,10 +27,31 @@ class MessageController {
         error,
       });
     }
+    if (req.body.draft === 'draft') {
+      // Insert into db
+      const insertMsgString = `INSERT INTO
+                           messages(subject, message, parent_message_id, status, created_on)
+                           VALUES($1, $2, $3, $4, $5) 
+                           returning *`;
+
+      const msgValues = [
+        req.body.subject,
+        req.body.message,
+        1,
+        'sent',
+        moment(new Date()),
+      ];
+
+      const { rows } = await db.query(insertMsgString, msgValues);
+      return res.status(201).json({
+        status: 201,
+        data: rows[0],
+      });
+    }
     // let's try and catch for the async func in case the promise fail to resolve
     try {
-    // fetch id of the reciver
-      const receiverId = await queryBuilder.receiverId(req.body.receiverId);
+    // fetch id of the receiver
+      const receiverId = await queryBuilder.receiverId(req.body.email);
       if (receiverId) {
         // Insert into db
         const insertMessageString = `INSERT INTO
@@ -46,14 +67,6 @@ class MessageController {
           moment(new Date()),
         ];
 
-        /**
-         * TODO - if statement for Draft and Sent Messages
-         *
-         *
-         *
-         *
-
-         */
         const { rows } = await db.query(insertMessageString, messageValues);
         const msgId = rows[0].id;
 

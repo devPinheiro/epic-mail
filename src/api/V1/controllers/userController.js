@@ -92,7 +92,7 @@ class UserController {
       if (!service.comparePassword(req.body.password, rows[0].password)) {
         return res.status(400).json({
           status: 400,
-          error: 'You have entered an incorrect password',
+          error: 'invalid credentials',
         });
       }
       // genrate token for user
@@ -202,7 +202,7 @@ class UserController {
       if (!service.comparePassword(req.params.password, rows[0].password)) {
         return res.status(400).json({
           status: 400,
-          error: 'Your reset password is incorrect',
+          error: 'invalid credentials',
         });
       }
       // genrate token for user
