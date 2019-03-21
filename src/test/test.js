@@ -331,7 +331,7 @@ describe('Password reset', () => {
       .end((err, res) => {
         expect(err).to.be.null;
         res.should.have.status(200);
-        res.should.body.have.property('data');
+        res.body.should.have.property('data');
         done();
       });
   });
