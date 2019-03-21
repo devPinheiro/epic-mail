@@ -529,7 +529,7 @@ describe('Add User to Group Test', () => {
       .post(`/api/v1/groups/${groupId}/users`)
       .set('x-access-token', token)
       .send({
-        email: 'tester@test.com',
+        email: 'sam@sammy.com',
       })
       .end((err, res) => {
         expect(err).to.be.null;
@@ -539,6 +539,50 @@ describe('Add User to Group Test', () => {
   });
 
 });
+
+
+// Delete User from Group Test
+describe('Delete User From Group Test', () => {
+
+  it('check if group exists', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .delete(`/api/v1/groups/34/users/2`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+
+  it('check if user exists', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .delete(`/api/v1/groups/${groupId}/users/4`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(404);
+        done();
+      });
+  });
+
+  it('delete user from group', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .delete(`/api/v1/groups/${groupId}/users/2`)
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(200);
+        done();
+      });
+  });
+
+});
+
 
 
 // delete group

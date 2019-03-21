@@ -8,4 +8,5 @@ groupRoute.get('/', auth.verifyToken, GroupController.getAllGroups);
 groupRoute.delete('/:id', auth.verifyToken, GroupController.deleteGroup);
 groupRoute.patch('/:groupId/:name', auth.verifyToken, GroupController.updateGroup);
 groupRoute.post('/:groupId/users', auth.verifyToken, GroupController.addUserToGroup);
+groupRoute.delete('/:groupId/users/:userId', auth.verifyToken, GroupController.deleteUserFromGroup);
 export default groupRoute;
