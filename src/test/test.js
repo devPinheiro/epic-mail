@@ -354,6 +354,22 @@ describe('Groups test', () => {
       });
   });
 
+  it('authorized users can create a group', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/groups')
+      .set('x-access-token', token)
+      .send({
+        name: 'test team',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(201);
+        done();
+      });
+  });
+
+
 
   it('check for wrong input', (done) => {
     // using chai-http plugin
@@ -366,6 +382,29 @@ describe('Groups test', () => {
       .end((err, res) => {
         expect(err).to.be.null;
         res.should.have.status(400);
+        done();
+      });
+  });
+
+  it('fetch all groups', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .get('/api/v1/groups')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(200);
+        done();
+      });
+  });
+
+  it('unauthorized users cannot fetch all groups', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .get('/api/v1/groups')
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(401);
         done();
       });
   });

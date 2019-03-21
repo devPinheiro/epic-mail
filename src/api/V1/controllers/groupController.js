@@ -59,6 +59,36 @@ class GroupController {
       });
     }
   }
+
+  // Implement async method for all groups
+  static async getAllGroups(req, res) {
+    /**
+     *
+     * @param {*} req
+     * @param {*} res
+     *
+     */
+
+    try {
+      const { allGroups } = await queryBuilder.fetchAllGroups(req.user.id);
+      if (allGroups) {
+        return res.status(200).json({
+          status: 200,
+          data: allGroups,
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'no groups found for this user',
+      });
+    } catch (error) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
 }
 
 export default GroupController;

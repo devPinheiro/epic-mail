@@ -190,4 +190,13 @@ export default {
     const msgs = rows[0];
     return { msgs };
   },
+   async fetchAllGroups(userId) {
+    /**
+     * get user from db
+     */
+    const queryString = 'SELECT * FROM groups WHERE owner_id = $1';
+    const { rows } = await db.query(queryString, [userId]);
+    const allGroups = rows;
+    return { allGroups };
+  },
 };

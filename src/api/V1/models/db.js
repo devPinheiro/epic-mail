@@ -67,6 +67,15 @@ const createInbox = `CREATE TABLE IF NOT EXISTS
                           FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE
                         );`;
 
+const createGroup = `CREATE TABLE IF NOT EXISTS
+                        groups(
+                          id SERIAL PRIMARY KEY,
+                          name VARCHAR(128) NOT NULL,
+                          role VARCHAR(128) NOT NULL,
+                          owner_id INTEGER NOT NULL,
+                          FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
+                        )`;
+
 const dropInboxQuery = `                    
                         DROP TABLE IF EXISTS inbox;                       
                         `;
@@ -79,8 +88,12 @@ const dropMessagesQuery = `
 const dropUsersQuery = `                    
                         DROP TABLE IF EXISTS users;                        
                         `;
+
+const dropGroupsQuery = `                    
+                        DROP TABLE IF EXISTS groups;                        
+                        `;
 // create all tables
-const createTablesQuery = `${dropInboxQuery} ${dropSentQuery}  ${dropMessagesQuery}  ${dropUsersQuery} ${createMessage} ${createInbox} ${createSent} ${createUser}`;
+const createTablesQuery = `${dropInboxQuery} ${dropSentQuery}  ${dropMessagesQuery} ${dropGroupsQuery}  ${dropUsersQuery}  ${createMessage} ${createInbox} ${createSent} ${createUser} ${createGroup}`;
 
 const createAllTables = () => {
   pool.query(createTablesQuery, (err, res) => {
