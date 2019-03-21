@@ -185,4 +185,9 @@ export default {
     const singleMessage = rows[0];
     return { singleMessage };
   },
+  async sendResetLink(query, values) {
+    const { rows } = await db.query(query, values);
+    const msgs = rows[0];
+    return { msgs };
+  },
 };

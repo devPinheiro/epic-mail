@@ -84,7 +84,7 @@ const createTablesQuery = `${dropInboxQuery} ${dropSentQuery}  ${dropMessagesQue
 
 const createAllTables = () => {
   pool.query(createTablesQuery, (err, res) => {
-    console.log(err, res);
+    // console.log(err, res);
     pool.end();
   });
 };
