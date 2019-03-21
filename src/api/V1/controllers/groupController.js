@@ -124,6 +124,53 @@ class GroupController {
       });
     }
   }
+
+// Implement async method for update group
+  static async updateGroup(req, res) {
+    // validate user input
+    const { name } = req.body;
+    const { groupId } = req.params;
+    const values = [name, req.params.name];
+
+    const groupIdn = groupId.trim();
+
+    const { success, error } = validator.groupParamsValidate(values, groupIdn);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
+    const { group } = await queryBuilder.checkGroup(values, req.user.id);
+    if (!group) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error: 'group can only be modified by group owner',
+      });
+    }
+    try {
+      const { updatedGroup } = await queryBuilder.updateGroup(values, groupIdn, req.user.id);
+      if (updatedGroup) {
+        return res.status(200).json({
+          status: 200,
+          data: updatedGroup,
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'no group found for this user',
+      });
+    } catch (err) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
+
 }
 
 export default GroupController;
