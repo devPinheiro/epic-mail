@@ -263,5 +263,14 @@ export default {
     const addUser = rows;
     return { addUser };
   },
+  async deleteUserGroup(user, groupId) {
+    const queryString = `DELETE FROM 
+                         group_members 
+                         WHERE user_id = $1 and group_id = $2
+                         returning *`;
+    const { rows } = await db.query(queryString, [user, groupId]);
+    const delUser = rows[0];
+    return { delUser };
+  },
 
 };

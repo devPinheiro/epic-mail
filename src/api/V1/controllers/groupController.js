@@ -229,6 +229,59 @@ class GroupController {
     }
   }
 
+  // Implement add user to group
+  static async deleteUserFromGroup(req, res) {
+    /**
+     * check if user exists
+     */
+    const { groupId } = req.params;
+    const { userId } = req.params;
+    const groupIdn = groupId.trim();
+    const userIdn = userId.trim();
+    const { group } = await queryBuilder.checkGroupExists(groupIdn);
+    if (!group) {
+      return res.status(404).json({
+        status: 404,
+        error: 'group does not exists',
+      });
+    }
+    const { user } = await queryBuilder.userDetails(userIdn);
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        error: 'user does not exists',
+      });
+    }
+    // if user already exists in db
+    const { alUser } = await queryBuilder.checkUserExistGroup(user.id, groupIdn);
+    if (!alUser) {
+      return res.status(400).json({
+        status: 400,
+        error: 'user does not exist in group',
+      });
+    }
+    try {
+      const { delUser } = await queryBuilder.deleteUserGroup(user.id, groupIdn);
+      if (!delUser) {
+        return res.status(400).json({
+          status: 400,
+          error: 'user can not be deleted from this group',
+        });
+      }
+      return res.status(200).json({
+        status: 200,
+        data: {
+          message: 'user deleted successfully',
+        },
+      });
+    } catch (err) {
+      return res.status(500).json({
+        status: 500,
+        error: 'internal server error',
+      });
+    }
+  }
+
 }
 
 export default GroupController;
