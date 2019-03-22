@@ -324,28 +324,28 @@ class GroupController {
 
       const { rows } = await db.query(insertMessageString, messageValues);
       const msgId = rows[0].id;
-      users.forEach((item, i) => {
-        if (item[i] === item.user_id) {
-          // insert into inbox
-          const inboxValues = [
-            msgId,
-            item.user_id,
-            0,
-            'unread',
-          ];
+      users.forEach((item) => {
 
-          // insert into inbox table
-          queryBuilder.insertInbox(inboxValues);
+        // insert into inbox
+        const inboxValues = [
+          msgId,
+          item.user_id,
+          0,
+          'unread',
+        ];
 
-          // fetch id of the sender
-          const sentValues = [
-            msgId,
-            groupIdn,
-            0,
-          ];
+        // insert into inbox table
+        queryBuilder.insertInbox(inboxValues);
+
+        // fetch id of the sender
+        const sentValues = [
+          msgId,
+          groupIdn,
+          0,
+        ];
           // insert into sent tables
-          queryBuilder.insertSent(sentValues);
-        }
+        queryBuilder.insertSent(sentValues);
+
       });
 
 
