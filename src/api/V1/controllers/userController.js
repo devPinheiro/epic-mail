@@ -1,8 +1,12 @@
-import moment from 'moment';
+/* eslint-disable indent */
+import sendGrid from '@sendgrid/mail';
+import dotenv from 'dotenv';
 import db from '../models/index';
 import service from '../helper/service';
 import validate from '../helper/validator';
 import queryBuilder from '../helper/queryBuilder';
+
+dotenv.config();
 
 class UserController {
   static async signup(req, res) {
@@ -148,43 +152,32 @@ class UserController {
     const { rows } = await db.query(queryString, values);
     // send user mail
     const message = `https://epic-mail-devp.herokuapp.com/api/v1/auth/confirmReset/${rows[0].email}&${newPassword}`;
-    const insertMessageString = `INSERT INTO
-                           messages(subject, message, parent_message_id, status, created_on)
-                           VALUES($1, $2, $3, $4, $5) 
-                           returning *`;
+    // use sendgrid
+    sendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+      to: req.body.email,
+      from: 'pinheirolaoluwa@gmail.com',
+      subject: 'Confirm Password Reset',
+      html: `<strong>You are one step away from reseting your password</strong>
+             click the link below 
+             
+             ${message}       
+      `,
+      text: `You are one step away from reseting your password
+             click the link below 
+             
+             ${message}       
+      `,
+    };
+    sendGrid.send(msg);
 
-    const messageValues = [
-      'Password Reset',
-      message,
-      1,
-      'sent',
-      moment(new Date()),
-    ];
-    const { msgs } = await queryBuilder.sendResetLink(insertMessageString, messageValues);
-    const msgId = msgs.id;
-    // insert into inbox
-    const inboxValues = [
-      msgId,
-      user.id,
-      0,
-      'unread',
-    ];
-
-    // insert into inbox table
-    const { insertBox } = await queryBuilder.insertInbox(inboxValues);
-    if (!insertBox) {
-      return res.status(400).json({
-        status: 400,
-        error: 'wrong credentials',
-      });
-    }
     return res.status(200).json({
       status: 200,
       data: {
         message: 'check your email for password reset link',
         email: rows[0].email,
       },
-    }); 
+    });
   }
 
   static async confirmReset(req, res) {
