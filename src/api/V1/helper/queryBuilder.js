@@ -163,11 +163,11 @@ export default {
      */
     const queryString = `UPDATE
                           inbox 
-                          SET status = $1      
+                          SET delete = $1      
                           WHERE message_id = $2
                           returning *
                           `;
-    const { rows } = await db.query(queryString, [true, paramsId]);
+    const { rows } = await db.query(queryString, [1, paramsId]);
     const singleMessage = rows[0];
     return { singleMessage };
   },
@@ -177,11 +177,11 @@ export default {
      */
     const queryString = `UPDATE
                           sent 
-                          SET status = $1      
+                          SET delete = $1      
                           WHERE message_id = $2
                           returning *
                           `;
-    const { rows } = await db.query(queryString, [true, paramsId]);
+    const { rows } = await db.query(queryString, [1, paramsId]);
     const singleMessage = rows[0];
     return { singleMessage };
   },
