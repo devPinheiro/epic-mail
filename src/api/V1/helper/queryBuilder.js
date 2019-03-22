@@ -207,7 +207,9 @@ export default {
                           WHERE id = $1 AND owner_id = $2
                           returning *
                           `;
-    const { rows } = await db.query(queryString, [userId, paramsId]);
+    const {
+      rows
+    } = await db.query(queryString, [paramsId, userId]);
     const deleteGroup = rows[0];
     return { deleteGroup };
   },
