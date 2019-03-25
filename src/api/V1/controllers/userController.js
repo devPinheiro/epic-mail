@@ -25,11 +25,14 @@ class UserController {
         error,
       });
     }
+    // sanitize user email
+    const email = req.body.email.toLowerCase();
+
     // check if user exists
-    const { user } = await queryBuilder.checkUser(req.body.email);
+    const { user } = await queryBuilder.checkUser(email);
     if (user) {
-      return res.status(400).json({
-        status: 400,
+      return res.status(409).json({
+        status: 409,
         error: 'user already exists',
       });
     }
@@ -44,7 +47,7 @@ class UserController {
                                      VALUES ($1, $2, $3, $4, $5) 
                                      returning *`;
       const values = [
-        req.body.email,
+        email,
         req.body.firstName,
         req.body.lastName,
         encryptedPassword,
@@ -81,11 +84,13 @@ class UserController {
         error,
       });
     }
+    // sanitize user email
+    const email = req.body.email.toLowerCase();
 
     try {
       // check if user exists
       const queryString = 'SELECT * FROM users WHERE email = $1';
-      const { rows } = await db.query(queryString, [req.body.email]);
+      const { rows } = await db.query(queryString, [email]);
       if (!rows[0]) {
         return res.status(404).json({
           status: 404,
@@ -128,8 +133,12 @@ class UserController {
         error,
       });
     }
+
+    // sanitize user email
+    const email = req.body.email.toLowerCase();
+
     // check if user exists
-    const { user } = await queryBuilder.checkUser(req.body.email);
+    const { user } = await queryBuilder.checkUser(email);
     if (!user) {
       return res.status(404).json({
         status: 404,

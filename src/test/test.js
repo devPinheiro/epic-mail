@@ -66,7 +66,7 @@ describe('POST register a new user test', () => {
       })
       .end((err, res) => {
         expect(err).to.be.null;
-        res.should.have.status(400);
+        res.should.have.status(409);
         res.body.should.have.property('status');
         res.body.should.have.property('error');
         done();
