@@ -16,7 +16,7 @@ export default {
      */
     const queryString = 'SELECT * FROM users WHERE email = $1';
     const { rows } = await db.query(queryString, [email]);
-    return rows[0].id;
+    return rows[0];
   },
   async senderId(userId) {
     /**
@@ -69,7 +69,7 @@ export default {
                           subject
                           FROM
                           inbox a
-                          INNER JOIN sent b ON a.message_id = b.message_id 
+                          INNER JOIN sent b ON a.message_id = b.message_id  
                           INNER JOIN messages c ON b.message_id = c.id
                           WHERE a.receiver_id = $1 AND a.delete = $2 AND b.delete = $2 `;
     const { rows } = await db.query(queryString, [values, 0]);
@@ -115,7 +115,7 @@ export default {
                               sent a
                               INNER JOIN inbox b ON a.message_id = b.message_id 
                               INNER JOIN messages c ON a.message_id = c.id
-                              WHERE a.sender_id = $1 AND a.delete = $2
+                              WHERE a.sender_id = $1 AND a.delete = $2 
                               `;
     const { rows } = await db.query(queryString, [values, 0]);
     const allSent = rows;
@@ -199,6 +199,24 @@ export default {
     const allGroups = rows;
     return { allGroups };
   },
+
+  async fetchOneGroup(userId, groupId) {
+    /**
+     * get group from db
+     */
+    const queryString = `SELECT                          
+                          b.user_id,
+                          group_id,
+                          c.first_name, last_name 					  
+                          FROM
+                          groups a
+                          INNER JOIN group_members b ON a.id = b.group_id
+                          INNER JOIN users c ON c.id = b.user_id
+                          WHERE owner_id = $1 AND group_id = $2`;
+    const { rows } = await db.query(queryString, [userId, groupId]);
+    const oneGroup = rows;
+    return { oneGroup };
+  },
   async deleteGroup(paramsId, userId) {
     /**
      * delete group
@@ -207,9 +225,7 @@ export default {
                           WHERE id = $1 AND owner_id = $2
                           returning *
                           `;
-    const {
-      rows
-    } = await db.query(queryString, [paramsId, userId]);
+    const { rows } = await db.query(queryString, [paramsId, userId]);
     const deleteGroup = rows[0];
     return { deleteGroup };
   },
@@ -224,16 +240,16 @@ export default {
                           AND owner_id = $3
                           returning *
                           `;
-    const { rows } = await db.query(queryString, [values[0], groupId, userId]);
+    const { rows } = await db.query(queryString, [values, groupId, userId]);
     const updatedGroup = rows[0];
     return { updatedGroup };
   },
-  async checkGroup(values, userId) {
+  async checkGroup(userId) {
     /**
      * check if group exist in db
      */
-    const queryString = 'SELECT * FROM groups WHERE name = $1 AND owner_id = $2';
-    const { rows } = await db.query(queryString, [values[1], userId]);
+    const queryString = 'SELECT * FROM groups WHERE owner_id = $1';
+    const { rows } = await db.query(queryString, [userId]);
     const group = rows[0];
     return { group };
   },
@@ -244,7 +260,7 @@ export default {
        */
     const queryString = 'SELECT * FROM group_members WHERE user_id = $1 AND group_id = $2';
     const { rows } = await db.query(queryString, [userId, groupId]);
-    const alUser = rows[0];
+    const alUser = rows;
     return { alUser };
   },
   async checkGroupExists(groupId) {
@@ -256,19 +272,16 @@ export default {
     const group = rows[0];
     return { group };
   },
-  async insertUserGroup(user, groupId) {
-    const queryString = `INSERT INTO 
-                         group_members (user_id, group_id, user_role)
-                         VALUES ($1, $2, $3) 
-                         returning *`;
-    const { rows } = await db.query(queryString, [user.id, groupId, 'member']);
-    const addUser = rows;
+  async insertUser(user, groupId) {
+    const queryString = 'INSERT INTO group_members (user_id, group_id, user_role) VALUES ($1, $2, $3) returning *';
+    const { rows } = await db.query(queryString, [user, groupId, 'member']);
+    const addUser = rows[0];
     return { addUser };
   },
   async deleteUserGroup(user, groupId) {
     const queryString = `DELETE FROM 
                          group_members 
-                         WHERE user_id = $1 and group_id = $2
+                         WHERE user_id = $1 AND group_id = $2 
                          returning *`;
     const { rows } = await db.query(queryString, [user, groupId]);
     const delUser = rows[0];
@@ -282,5 +295,11 @@ export default {
     const { rows } = await db.query(queryString, [groupId]);
     const users = rows;
     return { users };
+  },
+  async insertGroupMessage(msgId, groupId) {
+    const queryString = 'INSERT INTO group_pivot (message_id, group_id) VALUES ($1, $2) returning *';
+    const { rows } = await db.query(queryString, [msgId, groupId]);
+    const groupMessage = rows[0];
+    return { groupMessage };
   },
 };

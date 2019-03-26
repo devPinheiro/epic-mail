@@ -49,8 +49,8 @@ const createUser = `
 
 const createSent = `CREATE TABLE IF NOT EXISTS
                         sent(
-                            id SERIAL,
-                            message_id INTEGER PRIMARY KEY,
+                            id SERIAL PRIMARY KEY,
+                            message_id INTEGER ,
                             sender_id INTEGER NOT NULL,
                             delete INTEGER NOT NULL,
                             FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE
@@ -59,8 +59,8 @@ const createSent = `CREATE TABLE IF NOT EXISTS
 
 const createInbox = `CREATE TABLE IF NOT EXISTS
                         inbox(
-                          id SERIAL,
-                          message_id INTEGER PRIMARY KEY,
+                          id SERIAL PRIMARY KEY,
+                          message_id INTEGER ,
                           receiver_id INTEGER NOT NULL,
                           delete INTEGER NOT NULL,
                           status VARCHAR(128),
@@ -82,7 +82,15 @@ const createGroupMembers = `CREATE TABLE IF NOT EXISTS
                           user_id INTEGER NOT NULL,
                           group_id INTEGER NOT NULL,
                           user_role VARCHAR(128) NOT NULL,
-                          FOREIGN KEY (id) REFERENCES groups (id) ON DELETE CASCADE
+                          FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE
+                        );`;
+
+const createGroupsPivot = `CREATE TABLE IF NOT EXISTS
+                        group_pivot(
+                          id SERIAL PRIMARY KEY,
+                          group_id INTEGER NOT NULL,
+                          message_id INTEGER NOT NULL,
+                          FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE
                         );`;
 
 const dropInboxQuery = `                    
@@ -104,8 +112,26 @@ const dropGroupsQuery = `
 const dropGroupMembersQuery = `                    
                         DROP TABLE IF EXISTS group_members;                        
                         `;
+
+const dropGroupPivots = `                    
+                        DROP TABLE IF EXISTS group_pivot;                        
+                        `;
 // create all tables
-const createTablesQuery = `${dropInboxQuery} ${dropSentQuery}  ${dropMessagesQuery} ${dropGroupMembersQuery} ${dropGroupsQuery}  ${dropUsersQuery}   ${createMessage} ${createInbox} ${createSent} ${createUser} ${createGroup} ${createGroupMembers}`;
+const createTablesQuery = `${dropInboxQuery} 
+                           ${dropSentQuery}  
+                           ${dropMessagesQuery} 
+                           ${dropGroupPivots} 
+                           ${dropGroupMembersQuery} 
+                           ${dropGroupsQuery}  
+                           ${dropUsersQuery}   
+                           ${createMessage}
+                           ${createInbox} 
+                           ${createSent} 
+                           ${createUser} 
+                           ${createGroup} 
+                           ${createGroupMembers}
+                           ${createGroupsPivot}
+                           `;
 
 const createAllTables = () => {
   pool.query(createTablesQuery, (err, res) => {

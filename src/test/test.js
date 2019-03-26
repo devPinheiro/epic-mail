@@ -432,7 +432,7 @@ describe('Groups test', () => {
   it('check for wrong input', (done) => {
     // using chai-http plugin
     chai.request(app)
-      .patch('/api/v1/groups/sdf/marketing')
+      .patch('/api/v1/groups/sdf')
       .set('x-access-token', token)
       .send({
         name: 'HR Team',
@@ -447,14 +447,14 @@ describe('Groups test', () => {
   it('check if group exists', (done) => {
     // using chai-http plugin
     chai.request(app)
-      .patch('/api/v1/groups/34/marketing')
+      .patch('/api/v1/groups/34')
       .set('x-access-token', token)
       .send({
         name: 'HR Team',
       })
       .end((err, res) => {
         expect(err).to.be.null;
-        res.should.have.status(400);
+        res.should.have.status(404);
         done();
       });
   });
@@ -462,7 +462,7 @@ describe('Groups test', () => {
   it('update group name', (done) => {
     // using chai-http plugin
     chai.request(app)
-      .patch(`/api/v1/groups/${groupId}/testteam`)
+      .patch(`/api/v1/groups/${groupId}`)
       .set('x-access-token', token)
       .send({
         name: 'HR Team',

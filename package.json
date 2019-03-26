@@ -10,7 +10,7 @@
     "test": "npm run test:migrate_create --exit && cross-env NODE_env=test nyc --require babel-core/register mocha src/**/test.js --timeout 8000 --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build": "babel src -d dist --source-maps inline --copy-files",
-    "dev:migrate_db": "cross-env NODE_env=production babel-node src/api/V1/models/db.js createAllTables"
+    "dev:migrate_db": "cross-env NODE_env=development babel-node src/api/V1/models/db.js createAllTables"
   },
   "repository": {
     "type": "git",

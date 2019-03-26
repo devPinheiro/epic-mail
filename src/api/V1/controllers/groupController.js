@@ -60,7 +60,7 @@ class GroupController {
     }
   }
 
-  // Implement async method for all groups
+  // Implement async method for one groups
   static async getAllGroups(req, res) {
     /**
      *
@@ -82,6 +82,47 @@ class GroupController {
         error: 'no groups found for this user',
       });
     } catch (error) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
+
+  // Implement async method for one groups
+  static async getOneGroup(req, res) {
+    /**
+     *
+     * @param {*} req
+     * @param {*} res
+     *
+     */
+
+    // validate user input
+    const { id } = req.params;
+    const { success, error } = validator.paramsValidate(id);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
+
+    try {
+      const { oneGroup } = await queryBuilder.fetchOneGroup(req.user.id, id);
+      if (oneGroup.length !== 0) {
+        return res.status(200).json({
+          status: 200,
+          data: oneGroup,
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'no users found for this group',
+      });
+    } catch (err) {
       // send response to clientside
       return res.status(500).json({
         status: 500,
@@ -130,11 +171,10 @@ class GroupController {
     // validate user input
     const { name } = req.body;
     const { groupId } = req.params;
-    const values = [name, req.params.name];
 
     const groupIdn = groupId.trim();
 
-    const { success, error } = validator.groupParamsValidate(values, groupIdn);
+    const { success, error } = validator.groupParamsValidate(name, groupIdn);
     if (!success) {
       // return errors
       return res.status(400).json({
@@ -142,7 +182,7 @@ class GroupController {
         error,
       });
     }
-    const { group } = await queryBuilder.checkGroup(values, req.user.id);
+    const { group } = await queryBuilder.checkGroup(req.user.id);
     if (!group) {
       // return errors
       return res.status(400).json({
@@ -151,7 +191,7 @@ class GroupController {
       });
     }
     try {
-      const { updatedGroup } = await queryBuilder.updateGroup(values, groupIdn, req.user.id);
+      const { updatedGroup } = await queryBuilder.updateGroup(name, groupIdn, req.user.id);
       if (updatedGroup) {
         return res.status(200).json({
           status: 200,
@@ -179,7 +219,7 @@ class GroupController {
     const { groupId } = req.params;
 
     const groupIdn = groupId.trim();
-    const { success, error } = validator.resetValidate(req.body);
+    const { success, error } = validator.groupValidate(groupIdn, req.body.email);
     if (!success) {
       // return errors
       return res.status(400).json({
@@ -203,20 +243,16 @@ class GroupController {
     }
     // if user already exists in db
     const { alUser } = await queryBuilder.checkUserExistGroup(user.id, groupIdn);
-    if (alUser) {
+    if (alUser.length !== 0) {
       return res.status(400).json({
         status: 400,
         error: 'user already exist in group',
       });
     }
     try {
-      const { addUser } = await queryBuilder.insertUserGroup(user, groupIdn);
-      if (!addUser) {
-        return res.status(400).json({
-          status: 400,
-          error: 'user can not be added to this group',
-        });
-      }
+      // add user to group
+      const userId = user.id;
+      const { addUser } = await queryBuilder.insertUser(userId, groupIdn);
       return res.status(201).json({
         status: 201,
         data: addUser,
@@ -229,7 +265,7 @@ class GroupController {
     }
   }
 
-  // Implement add user to group
+  // Implement delete user to group
   static async deleteUserFromGroup(req, res) {
     /**
      * check if user exists
@@ -288,7 +324,7 @@ class GroupController {
     const groupIdn = groupId.trim();
 
     // validate user input
-    const { success, error } = validator.messageValidate(req.body);
+    const { success, error } = validator.groupMessageValidate(req.body);
     if (!success) {
       // return errors
       return res.status(400).json({
@@ -324,8 +360,16 @@ class GroupController {
 
       const { rows } = await db.query(insertMessageString, messageValues);
       const msgId = rows[0].id;
-      users.forEach((item) => {
-
+      // fetch id of the sender
+      const sentValues = [
+        msgId,
+        req.user.id,
+        0,
+      ];
+      // insert into sent tables
+      const { sentBox } = await queryBuilder.insertSent(sentValues);
+      
+      users.forEach(async (item, i) => {
         // insert into inbox
         const inboxValues = [
           msgId,
@@ -335,17 +379,7 @@ class GroupController {
         ];
 
         // insert into inbox table
-        queryBuilder.insertInbox(inboxValues);
-
-        // fetch id of the sender
-        const sentValues = [
-          msgId,
-          groupIdn,
-          0,
-        ];
-          // insert into sent tables
-        queryBuilder.insertSent(sentValues);
-
+        const { inbox } = await queryBuilder.insertInbox(inboxValues);        
       });
 
 
