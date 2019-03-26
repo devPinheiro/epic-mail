@@ -53,6 +53,23 @@ export default {
     const value = {
       subject: body.subject,
       message: body.message,
+      email: body.email,
+    };
+    const rules = {
+      subject: 'required',
+      message: 'required',
+      email: 'required|email',
+    };
+    const validation = new Validator(value, rules);
+    return {
+      success: validation.passes(),
+      error: validation.errors.all(),
+    };
+  },
+  groupMessageValidate(body) {
+    const value = {
+      subject: body.subject,
+      message: body.message,
     };
     const rules = {
       subject: 'required',
@@ -94,13 +111,11 @@ export default {
   groupParamsValidate(body, groupId) {
     const value = {
       id: groupId,
-      name: body[0],
-      paramName: body[1],
+      name: body,
     };
     const rules = {
       id: 'required|numeric',
       name: 'required|string',
-      paramName: 'required|string',
     };
     const validation = new Validator(value, rules);
     return {
@@ -115,6 +130,23 @@ export default {
     };
     const rules = {
       name: 'required|min:3',
+    };
+    const validation = new Validator(value, rules);
+    return {
+      success: validation.passes(),
+      error: validation.errors.all(),
+    };
+  },
+
+
+  groupValidate(id, body) {
+    const value = {
+      id,
+      email: body,
+    };
+    const rules = {
+      id: 'required|numeric',
+      email: 'required|email',
     };
     const validation = new Validator(value, rules);
     return {

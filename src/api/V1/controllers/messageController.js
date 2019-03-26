@@ -38,7 +38,7 @@ class MessageController {
         req.body.subject,
         req.body.message,
         1,
-        'sent',
+        'draft',
         moment(new Date()),
       ];
 
@@ -48,61 +48,63 @@ class MessageController {
         data: rows[0],
       });
     }
+
+    // fetch id of the receiver
+    const receiverId = await queryBuilder.receiverId(req.body.email);
+    if (!receiverId) {
+      // return errors
+      return res.status(404).json({
+        status: 404,
+        error: 'receiver does not exist',
+      });
+    }
+
     // let's try and catch for the async func in case the promise fail to resolve
     try {
-    // fetch id of the receiver
-      const receiverId = await queryBuilder.receiverId(req.body.email);
-      if (receiverId) {
-        // Insert into db
-        const insertMessageString = `INSERT INTO
+      // Insert into db
+      const insertMessageString = `INSERT INTO
                            messages(subject, message, parent_message_id, status, created_on)
                            VALUES($1, $2, $3, $4, $5) 
                            returning *`;
 
-        const messageValues = [
-          req.body.subject,
-          req.body.message,
-          1,
-          'sent',
-          moment(new Date()),
-        ];
+      const messageValues = [
+        req.body.subject,
+        req.body.message,
+        1,
+        'sent',
+        moment(new Date()),
+      ];
 
-        const { rows } = await db.query(insertMessageString, messageValues);
-        const msgId = rows[0].id;
+      const { rows } = await db.query(insertMessageString, messageValues);
+      const msgId = rows[0].id;
 
-        // insert into inbox
-        const inboxValues = [
-          msgId,
-          receiverId,
-          0,
-          'unread',
-        ];
+      // insert into inbox
+      const inboxValues = [
+        msgId,
+        receiverId.id,
+        0,
+        'unread',
+      ];
 
-        // insert into inbox table
-        const { insertBox } = await queryBuilder.insertInbox(inboxValues);
+      // insert into inbox table
+      const { insertBox } = await queryBuilder.insertInbox(inboxValues);
 
-        // fetch id of the sender
-        const senderId = await queryBuilder.senderId(req.user.id);
-        const sentValues = [
-          msgId,
-          senderId,
-          0,
-        ];
+      // fetch id of the sender
+      const senderId = await queryBuilder.senderId(req.user.id);
+      const sentValues = [
+        msgId,
+        senderId,
+        0,
+      ];
         // insert into sent tables
-        const { sentBox } = await queryBuilder.insertSent(sentValues);
-        if (insertBox && sentBox) {
-          // send response to clientside
-          return res.status(201).json({
-            status: 201,
-            data: rows[0],
-          });
-        }
+      const { sentBox } = await queryBuilder.insertSent(sentValues);
+      if (insertBox && sentBox) {
+        // send response to clientside
+        return res.status(201).json({
+          status: 201,
+          data: rows[0],
+        });
       }
-      // return errors
-      return res.status(400).json({
-        status: 400,
-        error: 'receiver does not exist',
-      });
 
       // catch any error if promise fail to resolve
     } catch (err) {
@@ -316,8 +318,8 @@ class MessageController {
       const { singleMessage } = await queryBuilder.deleteSentMessage(id);
       // fetch message
       if (singleMessage) {
-        return res.status(204).json({
-          status: 204,
+        return res.status(200).json({
+          status: 200,
           data: {
             message: 'message deleted successfuly',
           },

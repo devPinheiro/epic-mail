@@ -4,7 +4,7 @@ import swagger from 'swagger-ui-express';
 import swaggerDocument from './config/swagger.json';
 import userRoute from './api/V1/routes/userRouter';
 import messageRoute from './api/V1/routes/messageRouter';
-import groupRoute from './api/V1/routes/groupRouter.js';
+import groupRoute from './api/V1/routes/groupRouter';
 
 
 /**
