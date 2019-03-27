@@ -1,5 +1,6 @@
 import express from 'express';
 import logger from 'morgan';
+import cors from 'cors';
 import swagger from 'swagger-ui-express';
 import swaggerDocument from './config/swagger.json';
 import userRoute from './api/V1/routes/userRouter';
@@ -26,6 +27,16 @@ const PORT = process.env.PORT || 4100;
  *
  * @method express.urlencoded() parses incoming requests with urlencode payloads
  *  */
+ 
+//cors options
+let corsOptions = {
+  origin: "*",
+  optionSuccessStatus: 200
+}
+
+//cors middleware function
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true,
