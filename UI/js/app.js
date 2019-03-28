@@ -28,7 +28,7 @@ let sidebar = $('.sidebar'),
 // API library
 class Samios {
     // static method for post requests
-    static async signup(payload) {
+    static async signUp(payload) {
         const signupR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/signup',  {
                 method: "post",
                 mode: "cors",
@@ -45,5 +45,23 @@ class Samios {
             signupResult
         }
     }
+
+     static async signIn(payload) {
+         const signinR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/login', {
+             method: "post",
+             mode: "cors",
+             headers: {
+                 Accept: "application/json",
+                 "Content-Type": "application/json"
+             },
+             body: JSON.stringify(payload)
+         });
+
+         const signinResult = await signinR.json()
+
+         return {
+             signinResult
+         }
+     }
 
 }
