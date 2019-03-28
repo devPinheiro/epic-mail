@@ -523,29 +523,29 @@
           <div class="col-sp-1">
             <div id="signup_cont" class="signup  form col-1-lg">
                 <h1>Get started here!</h1>
-                <form id="signup-form">
+                <form id="signup-form" method="POST">
                     <div class="form-group">
                         <label for="First Name">First Name</label>
-                        <input type="text" id="fname">
+                        <input type="text" id="fname" pattern="[A-Za-z]" required>
                     </div>
 
                     <div class="form-group">
                         <label for="Last Name">Last Name</label>
-                        <input type="text" id="lname">
+                        <input type="text" id="lname" pattern="[A-Za-z]" required>
                     </div>
 
                     <div class="form-group">
                         <label for="Email">Email</label>
-                        <input type="email" id="s_email">
+                        <input type="email" id="s_email" required>
                     </div>
 
                     <div class="form-group">
                         <label for="Password">Password</label>
-                        <input type="password" id="s_password">
+                        <input type="password" id="s_password" pattern=".{6,}" required>
                     </div>
 
                     <div class="form-group">
-                        <button type="submit">Sign up</button>
+                        <button type="submit" id="signup_btn">Sign up</button>
                     </div>
                 </form>
                 <div class="signup_options">
@@ -557,6 +557,7 @@
         
         
     </div>
+    <script src="js/app.js"></script>
     <script src="js/index_2.js"></script>
 </body>
 
