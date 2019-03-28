@@ -7,24 +7,29 @@ let sidebar = $('.sidebar'),
     openSidebar = $('.open-sidebar'),
     closeSidebar = $('.close-sidebar');
 
-// // Menu Navigation
-// openSidebar.onClick('click', () => {
-//     // open
-//     openSidebar.style.display = 'none';
-//     closeSidebar.style.display = "block";
-//     sidebar.style.width = "200px";
-//     main.style.marginLeft = "200px";
+ // Menu Navigation
+if(openSidebar){
+   openSidebar.onClick('click', () => {
+    // open
+    openSidebar.style.display = 'none';
+    closeSidebar.style.display = "block";
+    sidebar.style.width = "200px";
+    main.style.marginLeft = "200px";
 
-// });
+   });
+}
 
-//     // close
-// closeSidebar.addEventListener('click', () => {
-//     sidebar.style.width = "0px";
-//     main.style.marginLeft = "0px";
-//     openSidebar.style.display = 'block';
-//     closeSidebar.style.display = "none";
-// });
+if(closeSidebar) {
+    // close
+    closeSidebar.addEventListener('click', () => {
+        sidebar.style.width = "0px";
+        main.style.marginLeft = "0px";
+        openSidebar.style.display = 'block';
+        closeSidebar.style.display = "none";
+    });
 
+}
+ 
 // API library
 class Samios {
     // static method for post requests
@@ -46,22 +51,40 @@ class Samios {
         }
     }
 
-     static async signIn(payload) {
-         const signinR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/login', {
-             method: "post",
-             mode: "cors",
-             headers: {
-                 Accept: "application/json",
-                 "Content-Type": "application/json"
-             },
-             body: JSON.stringify(payload)
-         });
+    static async signIn(payload) {
+        const signinR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/login', {
+            method: "post",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
 
-         const signinResult = await signinR.json()
+        const signinResult = await signinR.json()
 
-         return {
-             signinResult
-         }
-     }
+        return {
+            signinResult
+        }
+    }
+
+    static async resetPassword(payload) {
+        const resetR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/reset', {
+            method: "post",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const resetResult = await resetR.json()
+
+        return {
+            resetResult
+        }
+    }
 
 }

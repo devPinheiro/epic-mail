@@ -99,6 +99,36 @@ if ($('#signin_btn')) {
     };
 }
 
+// Listen for submit event -- Sign In
+if ($('#reset_btn')) {
+    $('#reset_btn').onclick = (e) => {
+
+        e.preventDefault();
+        // get user's input
+        const payload = {
+            email: $("#email").value,
+        }
+
+        // first validate user input
+        // let's do a little validation
+        let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        let checkEmail = regMail.test(payload.email); // returns a boolean 
+
+        $('#email').style.border = '';
+        if (!checkEmail) {
+            $('#email').style.border = "1px solid #ff1e1e";
+            showAlert('error', 'provide correct email credential')
+        }
+
+        // let's sign user up
+        if (checkEmail) {
+            resetPassword(payload);
+        }
+
+    };
+}
+
+
 
 
 // sign user up
@@ -153,8 +183,8 @@ const logIn = async (body) => {
 
         if(signinResult.error){
             let errMsg;
-            if(signinResult.status === 409){
-                errMsg = signupResult.error;
+            if(signinResult.status === 404){
+                errMsg = signinResult.error;
             }
             if(signinResult.status === 400){
                     errMsg = Object.values(signinResult.error).join(' \n \n')
@@ -166,7 +196,7 @@ const logIn = async (body) => {
         } else{
             // store token into localstorage
             localStorage.setItem('token', signinResult.data.token);
-            showAlert("success", `Successfully Registered`);
+            showAlert("success", `Sign in was successful`);
             // enable button
             $('#signin_btn').disabled = false;
             $('#signin_btn').style.backgroundColor = '#e68016';
@@ -174,6 +204,43 @@ const logIn = async (body) => {
             setTimeout(function () {
                 window.location = 'inbox.html';
             }, 3000);
+        }
+    } else {
+        showAlert('error', 'Something is wrong with your credentials')
+    }
+}
+
+// reset user password
+const resetPassword = async (body) => {
+    if (body) {
+
+        // disable button
+        $('#reset_btn').disabled = true;
+        $('#reset_btn').style.backgroundColor = '#c0c0c0';
+        // make network request
+        const { resetResult } = await Samios.resetPassword(body);
+
+        if (resetResult.error) {
+            let errMsg;
+            if (resetResult.status === 404) {
+                errMsg = resetResult.error;
+            }
+            if (resetResult.status === 400) {
+                errMsg = Object.values(resetResult.error).join(' \n \n')
+            }
+            showAlert('error', errMsg);
+            // enable button
+            $('#reset_btn').disabled = false;
+            $('#reset_btn').style.backgroundColor = '#e68016';
+        } else {
+            if (resetResult.status === 200) {
+               showAlert("success", resetResult.data.message);
+            }
+            
+            // enable button
+            $('#reset_btn').disabled = false;
+            $('#reset_btn').style.backgroundColor = '#e68016';
+            
         }
     } else {
         showAlert('error', 'Something is wrong with your credentials')
