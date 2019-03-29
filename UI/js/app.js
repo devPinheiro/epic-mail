@@ -9,7 +9,7 @@ let sidebar = $('.sidebar'),
 
  // Menu Navigation
 if(openSidebar){
-   openSidebar.addEventListener('click', () => {
+   openSidebar.onClick('click', () => {
     // open
     openSidebar.style.display = 'none';
     closeSidebar.style.display = "block";
@@ -31,8 +31,7 @@ if(closeSidebar) {
 }
  
 // API library
-class Samios {   
-
+class Samios {
     // static method for post requests
     static async signUp(payload) {
         const signupR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/signup',  {
@@ -85,25 +84,6 @@ class Samios {
 
         return {
             resetResult
-        }
-    }
-
-    static async composeMail(payload) {
-        const composeR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/messages', {
-            method: "post",
-            mode: "cors",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const composeResult = await composeR.json()
-
-        return {
-            composeResult
         }
     }
 
