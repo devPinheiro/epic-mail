@@ -81,21 +81,21 @@
                             </div>
 
                     <div class="compose-mail-form">
-                        <div class="form-g">
+                        <div id="compose_after"  class="form-g">
                             <label for="Email">Recipient</label>
-                            <input type="email" id="email" >
+                            <input type="email" id="receiver_email" >
                         </div>
                         <div class="form-g">
                              <label for="Email">Subject</label>
-                            <input type="text" name="subject" id="">
+                            <input type="text" name="subject" id="subject">
                         </div>
                        
                         <div class="form-g">
-                         <textarea name="mail-content" id="" cols="30" rows="15"></textarea>
+                         <textarea name="mail-content" id="mail_body" cols="30" rows="15"></textarea>
                         </div>
                         
                         <div class="form-g">
-                          <button type="submit" class="btn btn-primary">Send</button>
+                          <button type="submit" id="compose_btn" class="btn btn-primary">Send</button>
 
                           <button type="submit" class="btn btn-primary draft-btn">Save as Draft</button>
                         
@@ -117,6 +117,7 @@
 
     </div>
     <script src="js/app.js"></script>
+    <script src="js/index.js"></script>
 </body>
 
 </html>
