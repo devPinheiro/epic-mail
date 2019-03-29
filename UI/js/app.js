@@ -31,11 +31,7 @@ if(closeSidebar) {
 }
  
 // API library
-class Samios {
-     constructor(){
-        this.token = localStorage.getItem('token');
-     }
-     
+class Samios {   
 
     // static method for post requests
     static async signUp(payload) {
@@ -99,7 +95,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": this.token
+                "x-access-token": localStorage.getItem('token')
             },
             body: JSON.stringify(payload)
         });

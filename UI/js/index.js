@@ -367,19 +367,27 @@ const compose = async (body) => {
             if (composeResult.status === 400) {
                 errMsg = composeResult.error;
             }
+
+            if (composeResult.status === 401) {
+                errMsg = composeResult.error;
+            }
             showComposeAlert('error', errMsg);
             // enable button
             $('#compose_btn').disabled = false;
             $('#compose_btn').style.backgroundColor = '#e68016';
         } else {
             if (composeResult.status === 201) {
-               showAlert("success", composeResult.data.message);
+                // clear input
+                $("#receiver_email").value = '';
+                $("#subject").value = '';
+                $("#mail_body").value = '';
+               showComposeAlert("success", 'Mail has been sent successfully');
+               // enable button
+               $('#compose_btn').disabled = false;
+               $('#compose_btn').style.backgroundColor = '#e68016';
+             
             }
-            
-            // enable button
-            $('#compose_btn').disabled = false;
-            $('#compose_btn').style.backgroundColor = '#e68016';
-            
+                       
         }
     } else {
         showAlert('error', 'Something is wrong with your credentials')
