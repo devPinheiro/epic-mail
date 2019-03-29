@@ -3,7 +3,9 @@
 let container = $("#login-form"),
     form = $('.form'),
     container_signup = $("#signup_cont"),
-    form_signup = $('#signup-form');
+    form_signup = $('#signup-form'),
+    compose_before = $('.compose-mail-form'),
+    compose_after = $('#compose_after');
 
 
 // Listen for submit event -- Sign Up
@@ -128,6 +130,50 @@ if ($('#reset_btn')) {
     };
 }
 
+
+// Listen for submit event -- Compose
+if ($('#compose_btn')) {
+    $('#compose_btn').onclick = (e) => {
+
+        e.preventDefault();
+        // get user's input
+        const payload = {
+            email: $("#receiver_email").value,
+            subject: $("#subject").value,
+            message: $("#mail_body").value,
+        }
+
+        // first validate user input
+        // let's do a little validation
+        let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        let checkEmail = regMail.test(payload.email); // returns a boolean 
+        let reg = /[A-Za-z]/;
+        let checkSubject = reg.test(payload.subject); // returns a boolean 
+        let checkMessage = reg.test(payload.message); // returns a boolean 
+
+        $('#receiver_email').style.border = '';
+        if (!checkEmail) {
+            $('#receiver_email').style.border = "1px solid #ff1e1e";
+            showComposeAlert('error', 'provide correct email credential')
+        }
+
+        if (!checkSubject && payload.subject === '') {
+            $('#subject').style.border = "1px solid #ff1e1e";
+            showComposeAlert('error', 'subject can not be empy')
+        }
+ 
+        if (!checkMessage && payload.message === '') {
+            $('#mail_body').style.border = "1px solid #ff1e1e";
+            showComposeAlert('error', 'message can not be empty')
+        }
+
+        // send mail to recipient
+        if (checkEmail) {
+            compose(payload);
+        }
+
+    };
+}
 
 
 
@@ -285,4 +331,65 @@ let showAlert = (classN, message) => {
     }, 5000);
 }
 
+// compose mail alert
+let showComposeAlert = (classN, message) => {
 
+    // create an error div
+    let alertDiv = document.createElement('div');
+
+    // add error message and style
+    alertDiv.className = `alert ${classN}`;
+    alertDiv.textContent = message;
+
+    //insert before form and container
+    compose_before.insertBefore(alertDiv, compose_after);
+
+    // Timeout after 5s
+    setTimeout(function () {
+        $('.alert').remove();
+    }, 5000);
+}
+
+
+// compose message
+const compose = async (body) => {
+    if (body) {
+
+        // disable button
+        $('#compose_btn').disabled = true;
+        $('#compose_btn').style.backgroundColor = '#c0c0c0';
+
+        // make network request
+        const { composeResult } = await Samios.composeMail(body);
+
+        if (composeResult.error) {
+            let errMsg;
+            if (composeResult.status === 400) {
+                errMsg = composeResult.error;
+            }
+
+            if (composeResult.status === 401) {
+                errMsg = composeResult.error;
+            }
+            showComposeAlert('error', errMsg);
+            // enable button
+            $('#compose_btn').disabled = false;
+            $('#compose_btn').style.backgroundColor = '#e68016';
+        } else {
+            if (composeResult.status === 201) {
+                // clear input
+                $("#receiver_email").value = '';
+                $("#subject").value = '';
+                $("#mail_body").value = '';
+               showComposeAlert("success", 'Mail has been sent successfully');
+               // enable button
+               $('#compose_btn').disabled = false;
+               $('#compose_btn').style.backgroundColor = '#e68016';
+             
+            }
+                       
+        }
+    } else {
+        showAlert('error', 'Something is wrong with your credentials')
+    }
+}
