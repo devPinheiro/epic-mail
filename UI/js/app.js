@@ -29,7 +29,8 @@ if(closeSidebar) {
     });
 
 }
- 
+
+
 // API library
 class Samios {   
 
@@ -107,4 +108,53 @@ class Samios {
         }
     }
 
+    static async inbox() {
+        const inbox = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/messages', {
+            method: "get",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token')
+            }
+        });
+
+        const inboxResult = await inbox.json()
+        return {
+            inboxResult
+        }
+    }
+
+}
+
+
+// Mailbox UI class
+class MailBox{
+
+   inbox(res){
+     if (res.length === 0) {
+         return '<h4 class="text-center">You have no messages</h4>'
+     }
+     res.forEach((mail) => 
+          // append
+          $('.mail-section').innerHTML += `<div class="box ${mail.status}">
+                        <div class="mail-action">
+                            <input type="checkbox" name="mail_action" id="mail_action">
+                        </div>
+
+                        
+                        <div class="box-top">
+                            <a href="view-box.html">
+                                    <span class="title">${mail.subject}</span> <span class="date">24th Feb</span>
+                                    <div class="box-body">
+                                        <p class="subject">${mail.sender_id}</p>
+                                        <span class="body text-muted">${mail.message.substring(0, 180)}</span>
+                                    </div>
+                             </a>
+                        </div>
+                    </div>`
+     );
+   
+    
+   }
 }
