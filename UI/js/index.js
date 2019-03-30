@@ -1,4 +1,3 @@
-
 // select element needed
 let container = $("#login-form"),
     form = $('.form'),
@@ -175,6 +174,23 @@ if ($('#compose_btn')) {
     };
 }
 
+// fetch all inbox messages
+if ($('.inbox-mail')) {
+     document.addEventListener('DOMContentLoaded', async () => {
+         // fetch
+         const { inboxResult } = await Samios.inbox();
+
+         if (inboxResult.error === 'token has expired' || inboxResult.error === 'not authorized') {
+             window.location = 'login.html';
+         } else {
+             // initialize ui
+             const UI = new MailBox;
+
+             UI.inbox(inboxResult.data);
+         }
+
+     });
+}
 
 
 // sign user up
@@ -293,6 +309,49 @@ const resetPassword = async (body) => {
     }
 }
 
+// compose message
+const compose = async (body) => {
+    if (body) {
+
+        // disable button
+        $('#compose_btn').disabled = true;
+        $('#compose_btn').style.backgroundColor = '#c0c0c0';
+
+        // make network request
+        const { composeResult } = await Samios.composeMail(body);
+
+        if (composeResult.error) {
+            let errMsg;
+            if (composeResult.status === 400) {
+                errMsg = composeResult.error;
+            }
+
+            if (composeResult.status === 401) {
+                errMsg = composeResult.error;
+            }
+            showComposeAlert('error', errMsg);
+            // enable button
+            $('#compose_btn').disabled = false;
+            $('#compose_btn').style.backgroundColor = '#e68016';
+        } else {
+            if (composeResult.status === 201) {
+                // clear input
+                $("#receiver_email").value = '';
+                $("#subject").value = '';
+                $("#mail_body").value = '';
+               showComposeAlert("success", 'Mail has been sent successfully');
+               // enable button
+               $('#compose_btn').disabled = false;
+               $('#compose_btn').style.backgroundColor = '#e68016';
+             
+            }
+                       
+        }
+    } else {
+        showAlert('error', 'Something is wrong with your credentials')
+    }
+}
+
 // create an alert element
 let showAlertSignup = (classN, message) => {
 
@@ -351,45 +410,3 @@ let showComposeAlert = (classN, message) => {
 }
 
 
-// compose message
-const compose = async (body) => {
-    if (body) {
-
-        // disable button
-        $('#compose_btn').disabled = true;
-        $('#compose_btn').style.backgroundColor = '#c0c0c0';
-
-        // make network request
-        const { composeResult } = await Samios.composeMail(body);
-
-        if (composeResult.error) {
-            let errMsg;
-            if (composeResult.status === 400) {
-                errMsg = composeResult.error;
-            }
-
-            if (composeResult.status === 401) {
-                errMsg = composeResult.error;
-            }
-            showComposeAlert('error', errMsg);
-            // enable button
-            $('#compose_btn').disabled = false;
-            $('#compose_btn').style.backgroundColor = '#e68016';
-        } else {
-            if (composeResult.status === 201) {
-                // clear input
-                $("#receiver_email").value = '';
-                $("#subject").value = '';
-                $("#mail_body").value = '';
-               showComposeAlert("success", 'Mail has been sent successfully');
-               // enable button
-               $('#compose_btn').disabled = false;
-               $('#compose_btn').style.backgroundColor = '#e68016';
-             
-            }
-                       
-        }
-    } else {
-        showAlert('error', 'Something is wrong with your credentials')
-    }
-}
