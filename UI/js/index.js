@@ -187,8 +187,24 @@ if ($('.inbox-mail')) {
              const UI = new MailBox;
 
              UI.inbox(inboxResult.data);
+
+         const box = document.querySelectorAll('.box');
+         
+              $('.mail-section').addEventListener('click', async (e) => {
+                const id = e.path[3].attributes[1].value;
+                // fetch
+                const { singleResult } = await Samios.singleView(id);
+
+                // initialize ui
+                const UI = new MailBox;
+ 
+                UI.singleView(singleResult.data);
+
+           }); 
          }
 
+        
+        
      });
 }
 
@@ -209,6 +225,8 @@ if ($('.sent-mail')) {
 
      });
 }
+
+
 
 
 
