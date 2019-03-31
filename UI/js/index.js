@@ -192,6 +192,25 @@ if ($('.inbox-mail')) {
      });
 }
 
+// fetch all sent messages
+if ($('.sent-mail')) {
+     document.addEventListener('DOMContentLoaded', async () => {
+         // fetch
+         const { sentResult } = await Samios.sent();
+
+         if (sentResult.error === 'token has expired' || sentResult.error === 'not authorized') {
+             window.location = 'login.html';
+         } else {
+             // initialize ui
+             const UI = new MailBox;
+
+             UI.sent(sentResult.data);
+         }
+
+     });
+}
+
+
 
 // sign user up
 const signUp = async (body) => {
