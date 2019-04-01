@@ -99,6 +99,26 @@ export default {
     const allUnread = rows;
     return { allUnread };
   },
+  async fetchAllDraft(values) {
+    //
+    const queryString = `
+          SELECT 
+          c.id, 
+          c.parent_message_id,
+          created_on,
+          message,
+          status,
+          subject
+          FROM
+          draft_pivot a 
+          INNER JOIN messages c ON a.message_id = c.id 
+          WHERE a.user_id = $1
+          `;
+    const { rows } = await db.query(queryString, [values]);
+    const allDraft = rows;
+    return { allDraft };
+  },
+
   async fetchAllSent(values) {
     /**
      * all sent messages from db

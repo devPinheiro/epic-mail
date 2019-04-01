@@ -43,6 +43,18 @@ class MessageController {
       ];
 
       const { rows } = await db.query(insertMsgString, msgValues);
+      const draftId = rows[0].id;
+
+      const draftString = `INSERT INTO
+                          draft_pivot(message_id, user_id)
+                          VALUES($1, $2)
+                          returning *
+                          `;
+      const draftValues = [
+        draftId,
+        req.user.id,
+      ];
+      await db.query(draftString, draftValues);
       return res.status(201).json({
         status: 201,
         data: rows[0],
@@ -108,6 +120,35 @@ class MessageController {
 
       // catch any error if promise fail to resolve
     } catch (err) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
+
+  // Implement async method for all draft mails
+  static async getDraftMessage(req, res) {
+    /**
+     *
+     * @param {*} req
+     * @param {*} res
+     *
+     */
+    try {
+      const { allDraft } = await queryBuilder.fetchAllDraft(req.user.id);
+      if (allDraft) {
+        return res.status(200).json({
+          status: 200,
+          data: allDraft,
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'no messages found',
+      });
+    } catch (error) {
       // send response to clientside
       return res.status(500).json({
         status: 500,

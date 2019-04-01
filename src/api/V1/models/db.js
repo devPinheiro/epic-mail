@@ -28,7 +28,7 @@ const createMessage = `
                       messages(
                         id SERIAL PRIMARY KEY,
                         subject VARCHAR(128) NOT NULL,
-                        message VARCHAR(128) NOT NULL,
+                        message TEXT NOT NULL,
                         parent_message_id INTEGER NOT NULL,
                         status VARCHAR(10) NOT NULL,
                         created_on TIMESTAMP,
@@ -93,6 +93,14 @@ const createGroupsPivot = `CREATE TABLE IF NOT EXISTS
                           FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE
                         );`;
 
+const createDraftPivot = `CREATE TABLE IF NOT EXISTS
+                        draft_pivot(
+                          id SERIAL PRIMARY KEY,
+                          message_id INTEGER NOT NULL,
+                          user_id INTEGER NOT NULL,
+                          FOREIGN KEY (message_id) REFERENCES messages (id) ON DELETE CASCADE
+                        );`;
+
 const dropInboxQuery = `                    
                         DROP TABLE IF EXISTS inbox;                       
                         `;
@@ -116,10 +124,14 @@ const dropGroupMembersQuery = `
 const dropGroupPivots = `                    
                         DROP TABLE IF EXISTS group_pivot;                        
                         `;
+const dropDraftPivots = `                    
+                        DROP TABLE IF EXISTS draft_pivot;                        
+                        `;
 // create all tables
 const createTablesQuery = `${dropInboxQuery} 
                            ${dropSentQuery}  
-                           ${dropMessagesQuery} 
+                           ${dropDraftPivots} 
+                           ${dropMessagesQuery}                            
                            ${dropGroupPivots} 
                            ${dropGroupMembersQuery} 
                            ${dropGroupsQuery}  
@@ -130,6 +142,7 @@ const createTablesQuery = `${dropInboxQuery}
                            ${createUser} 
                            ${createGroup} 
                            ${createGroupMembers}
+                           ${createDraftPivot}
                            ${createGroupsPivot}
                            `;
 
