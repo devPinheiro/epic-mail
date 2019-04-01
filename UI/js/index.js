@@ -162,13 +162,57 @@ if ($('#compose_btn')) {
         }
  
         if (!checkMessage && payload.message === '') {
+           
+            showComposeAlert('error', 'message can not be empty')
+        }
+
+        // send mail to recipient
+        if (checkEmail && checkMessage && checkSubject) {
+            compose(payload);
+        }
+
+    };
+}
+
+if ($('#draft_btn')) {
+    $('#draft_btn').onclick = (e) => {
+
+        e.preventDefault();
+        // get user's input
+        const payload = {
+            email: $("#receiver_email").value,
+            subject: $("#subject").value,
+            message: $("#mail_body").value,
+            draft: 'draft'
+        }
+
+        // first validate user input
+        // let's do a little validation
+        let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        let checkEmail = regMail.test(payload.email); // returns a boolean 
+        let reg = /[A-Za-z]/;
+        let checkSubject = reg.test(payload.subject); // returns a boolean 
+        let checkMessage = reg.test(payload.message); // returns a boolean 
+
+        $('#receiver_email').style.border = '';
+        if (!checkEmail) {
+            $('#receiver_email').style.border = "1px solid #ff1e1e";
+            showComposeAlert('error', 'provide correct email credential')
+        }
+
+        if (!checkSubject && payload.subject === '') {
+            $('#subject').style.border = "1px solid #ff1e1e";
+            showComposeAlert('error', 'subject can not be empy')
+        }
+
+        if (!checkMessage && payload.message === '') {
             $('#mail_body').style.border = "1px solid #ff1e1e";
             showComposeAlert('error', 'message can not be empty')
         }
 
         // send mail to recipient
         if (checkEmail) {
-            compose(payload);
+            draft(payload);
         }
 
     };
@@ -187,8 +231,6 @@ if ($('.inbox-mail')) {
              const UI = new MailBox;
 
              UI.inbox(inboxResult.data);
-
-         const box = document.querySelectorAll('.box');
          
               $('.mail-section').addEventListener('click', async (e) => {
                 const id = e.path[3].attributes[1].value;
@@ -209,27 +251,95 @@ if ($('.inbox-mail')) {
 }
 
 // fetch all sent messages
-if ($('.sent-mail')) {
+if ($('.sent-section')) {
+    document.addEventListener('DOMContentLoaded', async () => {
+        // fetch
+        const { sentResult } = await Samios.sent();
+
+        if (sentResult.error === 'token has expired' || sentResult.error === 'not authorized') {
+            window.location = 'login.html';
+        } else {
+            // initialize ui
+            const UI = new MailBox;
+
+            UI.sent(sentResult.data);
+        }
+
+    });
+}
+
+let draftData;
+// fetch all draft messages
+if ($('.draft-section')) {
      document.addEventListener('DOMContentLoaded', async () => {
          // fetch
-         const { sentResult } = await Samios.sent();
+         const { draftResult } = await Samios.draft();
 
-         if (sentResult.error === 'token has expired' || sentResult.error === 'not authorized') {
+         if (draftResult.error === 'token has expired' || draftResult.error === 'not authorized') {
              window.location = 'login.html';
          } else {
              // initialize ui
              const UI = new MailBox;
+             // append to draft view
+             draftData = draftResult.data;
+             UI.draft(draftResult.data);
 
-             UI.sent(sentResult.data);
          }
 
      });
 }
 
+const editDraft = async (id) =>  {
+                 // fetch
+                     const data = draftData.filter((draft) => draft.id === id );
+                    // initialize ui
+                    const UI = new MailBox;
+                   
+                    UI.composeDraft(data[0]);
 
+                   
+                    }
+                   
+ // Listen for submit event -- Compose
+ const draftSubmit = () => {
 
+     // get user's input
+     const payload = {
+         email: $("#receiver_email").value,
+         subject: $("#subject").value,
+         message: $("#mail_body").value,
+     }
 
+     // first validate user input
+     // let's do a little validation
+     let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+     let checkEmail = regMail.test(payload.email); // returns a boolean 
+     let reg = /[A-Za-z]/;
+     let checkSubject = reg.test(payload.subject); // returns a boolean 
+     let checkMessage = reg.test(payload.message); // returns a boolean 
 
+     $('#receiver_email').style.border = '';
+     if (!checkEmail) {
+         $('#receiver_email').style.border = "1px solid #ff1e1e";
+         showComposeAlert('error', 'provide correct email credential')
+     }
+
+     if (!checkSubject && payload.subject === '') {
+         $('#subject').style.border = "1px solid #ff1e1e";
+         showComposeAlert('error', 'subject can not be empy')
+     }
+
+     if (!checkMessage && payload.message === '') {
+  
+         showComposeAlert('error', 'message can not be empty')
+     }
+
+     // send mail to recipient
+     if (checkEmail && checkMessage && checkSubject) {
+         compose(payload);
+     }
+
+ };
 // sign user up
 const signUp = async (body) => {
 
@@ -363,6 +473,10 @@ const compose = async (body) => {
                 errMsg = composeResult.error;
             }
 
+            if (composeResult.status === 404) {
+                errMsg = composeResult.error;
+            }
+
             if (composeResult.status === 401) {
                 errMsg = composeResult.error;
             }
@@ -385,7 +499,49 @@ const compose = async (body) => {
                        
         }
     } else {
-        showAlert('error', 'Something is wrong with your credentials')
+        showComposeAlert('error', 'Something is wrong with your credentials')
+    }
+}
+
+const draft = async (body) => {
+    if (body) {
+
+        // disable button
+        $('#draft_btn').disabled = true;
+        $('#draft_btn').style.backgroundColor = '#c0c0c0';
+
+        // make network request
+        const {
+            draftResult
+        } = await Samios.draftMail(body);
+
+        if (draftResult.error) {
+            let errMsg;
+            if (draftResult.status === 400) {
+                errMsg = draftResult.error;
+            }
+
+            if (draftResult.status === 401) {
+                errMsg = draftResult.error;
+            }
+            showComposeAlert('error', errMsg);
+            // enable button
+            $('#draft_btn').disabled = false;
+            $('#draft_btn').style.backgroundColor = '#e68016';
+        } else {
+            if (draftResult.status === 201) {
+                // clear input
+                $("#receiver_email").value = '';
+                $("#subject").value = '';
+                $("#mail_body").value = '';
+                showComposeAlert("success", 'Draft mail saved successfully');
+                // enable button
+                $('#draft_btn').disabled = false;
+                $('#draft_btn').style.backgroundColor = '#e68016';
+            }
+        }
+    } else {
+        showComposeAlert('error', 'Something is wrong with your credentials')
     }
 }
 
@@ -438,7 +594,7 @@ let showComposeAlert = (classN, message) => {
     alertDiv.textContent = message;
 
     //insert before form and container
-    compose_before.insertBefore(alertDiv, compose_after);
+    $('.compose-mail-form').insertBefore(alertDiv, $('#compose_after'));
 
     // Timeout after 5s
     setTimeout(function () {

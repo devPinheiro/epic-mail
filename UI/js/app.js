@@ -108,6 +108,25 @@ class Samios {
         }
     }
 
+    static async draftMail(payload) {
+        const draftR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/messages/', {
+            method: "post",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token')
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const draftResult = await draftR.json()
+
+        return {
+            draftResult
+        }
+    }
+
     static async inbox() {
         const inbox = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/messages', {
             method: "get",
@@ -158,6 +177,24 @@ class Samios {
             singleResult
         }
     }
+
+    static async draft() {
+        const draft = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/messages/draft', {
+            method: "get",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token')
+            }
+        });
+
+        const draftResult = await draft.json()
+        return {
+        draftResult
+        }
+    }
+
 
 }
 
@@ -250,4 +287,67 @@ class MailBox{
                       </div>`
 
    }
+
+   draft(res) {
+       if (res.length === 0) {
+           return '<h4 class="text-center">You have no draft messages</h4>'
+       }
+       res.forEach((mail) =>
+           // append
+           $('.draft-section').innerHTML += `<div class="box ${mail.status}" onclick="editDraft(${mail.id})">
+                        <div class="mail-action">
+                            <input type="checkbox" name="mail_action" id="mail_action">
+                        </div>
+
+                        
+                        <div class="box-top">
+                                    
+                                    <span class = "title"> ${mail.subject} </span> <span class="date">${moment(mail.created_on).fromNow()}</span >
+                                    <div class="box-body">
+                                        <p>(no recipient)</p>
+                                        <span class="body text-muted">${mail.message.substring(0, 180)}</span>
+                                    </div>
+                          
+                        </div>
+                    </div>`
+       );
+   }
+
+   composeDraft(res){
+      $('.draft-section').innerHTML = `
+       <section class="mail-app compose-mail">
+
+                        <div class="app-title">
+                                <h4> Edit Draft and Send </h6>
+            
+                            </div>
+
+                    <div class="compose-mail-form">
+                        <div id="compose_after"  class="form-g">
+                            <label for="Email">Recipient</label>
+                            <input type="email" id="receiver_email" value="" >
+                        </div>
+                        <div class="form-g">
+                             <label for="Email">Subject</label>
+                            <input type="text" name="subject" id="subject" value="${res.subject}">
+                        </div>
+                       
+                        <div class="form-g">
+                         <textarea name="mail-content" id="mail_body" cols="30" rows="15">${res.message}</textarea>
+                        </div>
+                        
+                        <div class="form-g">
+                          <button type="submit" id="compose_btn" onclick="draftSubmit()" class="btn btn-primary">Send</button>       
+                        
+                        </div>
+           
+                    </div>
+
+
+                </section>
+
+      `
+   }
+
+
 }
