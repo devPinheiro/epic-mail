@@ -10,6 +10,7 @@ messageRoute.get('/sent', auth.verifyToken, MessageController.getSentMessage);
 messageRoute.get('/draft', auth.verifyToken, MessageController.getDraftMessage);
 messageRoute.get('/:id', auth.verifyToken, MessageController.getOneMessage);
 messageRoute.delete('/:id', auth.verifyToken, MessageController.deleteMessage);
+messageRoute.delete('/draft/:id', auth.verifyToken, MessageController.deleteDraftMessage);
 messageRoute.delete('/retract/:id', auth.verifyToken, MessageController.retractMessage);
 
 export default messageRoute;
