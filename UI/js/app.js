@@ -127,6 +127,24 @@ class Samios {
         }
     }
 
+    static async deleteMail(payload) {
+        const delR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/messages/${payload}`, {
+            method: "delete",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token')
+            }
+        });
+
+        const delResult = await delR.json()
+
+        return {
+            delResult
+        }
+    }
+
     static async inbox() {
         const inbox = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/messages', {
             method: "get",
@@ -208,16 +226,18 @@ class MailBox{
      }
      res.forEach((mail) => 
           // append
-          $('.mail-section').innerHTML += `<div class="box ${mail.status}" data-id="${mail.message_id}">
+          $('.mail-section').innerHTML += `<div class="box ${mail.status}" >
                         <div class="mail-action">
-                            <input type="checkbox" name="mail_action" id="mail_action">
+                         
+                            <input type="checkbox" class="inbox-checkout" onchange="getId(${mail.message_id})"  name="mail_action" id="mail_action">
                         </div>
  
-                        <div class="box-top">
+                        <div class="box-top"  onclick="inboxMail(${mail.message_id})">
                            
                                     <span class="title">${mail.subject}</span> <span class="date">${moment(mail.created_on).fromNow()}</span>
                                     <div class="box-body">
-                                        <p class="subject">${mail.sender_id}</p>
+                                        <p class="subject">(${mail.email})</p>
+                        
                                         <span class="body text-muted">${mail.message.substring(0, 180)}</span>
                                     </div>                      
                         </div>
@@ -270,8 +290,8 @@ class MailBox{
                             <div class="box-contact">
 
                                 <div> <img class="user_img" src="https://lorempixel.com/200/200/people/" alt="" srcset=""> </div>
-                                <div class="title"><span >${res.sender_id}</span>
-                                    <p class="subject"></p>
+                                <div class="title"><span >${res.first_name} ${res.last_name}</span>
+                                    <p class="subject">${res.email}</p>
                                    
                                 </div>
 
@@ -294,13 +314,13 @@ class MailBox{
        }
        res.forEach((mail) =>
            // append
-           $('.draft-section').innerHTML += `<div class="box ${mail.status}" onclick="editDraft(${mail.id})">
+           $('.draft-section').innerHTML += `<div class="box ${mail.status}" >
                         <div class="mail-action">
                             <input type="checkbox" name="mail_action" id="mail_action">
                         </div>
 
                         
-                        <div class="box-top">
+                        <div class="box-top onclick="editDraft(${mail.id})"">
                                     
                                     <span class = "title"> ${mail.subject} </span> <span class="date">${moment(mail.created_on).fromNow()}</span >
                                     <div class="box-body">
