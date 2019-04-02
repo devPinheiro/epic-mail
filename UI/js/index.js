@@ -217,10 +217,11 @@ if ($('#draft_btn')) {
 
     };
 }
-
+let inboxData;
 // fetch all inbox messages
 if ($('.inbox-mail')) {
      document.addEventListener('DOMContentLoaded', async () => {
+         
          // fetch
          const { inboxResult } = await Samios.inbox();
 
@@ -229,25 +230,69 @@ if ($('.inbox-mail')) {
          } else {
              // initialize ui
              const UI = new MailBox;
-
+             inboxData = inboxResult.data
              UI.inbox(inboxResult.data);
-         
-              $('.mail-section').addEventListener('click', async (e) => {
-                const id = e.path[3].attributes[1].value;
-                // fetch
-                const { singleResult } = await Samios.singleView(id);
-
-                // initialize ui
-                const UI = new MailBox;
- 
-                UI.singleView(singleResult.data);
-
-           }); 
+             
          }
 
         
         
      });
+}
+
+const inboxMail = async (id) => {
+    // fetch
+    const data = inboxData.filter((inbox) => inbox.message_id === id);
+
+    // initialize ui
+    const UI = new MailBox;
+
+    UI.singleView(data[0]);
+
+    // fetch
+    await Samios.singleView(id);
+
+}
+
+let deleteId;
+// delete
+const getId = (id) => {
+    deleteId = id
+    //
+    let chk = document.querySelectorAll('#mail_action');
+    chk.forEach((checkbox, i) => {
+        if(checkbox.checked === false){
+            checkbox.disabled = true
+        }
+    })
+};
+
+
+if($('#delete')){
+    $('#delete').addEventListener('click', async ()=>{
+      if(deleteId){
+          // make a request to delete item
+          const { delResult } = await Samios.deleteMail(deleteId);
+
+          if (delResult.error) {
+              let errMsg;
+              if (delResult.status === 404) {
+                  errMsg = delResult.error;
+              }
+              if (delResult.status === 400) {
+                  errMsg = Object.values(delResult.error).join(' \n \n')
+              }
+              showDelAlert('error', errMsg);
+            console.log(errMsg)
+          } else {
+              if (delResult.status === 200) {
+                  showDelAlert("success", delResult.data.message);
+                  window.location.reload();
+              }
+
+      }
+    }
+    });
 }
 
 // fetch all sent messages
@@ -289,6 +334,8 @@ if ($('.draft-section')) {
      });
 }
 
+
+
 const editDraft = async (id) =>  {
                  // fetch
                      const data = draftData.filter((draft) => draft.id === id );
@@ -300,7 +347,7 @@ const editDraft = async (id) =>  {
                    
                     }
                    
- // Listen for submit event -- Compose
+ // Listen for submit event -- draft message
  const draftSubmit = () => {
 
      // get user's input
@@ -576,6 +623,25 @@ let showAlert = (classN, message) => {
 
     //insert before form and container
     form.insertBefore(alertDiv, container);
+
+    // Timeout after 5s
+    setTimeout(function () {
+        $('.alert').remove();
+    }, 5000);
+}
+
+// create an alert element
+let showDelAlert = (classN, message) => {
+
+    // create an error div
+    let alertDiv = document.createElement('div');
+
+    // add error message and style
+    alertDiv.className = `alert ${classN}`;
+    alertDiv.textContent = message;
+
+    //insert before form and container
+    $('.app').insertBefore(alertDiv, $('.compose-mail'));
 
     // Timeout after 5s
     setTimeout(function () {
