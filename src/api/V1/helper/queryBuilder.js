@@ -66,12 +66,17 @@ export default {
                           c.parent_message_id,
                           created_on,
                           message,
-                          subject
+                          subject,
+                          d.first_name,
+                          d.last_name,
+                          d.email
                           FROM
                           inbox a
                           INNER JOIN sent b ON a.message_id = b.message_id  
-                          INNER JOIN messages c ON b.message_id = c.id
-                          WHERE a.receiver_id = $1 AND a.delete = $2 AND b.delete = $2 `;
+                          INNER JOIN users d ON b.sender_id = d.id 
+                          INNER JOIN messages c ON b.message_id = c.id WHERE a.receiver_id = $1 AND a.delete = $2 AND b.delete = $2                         
+                          ORDER BY created_on DESC
+                          `;
     const { rows } = await db.query(queryString, [values, 0]);
     const allInbox = rows;
     return { allInbox };
@@ -102,17 +107,17 @@ export default {
   async fetchAllDraft(values) {
     //
     const queryString = `
-          SELECT 
-          c.id, 
-          c.parent_message_id,
-          created_on,
-          message,
-          status,
-          subject
+          SELECT
+            c.id,
+            c.parent_message_id,
+            created_on,
+            message,
+            status,
+            subject
           FROM
-          draft_pivot a 
-          INNER JOIN messages c ON a.message_id = c.id 
-          WHERE a.user_id = $1
+          draft_pivot a
+          INNER JOIN messages c ON a.message_id = c.id AND c.status = 'draft' WHERE a.user_id = $1
+          ORDER BY created_on DESC
           `;
     const { rows } = await db.query(queryString, [values]);
     const allDraft = rows;
@@ -134,8 +139,8 @@ export default {
                               FROM
                               sent a
                               INNER JOIN inbox b ON a.message_id = b.message_id 
-                              INNER JOIN messages c ON a.message_id = c.id
-                              WHERE a.sender_id = $1 AND a.delete = $2 
+                              INNER JOIN messages c ON a.message_id = c.id WHERE a.sender_id = $1 AND a.delete = $2                       
+                              ORDER BY created_on DESC
                               `;
     const { rows } = await db.query(queryString, [values, 0]);
     const allSent = rows;
