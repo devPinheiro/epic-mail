@@ -335,6 +335,50 @@ class MessageController {
     }
   }
 
+  // Implement async method for deleting a draft mail
+  static async deleteDraftMessage(req, res) {
+    /**
+      *
+      * @param {*} req
+      * @param {*} res
+      *
+      */
+    // validate user input
+    const { id } = req.params;
+    const { success, error } = validator.paramsValidate(id);
+    if (!success) {
+      // return errors
+      return res.status(400).json({
+        status: 400,
+        error,
+      });
+    }
+
+    try {
+      // set this message to delete = true
+      const { singleMessage } = await queryBuilder.deleteDraftMessage(id);
+      // fetch message
+      if (singleMessage) {
+        return res.status(200).json({
+          status: 200,
+          data: {
+            message: 'message deleted successfuly',
+          },
+        });
+      }
+      return res.status(404).json({
+        status: 404,
+        error: 'message does not exist',
+      });
+    } catch (err) {
+      // send response to clientside
+      return res.status(500).json({
+        status: 500,
+        error: 'server internal error',
+      });
+    }
+  }
+
   // Implement async method for retracting a mail
   static async retractMessage(req, res) {
     /**

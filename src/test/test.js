@@ -172,6 +172,26 @@ describe('POST  create / send email ', () => {
       });
   });
 
+  it('It should allow user create draft email ', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .post('/api/v1/messages/')
+      .set('x-access-token', token)
+      .send({
+        subject: 'I have a serious bug again',
+        message: 'You have been accepted into the fellowship',
+        email: 'tester@test.com',
+        draft: 'draft',
+      })
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(201);
+        res.body.should.have.property('status');
+        res.body.should.have.property('data');
+        done();
+      });
+  });
+
 
   it('It should respond with an error if user credentials are incorrect', (done) => {
     // using chai-http plugin
@@ -224,6 +244,25 @@ describe('GET fetch sent messages ', () => {
         res.should.have.status(200);
         res.body.should.have.property('status');
         res.body.should.have.property('data');
+        done();
+      });
+  });
+});
+
+let draftId;
+// GET all draft messages
+describe('GET fetch draft messages ', () => {
+  it('It should fetch draft messages ', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .get('/api/v1/messages/draft')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(200);
+        res.body.should.have.property('status');
+        res.body.should.have.property('data');
+        draftId = res.body.data[0].id;
         done();
       });
   });

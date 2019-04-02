@@ -116,10 +116,10 @@ export default {
             subject
           FROM
           draft_pivot a
-          INNER JOIN messages c ON a.message_id = c.id AND c.status = 'draft' WHERE a.user_id = $1
+          INNER JOIN messages c ON a.message_id = c.id AND c.status = $1 WHERE a.user_id = $2
           ORDER BY created_on DESC
           `;
-    const { rows } = await db.query(queryString, [values]);
+    const { rows } = await db.query(queryString, ['draft', values]);
     const allDraft = rows;
     return { allDraft };
   },
@@ -193,6 +193,18 @@ export default {
                           returning *
                           `;
     const { rows } = await db.query(queryString, [1, paramsId]);
+    const singleMessage = rows[0];
+    return { singleMessage };
+  },
+  async deleteDraftMessage(paramsId) {
+    /**
+     * delete message
+     */
+    const queryString = `DELETE FROM messages    
+                          WHERE id = $1
+                          returning *
+                          `;
+    const { rows } = await db.query(queryString, [paramsId]);
     const singleMessage = rows[0];
     return { singleMessage };
   },
