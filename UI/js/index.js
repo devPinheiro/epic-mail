@@ -322,6 +322,33 @@ if($('#delete_draft')){
     });
 }
 
+if($('#retract_sent')){
+    $('#retract_sent').addEventListener('click', async ()=>{
+      if(deleteId){
+          // make a request to delete item
+          const { delResult } = await Samios.retractMail(deleteId);
+
+          if (delResult.error) {
+              let errMsg;
+              if (delResult.status === 404) {
+                  errMsg = delResult.error;
+              }
+              if (delResult.status === 400) {
+                  errMsg = Object.values(delResult.error).join(' \n \n')
+              }
+              showDelAlert('error', errMsg);
+            console.log(errMsg)
+          } else {
+              if (delResult.status === 200) {
+                  showDelAlert("success", delResult.data.message);
+                  window.location.reload();
+              }
+
+      }
+    }
+    });
+}
+
 // fetch all sent messages
 if ($('.sent-section')) {
     document.addEventListener('DOMContentLoaded', async () => {
