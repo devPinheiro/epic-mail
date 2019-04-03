@@ -349,6 +349,7 @@ if($('#retract_sent')){
     });
 }
 
+let sentData;
 // fetch all sent messages
 if ($('.sent-section')) {
     document.addEventListener('DOMContentLoaded', async () => {
@@ -360,11 +361,22 @@ if ($('.sent-section')) {
         } else {
             // initialize ui
             const UI = new MailBox;
-
+            sentData = sentResult.data;
             UI.sent(sentResult.data);
         }
 
     });
+}
+
+const viewSent = async (id) => {
+    console.log(sentData)
+    // fetch
+    const data = sentData.filter((sent) => sent.message_id === id);
+    // initialize ui
+    const UI = new MailBox;
+    UI.sentView(data[0]);
+
+
 }
 
 let draftData;
