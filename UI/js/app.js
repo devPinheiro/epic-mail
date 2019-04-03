@@ -249,6 +249,25 @@ class Samios {
         }
     }
 
+    static async createGroup(payload) {
+        const createR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/groups', {
+            method: "post",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token')
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const createResult = await createR.json()
+
+        return {
+            createResult
+        }
+    }
+
 
 }
 
