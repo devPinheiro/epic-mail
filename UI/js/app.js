@@ -163,6 +163,24 @@ class Samios {
          }
      }
 
+    static async retractMail(payload) {
+        const delR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/messages/retract/${payload}`, {
+            method: "delete",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token')
+            }
+        });
+
+        const delResult = await delR.json()
+
+        return {
+            delResult
+        }
+    }
+
     static async inbox() {
         const inbox = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/messages', {
             method: "get",
@@ -273,7 +291,7 @@ class MailBox{
            // append
            $('.mail-section').innerHTML += `<div class="box ${mail.status}">
                         <div class="mail-action">
-                            <input type="checkbox" name="mail_action" id="mail_action">
+                            <input type="checkbox" onchange="getId(${mail.message_id})" name="mail_action" id="mail_action">
                         </div>
 
                         
