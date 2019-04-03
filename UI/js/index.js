@@ -735,3 +735,83 @@ let showComposeAlert = (classN, message) => {
 }
 
 
+/***
+ * Group Functionalities
+ * 
+ *  */
+
+if ($('#create_grp_btn')) {
+    $('#create_grp_btn').addEventListener('click', (e) => {
+       //  
+         e.preventDefault();
+         // get user's input
+         const payload = {
+             name: $("#name").value,
+         }
+         
+         // make network request
+         createGroup(payload);
+    });
+}
+
+// create group
+const createGroup = async (body) => {
+    if (body) {
+
+        // disable button
+        $('#create_grp_btn').disabled = true;
+        $('#create_grp_btn').style.backgroundColor = '#c0c0c0';
+
+        // make network request
+        const {
+            createResult
+        } = await Samios.createGroup(body);
+
+        if (createResult.error) {
+            let errMsg;
+            if (createResult.status === 400) {
+                errMsg = Object.values(createResult.error).join(' \n \n');
+            }
+
+            if (createResult.status === 401) {
+                errMsg = createResult.error;
+            }
+            showCreateAlert('error', errMsg);
+            // enable button
+            $('#create_grp_btn').disabled = false;
+            $('#create_grp_btn').style.backgroundColor = '#e68016';
+        } else {
+            if (createResult.status === 201) {
+                // clear input
+                $("#name").value = '';
+                showCreateAlert("success", 'Group created successfully');
+                // enable button
+                $('#create_grp_btn').disabled = false;
+                $('#create_grp_btn').style.backgroundColor = '#e68016';
+
+            }
+
+        }
+    } else {
+        showCreateAlert('error', 'Something is wrong with your credentials')
+    }
+}
+
+// create group alert
+let showCreateAlert = (classN, message) => {
+
+    // create an error div
+    let alertDiv = document.createElement('div');
+
+    // add error message and style
+    alertDiv.className = `alert ${classN}`;
+    alertDiv.textContent = message;
+
+    //insert before form and container
+    $('.compose-mail-form').insertBefore(alertDiv, $('.create_group'));
+
+    // Timeout after 5s
+    setTimeout(function () {
+        $('.alert').remove();
+    }, 5000);
+}
