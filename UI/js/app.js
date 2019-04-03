@@ -295,14 +295,14 @@ class MailBox{
                         </div>
 
                         
-                        <div class="box-top">
-                            <a href="view-box.html">
+                        <div class="box-top" onclick="viewSent(${mail.message_id})">
+                            
                                     <span class = "title"> ${mail.subject} </span> <span class="date">${moment(mail.created_on).fromNow()}</span >
                                     <div class="box-body">
                                         <p class="subject">${mail.sender_id}</p>
                                         <span class="body text-muted">${mail.message.substring(0, 180)}</span>
                                     </div>
-                             </a>
+                            
                         </div>
                     </div>`
        );
@@ -404,6 +404,36 @@ class MailBox{
 
       `
    }
+
+    sentView(res) {
+        // append
+        $('.mail-section').innerHTML = `
+                   <div class="app-title">
+                          <h4 class="subject">${res.subject}</h6>
+                          
+                       </div>
+                        
+                        <div class="box no-border">
+                            <div class="box-contact">
+
+                                <div> <img class="user_img" src="https://lorempixel.com/200/200/people/" alt="" srcset=""> </div>
+                                <div class="title"><span >${res.receiver_id}</span>
+                                 
+                                   
+                                </div>
+
+                            </div>
+
+                            <div class="box-top">
+                                <span class="reply date">${moment(res.created_on).format("dddd, MMMM Do, h:mm a")}</span>                                   
+                            </div>  
+                       </div>
+                       
+                       <div class="box-mail-body">                                           
+                          <span  class="body text-muted">${res.message}</span>
+                      </div>`
+
+    }
 
 
 }
