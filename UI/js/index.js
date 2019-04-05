@@ -307,7 +307,6 @@ if($('#delete_draft')){
                   errMsg = Object.values(delResult.error).join(' \n \n')
               }
               showDelAlert('error', errMsg);
-            console.log(errMsg)
           } else {
               if (delResult.status === 200) {
                   showDelAlert("success", delResult.data.message);
@@ -809,6 +808,32 @@ if ($('.group')) {
              
          }        
      });
+}
+
+// delete group
+const delGroup = async (deleteId) => {
+     
+      if (confirm('Are you sure you want to delete this group?')) {
+          // make a request to delete item
+          const { delResult } = await Samios.deleteGroup(deleteId);
+
+          if (delResult.error) {
+              let errMsg;
+              if (delResult.status === 404) {
+                  errMsg = delResult.error;
+              }
+              if (delResult.status === 400) {
+                  errMsg = Object.values(delResult.error).join(' \n \n')
+              }
+              showDelAlert('error', errMsg);
+          } else {
+              if (delResult.status === 200) {
+                  showDelAlert("success", delResult.data.message);
+                  window.location.reload();
+              }
+
+      }
+    }
 }
 
 // create group alert
