@@ -233,10 +233,7 @@ if ($('.inbox-mail')) {
              inboxData = inboxResult.data
              UI.inbox(inboxResult.data);
              
-         }
-
-        
-        
+         }        
      });
 }
 
@@ -788,13 +785,30 @@ const createGroup = async (body) => {
                 // enable button
                 $('#create_grp_btn').disabled = false;
                 $('#create_grp_btn').style.backgroundColor = '#e68016';
-
             }
-
         }
     } else {
         showCreateAlert('error', 'Something is wrong with your credentials')
     }
+}
+
+
+// fetch all groups
+if ($('.group')) {
+     document.addEventListener('DOMContentLoaded', async () => {
+         
+         // fetch
+         const { groupResult } = await Samios.allGroups();
+
+         if (groupResult.error === 'token has expired' || groupResult.error === 'not authorized') {
+             window.location = 'login.html';
+         } else {
+             // initialize ui
+             const UI = new MailBox;
+             UI.allGroups(groupResult.data);
+             
+         }        
+     });
 }
 
 // create group alert

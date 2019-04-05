@@ -320,7 +320,6 @@ section {
     padding: 10px 2px;
     font-size: 14px;
     border-bottom: 1px solid #f0f0f0;
-
 }
 
 .mail-app>.mail-section>.box:hover {
@@ -695,6 +694,17 @@ a {
     border-radius: 50%;
     width: 60px;
     height: 60px;
+}
+
+.green {
+    margin-right: 25px;
+    color: #109410;
+    cursor: pointer;
+}
+
+.red {
+    color: #ec2b2b;
+    cursor: pointer;
 }
 
 /* -------------------------- Alert Notification ------------*/

@@ -267,7 +267,23 @@ class Samios {
             createResult
         }
     }
+    
+    static async allGroups() {
+         const group = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/groups', {
+             method: "get",
+             mode: "cors",
+             headers: {
+                 Accept: "application/json",
+                 "Content-Type": "application/json",
+                 "x-access-token": localStorage.getItem('token')
+             }
+         });
 
+         const groupResult = await group.json()
+         return {
+             groupResult
+         }
+     }
 
 }
 
@@ -453,6 +469,23 @@ class MailBox{
                       </div>`
 
     }
-
+    
+    allGroups(res){
+        if(res.length === 0){
+            return '<h4 class="text-center">You have no groups created</h4>'
+        }
+        res.forEach((group) => {
+        $('.container-grid-3').innerHTML +=`
+                        <div class="contact">            
+                             <span><i class="ion-ios-people"></i></span>
+                            <p class="title" data-id="${group.id}">${group.name}</p>
+                            <div class="actions">
+                                <span> <i class="ion-edit green"></i></span>
+                                <span onclick="delGroup(${group.id})"> <i class="ion-ios-trash red"></i></span>
+                            </div>
+                        </div>
+        `
+        });
+    }
 
 }
