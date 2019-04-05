@@ -285,6 +285,24 @@ class Samios {
          }
      }
 
+    static async deleteGroup(payload) {
+         const delR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/groups/${payload}`, {
+             method: "delete",
+             mode: "cors",
+             headers: {
+                 Accept: "application/json",
+                 "Content-Type": "application/json",
+                 "x-access-token": localStorage.getItem('token')
+             }
+         });
+
+         const delResult = await delR.json()
+
+         return {
+             delResult
+         }
+     }
+
 }
 
 
