@@ -27,16 +27,11 @@ const PORT = process.env.PORT || 4100;
  *
  * @method express.urlencoded() parses incoming requests with urlencode payloads
  *  */
- 
-//cors options
-let corsOptions = {
-  origin: "*",
-  methods: 'GET, POST, PUT, PATCH, DELETE',
-  optionSuccessStatus: 200
-}
 
-//cors middleware function
-app.use(cors(corsOptions));
+app.options('*', cors());
+
+// cors middleware function
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({
