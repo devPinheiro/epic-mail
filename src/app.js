@@ -31,6 +31,7 @@ const PORT = process.env.PORT || 4100;
 //cors options
 let corsOptions = {
   origin: "*",
+  methods: 'GET, POST, PUT, PATCH, DELETE',
   optionSuccessStatus: 200
 }
 
