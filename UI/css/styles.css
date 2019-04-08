@@ -728,6 +728,38 @@ a {
     background: rgba(255, 30, 30, 0.639);
 }
 
+/* -------------------- Modal ---------------- */
+.modal{
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 0 Auto;
+    width: 500px;
+    margin-top: 280px;
+    transition: ease-in;
+    padding: 30px 25px;
+    box-shadow: 0px 0px 6px 1px rgba(86, 84, 84, 0.14);
+
+}
+
+.close{
+    color: #222;
+    float: right;
+    font-size: 24px;
+}
+
+.close:hover{
+    cursor: pointer;
+}
 
 
 /* --------------------------- Media Query --------------------- */

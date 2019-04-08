@@ -188,22 +188,22 @@ if ($('#draft_btn')) {
 
         // first validate user input
         // let's do a little validation
-        let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-        let checkEmail = regMail.test(payload.email); // returns a boolean 
+        // let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        // let checkEmail = regMail.test(payload.email); // returns a boolean 
         let reg = /[A-Za-z]/;
         let checkSubject = reg.test(payload.subject); // returns a boolean 
         let checkMessage = reg.test(payload.message); // returns a boolean 
 
-        $('#receiver_email').style.border = '';
-        if (!checkEmail) {
-            $('#receiver_email').style.border = "1px solid #ff1e1e";
-            showComposeAlert('error', 'provide correct email credential')
-        }
+        // $('#receiver_email').style.border = '';
+        // if (!checkEmail) {
+        //     $('#receiver_email').style.border = "1px solid #ff1e1e";
+        //     showComposeAlert('error', 'provide correct email credential')
+        // }
 
-        if (!checkSubject && payload.subject === '') {
-            $('#subject').style.border = "1px solid #ff1e1e";
-            showComposeAlert('error', 'subject can not be empy')
-        }
+        // if (!checkSubject && payload.subject === '') {
+        //     $('#subject').style.border = "1px solid #ff1e1e";
+        //     showComposeAlert('error', 'subject can not be empy')
+        // }
 
         if (!checkMessage && payload.message === '') {
             $('#mail_body').style.border = "1px solid #ff1e1e";
@@ -211,7 +211,7 @@ if ($('#draft_btn')) {
         }
 
         // send mail to recipient
-        if (checkEmail) {
+        if (checkMessage) {
             draft(payload);
         }
 
@@ -280,7 +280,7 @@ if($('#delete')){
                   errMsg = Object.values(delResult.error).join(' \n \n')
               }
               showDelAlert('error', errMsg);
-            console.log(errMsg)
+            
           } else {
               if (delResult.status === 200) {
                   showDelAlert("success", delResult.data.message);
@@ -333,7 +333,7 @@ if($('#retract_sent')){
                   errMsg = Object.values(delResult.error).join(' \n \n')
               }
               showDelAlert('error', errMsg);
-            console.log(errMsg)
+         
           } else {
               if (delResult.status === 200) {
                   showDelAlert("success", delResult.data.message);
@@ -365,7 +365,7 @@ if ($('.sent-section')) {
 }
 
 const viewSent = async (id) => {
-    console.log(sentData)
+   
     // fetch
     const data = sentData.filter((sent) => sent.message_id === id);
     // initialize ui
@@ -399,14 +399,12 @@ if ($('.draft-section')) {
 
 
 const editDraft = async (id) =>  {
+              
                  // fetch
                      const data = draftData.filter((draft) => draft.id === id );
                     // initialize ui
                     const UI = new MailBox;
-                   
-                    UI.composeDraft(data[0]);
-
-                   
+                    UI.composeDraft(data[0]);                
                     }
                    
  // Listen for submit event -- draft message
@@ -627,7 +625,7 @@ const draft = async (body) => {
         if (draftResult.error) {
             let errMsg;
             if (draftResult.status === 400) {
-                errMsg = draftResult.error;
+                errMsg = Object.values(draftResult.error).join('');
             }
 
             if (draftResult.status === 401) {
@@ -759,9 +757,7 @@ const createGroup = async (body) => {
         $('#create_grp_btn').style.backgroundColor = '#c0c0c0';
 
         // make network request
-        const {
-            createResult
-        } = await Samios.createGroup(body);
+        const { createResult } = await Samios.createGroup(body);
 
         if (createResult.error) {
             let errMsg;
@@ -836,6 +832,77 @@ const delGroup = async (deleteId) => {
     }
 }
 
+const openModal = (name, id) => {
+    $('.modal').style.display = 'block';
+    $('#update_name').value = name;
+    $('#group_id').value = id;  
+};
+
+if($('.close')){
+    $('.close').addEventListener('click', ()=>{
+       $('.modal').style.display = 'none';
+    });
+}
+
+window.onclick = (e) => {
+    return e.target == $('.modal') ? $('.modal').style.display = 'none' : '';
+};
+
+ // update
+ if($('#update_group')){
+     $('#update_group').addEventListener('click', (e)=>{
+        e.preventDefault();
+        // payload for network request
+        const payload = {
+            name: $('#update_name').value,
+            id: $('#group_id').value
+        }
+
+        // update group
+        updateGroup(payload)
+        
+     });
+ }
+
+ const updateGroup = async (body) => {
+     if (body) {
+
+         // disable button
+         $('#update_group').disabled = true;
+         $('#update_group').style.backgroundColor = '#c0c0c0';
+
+         // make network request
+         const { editResult } = await Samios.editGroup(body);
+
+         if (editResult.error) {
+             let errMsg;
+             if (editResult.status === 400) {
+                 errMsg = Object.values(editResult.error).join(' \n \n');
+             }
+
+             if (editResult.status === 401) {
+                 errMsg = editResult.error;
+             }
+             showCreateAlert('error', errMsg);
+             // enable button
+             $('#update_group').disabled = false;
+             $('#update_group').style.backgroundColor = '#e68016';
+         } else {
+             if (editResult.status === 200) {
+                 // clear input
+                 $("#update_name").value = '';
+                
+                 // enable button
+                 $('#update_group').disabled = false;
+                 $('#update_group').style.backgroundColor = '#e68016';
+
+                 window.location.reload();
+             }
+         }
+     } else {
+         showCreateAlert('error', 'Something is wrong with your credentials')
+     }
+ }
 // create group alert
 let showCreateAlert = (classN, message) => {
 

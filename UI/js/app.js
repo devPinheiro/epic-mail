@@ -27,8 +27,10 @@ if(closeSidebar) {
         openSidebar.style.display = 'block';
         closeSidebar.style.display = "none";
     });
-
 }
+
+
+
 
 
 // API library
@@ -303,12 +305,28 @@ class Samios {
          }
      }
 
+    static async editGroup(payload) {
+          const editR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/groups/${payload.id}`, {
+              method: "PATCH",
+              mode: "cors",
+              headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  "x-access-token": localStorage.getItem('token'),
+              },
+              body: JSON.stringify({name: payload.name})
+          });
+          const editResult = await editR.json()
+          return {
+              editResult
+          }
+      }
+
 }
 
 
 // Mailbox UI class
 class MailBox{
-
    inbox(res){
      if (res.length === 0) {
          return '<h4 class="text-center">You have no messages</h4>'
@@ -363,7 +381,6 @@ class MailBox{
 
    }
 
-
     singleView(res) {
        if (res.length === 0) {
            return '<h4 class="text-center">Message has been deleted</h4>'
@@ -409,7 +426,7 @@ class MailBox{
                         </div>
 
                         
-                        <div class="box-top onclick="editDraft(${mail.id})"">
+                        <div class="box-top" onclick="editDraft(${mail.id})">
                                     
                                     <span class = "title"> ${mail.subject} </span> <span class="date">${moment(mail.created_on).fromNow()}</span >
                                     <div class="box-body">
@@ -496,9 +513,9 @@ class MailBox{
         $('.container-grid-3').innerHTML +=`
                         <div class="contact">            
                              <span><i class="ion-ios-people"></i></span>
-                            <p class="title" data-id="${group.id}">${group.name}</p>
+                            <p class="title">${group.name}</p>
                             <div class="actions">
-                                <span> <i class="ion-edit green"></i></span>
+                                <span onclick="openModal('${group.name}', ${group.id})"> <i class="ion-edit green"></i></span>
                                 <span onclick="delGroup(${group.id})"> <i class="ion-ios-trash red"></i></span>
                             </div>
                         </div>
@@ -506,4 +523,5 @@ class MailBox{
         });
     }
 
+    
 }
