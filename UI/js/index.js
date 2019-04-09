@@ -187,23 +187,11 @@ if ($('#draft_btn')) {
         }
 
         // first validate user input
-        // let's do a little validation
-        // let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-        // let checkEmail = regMail.test(payload.email); // returns a boolean 
         let reg = /[A-Za-z]/;
         let checkSubject = reg.test(payload.subject); // returns a boolean 
         let checkMessage = reg.test(payload.message); // returns a boolean 
 
-        // $('#receiver_email').style.border = '';
-        // if (!checkEmail) {
-        //     $('#receiver_email').style.border = "1px solid #ff1e1e";
-        //     showComposeAlert('error', 'provide correct email credential')
-        // }
-
-        // if (!checkSubject && payload.subject === '') {
-        //     $('#subject').style.border = "1px solid #ff1e1e";
-        //     showComposeAlert('error', 'subject can not be empy')
-        // }
+    
 
         if (!checkMessage && payload.message === '') {
             $('#mail_body').style.border = "1px solid #ff1e1e";
@@ -780,6 +768,12 @@ const createGroup = async (body) => {
                 // enable button
                 $('#create_grp_btn').disabled = false;
                 $('#create_grp_btn').style.backgroundColor = '#e68016';
+
+                // fetch
+                const { groupResult } = await Samios.allGroups();
+                // initialize ui
+                const UI = new MailBox;
+                UI.allGroups(groupResult.data);
             }
         }
     } else {
@@ -825,6 +819,12 @@ const delGroup = async (deleteId) => {
           } else {
               if (delResult.status === 200) {
                   showDelAlert("success", delResult.data.message);
+
+                  // fetch
+                const { groupResult } = await Samios.allGroups();
+                // initialize ui
+                const UI = new MailBox;
+                UI.allGroups(groupResult.data);
               }
       }
     }
@@ -904,22 +904,25 @@ window.onclick = (e) => {
 
 
  // add user to group
-const viewGroup = (id) => {
-    if(id){   
+ let groupN;
+const viewGroup = async (id, groupName) => {
+    if(id){  
+        groupN = groupName;
+        // get group 
+        const { groupResult } = await Samios.getGroup(id);
        // initialize ui
        const UI = new MailBox;
-       UI.viewGroup(id);
+       UI.viewGroup(groupResult.data, id, groupName);
+
     }
 }
 
-const view = () => {
-        
+const addUserGroup = () => {       
         // payload for network request
         const payload = {
             email: $('#user_email').value,
             id: $('#group_id').value
         }
-
         // add user to group
         addUser(payload)
 }
@@ -960,12 +963,51 @@ const view = () => {
                  $('#add_user').disabled = false;
                  $('#add_user').style.backgroundColor = '#e68016';
 
-                 window.location.reload();
+                 viewGroup(body.id, groupN);
              }
          }
      } else {
          showCreateAlert('error', 'Something is wrong with your credentials')
      }
+ }
+
+ //delete user from group
+ let userId;
+ let groupUid;
+ const delUser = (memberId, groupId) => {
+     userId = memberId;
+     groupUid = groupId;
+     // check user 
+     let chk = document.querySelectorAll('#mail_action');
+     chk.forEach((checkbox, i) => {
+         if (checkbox.checked === false) {
+             checkbox.disabled = true
+         }
+     });
+ };
+
+const deleteUser = async ()=>{
+           if(userId){
+                // make a request to delete item
+                const { delResult } = await Samios.deleteUserGroup(userId, groupUid);
+
+                if (delResult.error) {
+                    let errMsg;
+                    if (delResult.status === 404) {
+                        errMsg = delResult.error;
+                    }
+                    if (delResult.status === 400) {
+                        errMsg = Object.values(delResult.error).join(' \n \n')
+                    }
+                    showDelAlert('error', errMsg);
+                    
+                } else {
+                    if (delResult.status === 200) {
+                        showDelAlert("success", delResult.data.message);
+                        viewGroup(groupUid, groupN);
+                    }
+            }
+    }
  }
 // create group alert
 let showCreateAlert = (classN, message) => {

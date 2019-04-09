@@ -323,7 +323,23 @@ class Samios {
       }
 
 
-      static async addUserGroup(payload) {
+    static async getGroup(payload) {
+          const groupR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/groups/${payload}`, {
+              method: "GET",
+              mode: "cors",
+              headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  "x-access-token": localStorage.getItem('token'),
+              }
+          });
+          const groupResult = await groupR.json()
+          return {
+              groupResult
+          }
+    }
+
+    static async addUserGroup(payload) {
           const addUserR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/groups/${payload.id}/users`, {
               method: "POST",
               mode: "cors",
@@ -338,7 +354,25 @@ class Samios {
           return {
               addUserResult
           }
-      }
+    }
+
+    static async deleteUserGroup(userId, groupId) {
+         const delR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/groups/${groupId}/users/${userId}`, {
+             method: "delete",
+             mode: "cors",
+             headers: {
+                 Accept: "application/json",
+                 "Content-Type": "application/json",
+                 "x-access-token": localStorage.getItem('token')
+             }
+         });
+
+         const delResult = await delR.json()
+
+         return {
+             delResult
+         }
+    }
 
 }
 
@@ -527,11 +561,12 @@ class MailBox{
         if(res.length === 0){
             return '<h4 class="text-center">You have no groups created</h4>'
         }
+          $('.container-grid-3').innerHTML  = '';
         res.forEach((group) => {
         $('.container-grid-3').innerHTML +=`
                         <div class="contact">            
                              <span><i class="ion-ios-people"></i></span>
-                            <p class="title" onclick="viewGroup(${group.id})">${group.name}</p>
+                            <p class="title group_title" onclick="viewGroup(${group.id}, '${group.name}')">${group.name}</p>
                             <div class="actions">
                                 <span onclick="openModal('${group.name}', ${group.id})"> <i class="ion-edit green"></i></span>
                                 <span onclick="delGroup(${group.id})"> <i class="ion-ios-trash red"></i></span>
@@ -541,14 +576,21 @@ class MailBox{
         });
     }
     
-    viewGroup(res){
+    viewGroup(res, id, groupName){
         // clear up
         $('.group').innerHTML = '';
-        if(res){
+        if(id){
             $('.group').innerHTML = `
                 <section class="mail-app compose-mail">
+                          <div class="app-title container-grid-mail-action">
+                            
+                        <span><h4> <a href="group.html"><i class="ion-chevron-left icon"></i></a> ${groupName}</h4></span>
+                            
+                        </div>
+                          
+                         <br>
                          <div class="app-title">
-                            <h4> Add User to Group</h6>
+                            <p> Add New Member </p>
 
                         </div>
                  
@@ -556,17 +598,51 @@ class MailBox{
                         <div class="form-g create_group">
                             <label for="group">Email</label>
                             <input type="email"  id="user_email">
-                            <input type="hidden" id="group_id" value="${res}">     
+                            <input type="hidden" id="group_id" value="${id}">     
                         </div>
 
                         <div class="form-g">
-                            <button type="submit" onclick="view()" id="add_user" class="btn btn-primary">Add User</button>
+                            <button type="submit" onclick="addUserGroup()" id="add_user" class="btn btn-primary">Add User</button>
                          </div>
                        
                     </div>
 
                 </section>
+
+                <section class="mail-app compose-mail group_members">
+                    <div class="app-title container-grid-mail-action">   
+                        <span><h4> All Group Members (${ res ? res.length : 0}) </h4></span>
+                                
+                        <div class="text-right mail-action-btn">
+                            <span onclick="deleteUser()">
+                            <i class="ion-ios-trash-outline icon-lg"></i>
+                        </span>
+                        </div>
+                        </div>
+                 </section>
             `;
+        }
+
+        if (res){
+          res.forEach((member) => {
+             $('.group_members').innerHTML += `
+                     
+                       <div class="box contact-box">
+                        <div class="mail-action">
+                            <input type="checkbox" onclick="delUser(${member.user_id}, ${id})" name="mail_action" id="mail_action">
+                        </div>
+
+                        <div class="box-contact">
+                                <div> <img class="user_img" src="https://picsum.photos/200/" alt="" srcset=""> </div>
+                                  <div>
+                                    <span class="title">${member.first_name} ${member.last_name}</span>
+                                    <p class="subject">member</p>
+                                  </div>
+                           
+                        </div>
+                    </div>
+             `;
+          });
         }
     }
     
