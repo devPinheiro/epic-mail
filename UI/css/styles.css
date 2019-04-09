@@ -761,6 +761,10 @@ a {
     cursor: pointer;
 }
 
+.group_title {
+    cursor: pointer;
+}
+
 
 /* --------------------------- Media Query --------------------- */
 
