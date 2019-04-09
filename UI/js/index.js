@@ -825,9 +825,7 @@ const delGroup = async (deleteId) => {
           } else {
               if (delResult.status === 200) {
                   showDelAlert("success", delResult.data.message);
-                  window.location.reload();
               }
-
       }
     }
 }
@@ -895,6 +893,72 @@ window.onclick = (e) => {
                  // enable button
                  $('#update_group').disabled = false;
                  $('#update_group').style.backgroundColor = '#e68016';
+
+                 window.location.reload();
+             }
+         }
+     } else {
+         showCreateAlert('error', 'Something is wrong with your credentials')
+     }
+ }
+
+
+ // add user to group
+const viewGroup = (id) => {
+    if(id){   
+       // initialize ui
+       const UI = new MailBox;
+       UI.viewGroup(id);
+    }
+}
+
+const view = () => {
+        
+        // payload for network request
+        const payload = {
+            email: $('#user_email').value,
+            id: $('#group_id').value
+        }
+
+        // add user to group
+        addUser(payload)
+}
+
+ const addUser = async (body) => {
+     if (body) {
+
+         // disable button
+         $('#add_user').disabled = true;
+         $('#add_user').style.backgroundColor = '#c0c0c0';
+
+         // make network request
+         const { addUserResult } = await Samios.addUserGroup(body);
+
+         if (addUserResult.error) {
+             let errMsg;
+             if (addUserResult.status === 400) {
+                 errMsg = Object.values(addUserResult.error).join(' \n \n');
+             }
+
+             if (addUserResult.status === 401) {
+                 errMsg = addUserResult.error;
+             }
+
+              if (addUserResult.status === 404) {
+                  errMsg = addUserResult.error;
+              }
+             showCreateAlert('error', errMsg);
+             // enable button
+             $('#add_user').disabled = false;
+             $('#add_user').style.backgroundColor = '#e68016';
+         } else {
+             if (addUserResult.status === 201) {
+                 // clear input
+                 $("#user_email").value = '';
+                
+                 // enable button
+                 $('#add_user').disabled = false;
+                 $('#add_user').style.backgroundColor = '#e68016';
 
                  window.location.reload();
              }
