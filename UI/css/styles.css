@@ -744,9 +744,9 @@ a {
     background-color: #fff;
     margin: 0 Auto;
     width: 500px;
-    margin-top: 280px;
+    margin-top: 200px;
     transition: ease-in;
-    padding: 30px 25px;
+    padding: 20px 25px;
     box-shadow: 0px 0px 6px 1px rgba(86, 84, 84, 0.14);
 
 }

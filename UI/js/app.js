@@ -322,6 +322,24 @@ class Samios {
           }
       }
 
+
+      static async addUserGroup(payload) {
+          const addUserR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/groups/${payload.id}/users`, {
+              method: "POST",
+              mode: "cors",
+              headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                  "x-access-token": localStorage.getItem('token'),
+              },
+              body: JSON.stringify({email: payload.email})
+          });
+          const addUserResult = await addUserR.json()
+          return {
+              addUserResult
+          }
+      }
+
 }
 
 
@@ -513,7 +531,7 @@ class MailBox{
         $('.container-grid-3').innerHTML +=`
                         <div class="contact">            
                              <span><i class="ion-ios-people"></i></span>
-                            <p class="title">${group.name}</p>
+                            <p class="title" onclick="viewGroup(${group.id})">${group.name}</p>
                             <div class="actions">
                                 <span onclick="openModal('${group.name}', ${group.id})"> <i class="ion-edit green"></i></span>
                                 <span onclick="delGroup(${group.id})"> <i class="ion-ios-trash red"></i></span>
@@ -522,6 +540,34 @@ class MailBox{
         `
         });
     }
+    
+    viewGroup(res){
+        // clear up
+        $('.group').innerHTML = '';
+        if(res){
+            $('.group').innerHTML = `
+                <section class="mail-app compose-mail">
+                         <div class="app-title">
+                            <h4> Add User to Group</h6>
 
+                        </div>
+                 
+                      <div class="compose-mail-form">
+                        <div class="form-g create_group">
+                            <label for="group">Email</label>
+                            <input type="email"  id="user_email">
+                            <input type="hidden" id="group_id" value="${res}">     
+                        </div>
+
+                        <div class="form-g">
+                            <button type="submit" onclick="view()" id="add_user" class="btn btn-primary">Add User</button>
+                         </div>
+                       
+                    </div>
+
+                </section>
+            `;
+        }
+    }
     
 }
