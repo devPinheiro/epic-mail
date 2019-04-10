@@ -6,6 +6,20 @@ let container = $("#login-form"),
     compose_before = $('.compose-mail-form'),
     compose_after = $('#compose_after');
 
+// toggle group drop down
+if($('#checkGroup')){
+  $('.dropdownGroup').style.display = 'none';
+  $('#checkGroup').addEventListener('change', ()=>{
+      if($('#checkGroup').checked === true){
+            $("#receiverInput").style.display = "none";
+            $(".dropdownGroup").style.display = "block"; 
+      }else {
+            $("#receiverInput").style.display = "block";
+            $(".dropdownGroup").style.display = "none"; 
+      }
+    
+  });
+}
 
 // Listen for submit event -- Sign Up
 if ($('#signup_btn')){
@@ -135,42 +149,77 @@ if ($('#compose_btn')) {
     $('#compose_btn').onclick = (e) => {
 
         e.preventDefault();
-        // get user's input
-        const payload = {
-            email: $("#receiver_email").value,
-            subject: $("#subject").value,
-            message: $("#mail_body").value,
+        // check if it's group message
+        if($('#checkGroup').checked === true){
+            // get user's input
+            const grpPayload = {
+              subject: $("#subject").value,
+              message: $("#mail_body").value,
+              id: $('#showGroups').value
+            };
+            
+            // first validate user input
+            // let's do a little validation
+            let reg = /[A-Za-z]/;
+            let checkSubject = reg.test(grpPayload.subject); // returns a boolean 
+            let checkMessage = reg.test(grpPayload.message); // returns a boolean 
+
+            if (!checkSubject && grpPayload.subject === '') {
+                $('#subject').style.border = "1px solid #ff1e1e";
+                showComposeAlert('error', 'subject can not be empy')
+            }
+    
+            if (!checkMessage && grpPayload.message === '') {
+            
+                showComposeAlert('error', 'message can not be empty')
+            }
+
+            // send mail to recipient
+            if ( checkMessage && checkSubject) {
+                composeGroup(grpPayload);
+            }
+
+
+        } else {
+            // get user's input
+            const payload = {
+                email: $("#receiver_email").value,
+                subject: $("#subject").value,
+                message: $("#mail_body").value,
+            }
+
+            // first validate user input
+            // let's do a little validation
+            let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+            let checkEmail = regMail.test(payload.email); // returns a boolean 
+            let reg = /[A-Za-z]/;
+            let checkSubject = reg.test(payload.subject); // returns a boolean 
+            let checkMessage = reg.test(payload.message); // returns a boolean 
+
+            $('#receiver_email').style.border = '';
+            if (!checkEmail) {
+                $('#receiver_email').style.border = "1px solid #ff1e1e";
+                showComposeAlert('error', 'provide correct email credential')
+            }
+
+            if (!checkSubject && payload.subject === '') {
+                $('#subject').style.border = "1px solid #ff1e1e";
+                showComposeAlert('error', 'subject can not be empy')
+            }
+    
+            if (!checkMessage && payload.message === '') {
+            
+                showComposeAlert('error', 'message can not be empty')
+            }
+
+            // send mail to recipient
+            if (checkEmail && checkMessage && checkSubject) {
+                compose(payload);
+            }
+
         }
 
-        // first validate user input
-        // let's do a little validation
-        let regMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-        let checkEmail = regMail.test(payload.email); // returns a boolean 
-        let reg = /[A-Za-z]/;
-        let checkSubject = reg.test(payload.subject); // returns a boolean 
-        let checkMessage = reg.test(payload.message); // returns a boolean 
-
-        $('#receiver_email').style.border = '';
-        if (!checkEmail) {
-            $('#receiver_email').style.border = "1px solid #ff1e1e";
-            showComposeAlert('error', 'provide correct email credential')
-        }
-
-        if (!checkSubject && payload.subject === '') {
-            $('#subject').style.border = "1px solid #ff1e1e";
-            showComposeAlert('error', 'subject can not be empy')
-        }
- 
-        if (!checkMessage && payload.message === '') {
-           
-            showComposeAlert('error', 'message can not be empty')
-        }
-
-        // send mail to recipient
-        if (checkEmail && checkMessage && checkSubject) {
-            compose(payload);
-        }
-
+       
     };
 }
 
@@ -927,7 +976,7 @@ const addUserGroup = () => {
         addUser(payload)
 }
 
- const addUser = async (body) => {
+const addUser = async (body) => {
      if (body) {
 
          // disable button
@@ -1009,6 +1058,78 @@ const deleteUser = async ()=>{
             }
     }
  }
+
+ // compose mail -- populate drop down
+ if ($("#showGroups")) {
+   document.addEventListener("DOMContentLoaded", async () => {
+     // fetch
+     const { groupResult } = await Samios.allGroups();
+
+     if (
+       groupResult.error === "token has expired" ||
+       groupResult.error === "not authorized"
+     ) {
+       window.location = "login.html";
+     } else {
+       const res = groupResult.data;
+       res.forEach(group => {
+         $("#showGroups").innerHTML += `
+                <option value="${group.id}">${group.name}</option>        
+              `;
+       });
+     }
+   });
+ }
+
+ // compose group message
+const composeGroup = async (body) => {
+    if (body) {
+
+        // disable button
+        $('#compose_btn').disabled = true;
+        $('#compose_btn').style.backgroundColor = '#c0c0c0';
+
+        // make network request
+        const { composeResult } = await Samios.composeGroupMail(body);
+
+        if (composeResult.error) {
+            let errMsg;
+            if (composeResult.status === 400) {
+                errMsg = composeResult.error;
+            }
+
+            if (composeResult.status === 404) {
+                errMsg = composeResult.error;
+            }
+
+            if (composeResult.status === 401) {
+                errMsg = composeResult.error;
+            }
+            showComposeAlert('error', errMsg);
+            // enable button
+            $('#compose_btn').disabled = false;
+            $('#compose_btn').style.backgroundColor = '#e68016';
+        } else {
+            if (composeResult.status === 201) {
+                // clear input
+                $("#receiver_email").value = '';
+                $("#subject").value = '';
+                $("#mail_body").value = '';
+               showComposeAlert("success", 'Mail has been sent successfully');
+               // enable button
+               $('#compose_btn').disabled = false;
+               $('#compose_btn').style.backgroundColor = '#e68016';
+             
+            }
+                       
+        }
+    } else {
+        showComposeAlert('error', 'Something is wrong with your credentials')
+    }
+}
+
+
+
 // create group alert
 let showCreateAlert = (classN, message) => {
 

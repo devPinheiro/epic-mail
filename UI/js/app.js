@@ -110,6 +110,25 @@ class Samios {
         }
     }
 
+     static async composeGroupMail(payload) {
+        const composeR = await fetch(`https://epic-mail-devp.herokuapp.com/api/v1/groups/${payload.id}/messages`, {
+            method: "post",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "x-access-token": localStorage.getItem('token')
+            },
+            body: JSON.stringify({subject: payload.subject, message: payload.message})
+        });
+
+        const composeResult = await composeR.json()
+
+        return {
+            composeResult
+        }
+    }
+
     static async draftMail(payload) {
         const draftR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/messages/', {
             method: "post",
