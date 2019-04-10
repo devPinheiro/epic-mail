@@ -50,7 +50,7 @@ class UserController {
     }
 
     try {
-      const STANDARD_ROLE = 'member';
+      const STANDARD_ROLE = 'admin';
       // encrypt user password
       const encryptedPassword = service.encryptPassword(req.body.password);
       // persist user to db
@@ -282,6 +282,31 @@ class UserController {
         status: 500,
         error: 'internal server error',
       });
+    }
+  }
+
+  static async getUser(req, res) {
+    try {
+        // get user id
+        const userId = req.user.id;
+        // fetch user details
+        const queryUser = 'SELECT email, first_name, last_name, image FROM users WHERE id = $1';
+        const { rows } = await db.query(queryUser, [userId]);
+        if (rows[0]) {
+          return res.status(200).json({
+            status: 200,
+            data: rows[0],
+          });
+        }
+        return res.status(404).json({
+          status: 404,
+          message: 'user does not exist',
+        });
+    } catch (error) {
+        return res.status(500).json({
+          status: 500,
+          error: 'internal server error',
+        });
     }
   }
 }

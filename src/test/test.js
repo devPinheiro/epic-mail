@@ -148,6 +148,20 @@ describe('POST user login test', () => {
         done();
       });
   });
+
+  it('It should fetch user details', (done) => {
+    // using chai-http plugin
+    chai.request(app)
+      .get('/api/v1/auth/user')
+      .set('x-access-token', token)
+      .end((err, res) => {
+        expect(err).to.be.null;
+        res.should.have.status(200);
+        res.body.should.have.property('status');
+        res.body.should.have.property('data');
+        done();
+      });
+  });
 });
 
 
