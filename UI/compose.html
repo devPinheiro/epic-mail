@@ -79,9 +79,22 @@
                                 <h4> Compose New Mail</h6>
             
                             </div>
+                
+                      
+                      <div class="compose-mail-form">
+                        <div class="split" id="compose_after">
+                            <input type="checkbox" name="group" id="checkGroup">
+                            <div class="form-g"><label for="Group">Send to Group</label></div>
+                        </div>
+                                  
+                        <div class="form-g dropdownGroup">
+                            <label for="Email">Choose a group</label>
+                            <select id="showGroups">
+                                <option>None</option>
+                            </select>
+                        </div>
 
-                    <div class="compose-mail-form">
-                        <div id="compose_after"  class="form-g">
+                        <div id="receiverInput"  class="form-g">
                             <label for="Email">Recipient</label>
                             <input type="email" id="receiver_email" >
                         </div>
@@ -89,6 +102,8 @@
                              <label for="Email">Subject</label>
                             <input type="text" name="subject" id="subject">
                         </div>
+
+                       
                        
                         <div class="form-g">
                          <textarea name="mail-content" id="mail_body" cols="30" rows="15"></textarea>
