@@ -43,6 +43,7 @@ const createUser = `
                         email VARCHAR(128) NOT NULL,
                         first_name VARCHAR(128) NOT NULL,
                         last_name VARCHAR(128) NOT NULL,
+                        image TEXT NOT NULL,
                         password VARCHAR(128) NOT NULL,
                         role VARCHAR(128) NOT NULL
                        );`;
