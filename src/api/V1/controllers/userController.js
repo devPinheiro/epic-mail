@@ -1,5 +1,8 @@
 /* eslint-disable indent */
 import sendGrid from '@sendgrid/mail';
+import multer from 'multer';
+import fs from 'fs';
+import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
 import db from '../models/index';
 import service from '../helper/service';
@@ -7,6 +10,15 @@ import validate from '../helper/validator';
 import queryBuilder from '../helper/queryBuilder';
 
 dotenv.config();
+
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename(req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
 
 class UserController {
   static async signup(req, res) {
@@ -43,13 +55,14 @@ class UserController {
       const encryptedPassword = service.encryptPassword(req.body.password);
       // persist user to db
       const persistUserString = `INSERT INTO 
-                                     users (email, first_name, last_name, password, role) 
-                                     VALUES ($1, $2, $3, $4, $5) 
+                                     users (email, first_name, last_name, image, password, role) 
+                                     VALUES ($1, $2, $3, $4, $5, $6) 
                                      returning *`;
       const values = [
         email,
         req.body.firstName,
         req.body.lastName,
+        'https://lorempixel.com/200/200/people/',
         encryptedPassword,
         req.body.role || STANDARD_ROLE,
       ];
@@ -217,6 +230,57 @@ class UserController {
       return res.status(400).json({
         status: 400,
         data: 'invalid credentials, contact administrator',
+      });
+    }
+  }
+
+
+  static upload(req, res) {
+    // update user profile
+     try {
+      let avatar;
+        const upload = multer({ storage }).single('avatar');
+        upload(req, res, (err) => {
+          if (err) {
+            return res.send(err);
+          }
+
+          cloudinary.config({
+          cloud_name: process.env.CLOUDINARY_NAME,
+          api_key: process.env.CLOUDINARY_API_KEY,
+          api_secret: process.env.CLOUDINARY_API_SECRET,
+        });
+        const { path } = req.file;
+        const fileName = new Date().toISOString();
+        cloudinary.v2.uploader.upload(path, { public_id: `epic/${fileName}`, tags: 'epic' }, async (errr, image) => {
+            if (errr) {
+              res.send(errr);
+            }
+            // remove file from server
+            fs.unlinkSync(path);
+            // get image url
+            avatar = image.secure_url;
+
+          // persist user to db
+          const updateString = `UPDATE  users 
+                                        SET image = $1
+                                        WHERE id = $2
+                                        returning *`;
+          const values = [
+            avatar,
+            req.user.id,
+          ];
+          await db.query(updateString, values);
+          return res.status(201).json({
+            status: 201,
+            data: 'profile image uploaded successfully',
+          });
+        });
+    });
+    } catch (err) {
+      return res.status(500).json({
+        status: 500,
+        error: 'internal server error',
       });
     }
   }
