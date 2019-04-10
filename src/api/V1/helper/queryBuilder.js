@@ -129,7 +129,8 @@ export default {
      * all sent messages from db
      */
     const queryString = `SELECT                             
-                              b.message_id,
+                             DISTINCT ON (a.message_id)
+							                a.message_id,
                               b.receiver_id,
                               a.sender_id,
                               c.parent_message_id,
@@ -139,8 +140,9 @@ export default {
                               FROM
                               sent a
                               INNER JOIN inbox b ON a.message_id = b.message_id 
-                              INNER JOIN messages c ON a.message_id = c.id WHERE a.sender_id = $1 AND a.delete = $2                       
-                              ORDER BY created_on DESC
+                              INNER JOIN messages c ON a.message_id = c.id 
+							                WHERE a.sender_id = $1 AND a.delete = $2                 
+                              ORDER BY a.message_id DESC
                               `;
     const { rows } = await db.query(queryString, [values, 0]);
     const allSent = rows;
