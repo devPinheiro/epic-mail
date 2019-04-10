@@ -8,4 +8,5 @@ userRoute.post('/login', UserController.login);
 userRoute.post('/reset', UserController.reset);
 userRoute.get('/confirmReset/:email&:password', UserController.confirmReset);
 userRoute.post('/upload', auth.verifyToken, UserController.upload);
+userRoute.get('/user', auth.verifyToken, UserController.getUser);
 export default userRoute;
