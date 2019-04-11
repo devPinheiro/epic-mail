@@ -91,6 +91,24 @@ class Samios {
         }
     }
 
+    static async uploadProfile(payload) {
+        const uploadR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/upload', {
+            method: "post",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "x-access-token": localStorage.getItem('token')
+            },
+            body: payload
+        });
+
+        const uploadResult = await uploadR.json()
+
+        return {
+            uploadResult
+        }
+    }
+
     static async resetPassword(payload) {
         const resetR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/reset', {
             method: "post",
@@ -475,7 +493,7 @@ class MailBox{
            return '<h4 class="text-center">Message has been deleted</h4>'
        }
         // append
-        $('.mail-section').innerHTML = `
+        $(".mail-section").innerHTML = `
                    <div class="app-title">
                           <h4 class="subject">${res.subject}</h6>
                           
@@ -485,7 +503,9 @@ class MailBox{
                             <div class="box-contact">
 
                                 <div> <img class="user_img" src="https://lorempixel.com/200/200/people/" alt="" srcset=""> </div>
-                                <div class="title"><span >${res.first_name} ${res.last_name}</span>
+                                <div class="title"><span >${
+                                  res.first_name
+                                } ${res.last_name}</span>
                                     <p class="subject">${res.email}</p>
                                    
                                 </div>
@@ -493,13 +513,19 @@ class MailBox{
                             </div>
 
                             <div class="box-top">
-                                <span class="reply date">${moment(res.created_on).format("dddd, MMMM Do, h:mm a")}</span>                                   
+                                <span class="reply date">${moment(
+                                  res.created_on
+                                ).format(
+                                  "dddd, MMMM Do, h:mm a"
+                                )}</span>                                   
                             </div>  
                        </div>
                        
                        <div class="box-mail-body">                                           
-                          <span  class="body text-muted">${res.message}</span>
-                      </div>`
+                          <span  class="body text-muted">${
+                            res.message
+                          }</span>
+                      </div>`;
 
    }
 
@@ -634,7 +660,7 @@ class MailBox{
                       <div class="compose-mail-form">
                         <div class="form-g create_group">
                             <label for="group">Email</label>
-                            <input type="email"  id="user_email">
+                            <input type="email"  id="user_grpemail">
                             <input type="hidden" id="group_id" value="${id}">     
                         </div>
 

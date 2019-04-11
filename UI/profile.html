@@ -52,17 +52,17 @@
                 </div>
 
                 <div class="col-navlink link">
-                    <ul class=" nav-link">
-                    
+                   <ul class=" nav-link">
+
                         <div class=" dropdown"><a href="#" class="dropdown_btn"> <img id='userProfile' src="" alt="" class="user"> </a>
                             <div class="dropdown-fill">
                                 <div class="user_details">
                                     <p id="user_name"></p>
                                     <p id="user_email"></p>
                                 </div>
-                    
+                                
                                 <a href="profile.html"><i class="ion-ios-person-outline dropdown_icon"></i> Profile </a>
-                    
+                               
                                 <a href="index.html"><i class="ion-log-out dropdown_icon"></i> Log Out </a>
                             </div>
                         </div>
@@ -87,13 +87,13 @@
                     </div>
 
                     <div class="profile_img text-center">
-                         <div> 
-                             <img src="https://picsum.photos/500/" alt="" srcset=""> 
+                         <div class="alert"> 
+                             <img id="profile_img" alt="" srcset=""> 
                              <i class="ion-ios-plus icon-lg profile_icon"></i>
                         </div>
                         <div class="profile_details">
-                            <p class="user_name"><b>Samuel Pinheiro</b></p>
-                            <small class="email">sam@epic-mail.com</small>
+                            <b><p class="user_name"></p></b>
+                            <small class="email"></small>
                         </div>
                     </div>
 
@@ -101,10 +101,10 @@
                         <form>
                              <div class="form-g">
                                 <label for="group">Change Picture</label>
-                                <input type="file" id="profile_img" >     
+                                <input type="file" name='avatar' id="upload_file" >     
                             </div>
                             <div class="form-g">
-                               <button type="submit" class="btn btn-primary">Update Profile</button>
+                               <button type="submit" class="btn btn-primary upload_picture">Update Profile</button>
                             </div>
                         </form>
                        
@@ -124,6 +124,7 @@
 
     </div>
     <script src="js/app.js"></script>
+    <script src="js/index.js"></script>
 </body>
 
 </html>
