@@ -134,6 +134,25 @@ section {
     margin: 8px 5px 8px 0;
 }
 
+.user_details{
+    text-align: center;
+    display: block;
+    font-size: 12px;
+    border-bottom: 1px solid #eeeded;
+    padding-bottom: 10px;
+}
+
+.user_details p {
+    margin: 7px;
+}
+
+#user_name {
+    font-weight: 600;
+}
+
+.nav_hr {
+    color: #f8f8f8;
+}
 /* ------------------------ Text ----------------- */
 .text-dark {
     color: rgb(52, 50, 72);
@@ -165,7 +184,7 @@ section {
 
 .dropdown-fill {
     display: none;
-    margin: 15px 0;
+    margin: 5px 0;
     padding: 10px 0;
     position: absolute;
     right: 20px;
@@ -181,7 +200,7 @@ section {
 .dropdown-fill a {
     padding: 10px 15px;
     display: block;
-    font-size: 12px;
+    font-size: 14px;
     text-decoration: none;
     color: #222222;
 }
@@ -388,6 +407,15 @@ section {
     padding: 5px 10px;
     color: #e68016;
     cursor: pointer;
+}
+
+#userProfile {
+    width: 40px;
+    border-radius: 50%;
+}
+
+.dropdown_btn{
+    padding-right: 20px;
 }
 
 /* ----------------------container --------------- */
