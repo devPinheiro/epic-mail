@@ -69,6 +69,7 @@ export default {
                           subject,
                           d.first_name,
                           d.last_name,
+                          d.image,
                           d.email
                           FROM
                           inbox a
@@ -136,11 +137,16 @@ export default {
                               c.parent_message_id,
                               created_on,
                               message,
-                              subject
+                              subject,
+                              d.first_name,
+                              d.last_name,
+                              d.image,
+                              d.email
                               FROM
                               sent a
                               INNER JOIN inbox b ON a.message_id = b.message_id 
                               INNER JOIN messages c ON a.message_id = c.id 
+                              INNER JOIN users d ON a.sender_id = d.id 
 							                WHERE a.sender_id = $1 AND a.delete = $2                 
                               ORDER BY a.message_id DESC
                               `;
@@ -246,7 +252,7 @@ export default {
     const queryString = `SELECT                          
                           b.user_id,
                           group_id,
-                          c.first_name, last_name 					  
+                          c.first_name, last_name, image, email 					  
                           FROM
                           groups a
                           INNER JOIN group_members b ON a.id = b.group_id
