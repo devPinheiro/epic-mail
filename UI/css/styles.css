@@ -742,14 +742,18 @@ a {
     height: 60px;
 }
 
+.subject{
+    padding-top: 3px;
+    padding-bottom: 8px;
+}
 .green {
     margin-right: 25px;
-    color: #109410;
+    color: #019145;
     cursor: pointer;
 }
 
 .red {
-    color: #ec2b2b;
+    color: #f31a1a;
     cursor: pointer;
 }
 
@@ -763,7 +767,7 @@ a {
 }
 
 .success {
-    background: rgba(78, 208, 78, 0.39);
+    background: #019145;
 }
 
 .cancel {
@@ -771,7 +775,7 @@ a {
 }
 
 .error {
-    background: rgba(255, 30, 30, 0.639);
+    background: #f31a1a;
 }
 
 /* -------------------- Modal ---------------- */

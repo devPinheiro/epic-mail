@@ -477,7 +477,7 @@ class MailBox{
                             
                                     <span class = "title"> ${mail.subject} </span> <span class="date">${moment(mail.created_on).fromNow()}</span >
                                     <div class="box-body">
-                                        <p class="subject">${mail.sender_id}</p>
+                                        <p class="subject">${mail.email}</p>
                                         <span class="body text-muted">${mail.message.substring(0, 180)}</span>
                                     </div>
                             
@@ -502,7 +502,7 @@ class MailBox{
                         <div class="box no-border">
                             <div class="box-contact">
 
-                                <div> <img class="user_img" src="https://lorempixel.com/200/200/people/" alt="" srcset=""> </div>
+                                <div> <img class="user_img" src="${res.image}" alt="" srcset=""> </div>
                                 <div class="title"><span >${
                                   res.first_name
                                 } ${res.last_name}</span>
@@ -601,8 +601,11 @@ class MailBox{
                         <div class="box no-border">
                             <div class="box-contact">
 
-                                <div> <img class="user_img" src="https://lorempixel.com/200/200/people/" alt="" srcset=""> </div>
-                                <div class="title"><span >${res.receiver_id}</span>
+                                <div> <img class="user_img" src="${res.image}" alt="" srcset=""> </div>
+                                <div class="title"><span >${
+                                  res.first_name
+                                } ${res.last_name}</span>
+                                <div class="subject">${res.email}
                                  
                                    
                                 </div>
@@ -696,10 +699,10 @@ class MailBox{
                         </div>
 
                         <div class="box-contact">
-                                <div> <img class="user_img" src="https://picsum.photos/200/" alt="" srcset=""> </div>
+                                <div> <img class="user_img" src="${member.image}" alt="" srcset=""> </div>
                                   <div>
                                     <span class="title">${member.first_name} ${member.last_name}</span>
-                                    <p class="subject">member</p>
+                                    <p class="subject">${member.email}</p>
                                   </div>
                            
                         </div>
