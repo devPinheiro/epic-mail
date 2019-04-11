@@ -91,6 +91,24 @@ class Samios {
         }
     }
 
+    static async uploadProfile(payload) {
+        const uploadR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/upload', {
+            method: "post",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "x-access-token": localStorage.getItem('token')
+            },
+            body: payload
+        });
+
+        const uploadResult = await uploadR.json()
+
+        return {
+            uploadResult
+        }
+    }
+
     static async resetPassword(payload) {
         const resetR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/reset', {
             method: "post",
