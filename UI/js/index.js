@@ -513,7 +513,7 @@ const signUp = async (body) => {
             // store token into localstorage
             localStorage.setItem('token', signupResult.data.token);
             const { userResult } = await Samios.getUser();
-            console.log(userResult)
+          
             localStorage.setItem('userData', JSON.stringify(userResult.data));
             showAlertSignup("success", `Successfully Registered`);
             // enable button
@@ -554,6 +554,9 @@ const logIn = async (body) => {
         } else{
             // store token into localstorage
             localStorage.setItem('token', signinResult.data.token);
+            const { userResult } = await Samios.getUser();
+          
+            localStorage.setItem('userData', JSON.stringify(userResult.data));
             showAlert("success", `Sign in was successful`);
             // enable button
             $('#signin_btn').disabled = false;
@@ -974,7 +977,7 @@ const viewGroup = async (id, groupName) => {
 const addUserGroup = () => {       
         // payload for network request
         const payload = {
-            email: $('#user_email').value,
+            email: $('#user_grpemail').value,
             id: $('#group_id').value
         }
         // add user to group
@@ -1181,40 +1184,81 @@ if($('.upload_picture')){
       
     $('.upload_picture').addEventListener('click', async (e)=>{
        e.preventDefault();
-        // get user's input
-        const data = new FormData();
-        data.append('avatar', $("#upload_file").files[0])
-         // make network request
-         const { uploadResult } = await Samios.uploadProfile(data);
 
-         if (uploadResult.error) {
-             let errMsg;
-             if (uploadResult.status === 400) {
-                 errMsg = Object.values(uploadResult.error).join(' \n \n');
-             }
+         $(".upload_picture").disabled = true;
+         $(".upload_picture").style.backgroundColor = "#c0c0c0";
 
-             if (uploadResult.status === 401) {
-                 errMsg = uploadResult.error;
-             }
+        if($("#upload_file").files[0].type === 'image/jpeg' || $("#upload_file").files[0].type === 'image/png'){
+            // get user's input
+            const data = new FormData();
+            data.append('avatar', $("#upload_file").files[0])
+            // make network request
+            const { uploadResult } = await Samios.uploadProfile(data);
 
-              if (uploadResult.status === 404) {
-                  errMsg = uploadResult.error;
-              }
-             showAlert('error', errMsg);
-             // enable button
-             $('.upload_picture').disabled = false;
-             $('.upload_picture').style.backgroundColor = '#e68016';
-         } else {
-             if (uploadResult.status === 201) {
-                 // clear input
-                 $("#upload_file").value = '';
-                
-                 // enable button
-                 $('.upload_picture').disabled = false;
-                 $('.upload_picture').style.backgroundColor = '#e68016';
+            if (uploadResult.error) {
+                let errMsg;
+                if (uploadResult.status === 400) {
+                    errMsg = Object.values(uploadResult.error).join(' \n \n');
+                }
 
-                 
-             }
-            }
+                if (uploadResult.status === 401) {
+                    errMsg = uploadResult.error;
+                }
+
+                if (uploadResult.status === 404) {
+                    errMsg = uploadResult.error;
+                }
+                showProAlert('error', errMsg);
+                // enable button
+                $('.upload_picture').disabled = false;
+                $('.upload_picture').style.backgroundColor = '#e68016';
+            } else {
+                if (uploadResult.status === 201) {
+                    // clear input
+                    $("#upload_file").value = '';
+
+                    const { userResult } = await Samios.getUser();
+            
+                    localStorage.setItem('userData', JSON.stringify(userResult.data));
+                    
+                    showProAlert("success", 'Profile picture uploaded successfully');
+                    // enable button
+                    $('.upload_picture').disabled = false;
+                    $('.upload_picture').style.backgroundColor = '#e68016';
+                    
+                    // Timeout after 4s
+                    setTimeout(function () {
+                    // reload
+                    window.location.reload();
+                    }, 4000);
+                    
+                }
+                }
+        } else {
+            showProAlert("error", 'You can only upload image files');
+            // enable button
+            $('.upload_picture').disabled = false;
+            $('.upload_picture').style.backgroundColor = '#e68016';
+        }
+       
     });
+}
+
+// create profile alert
+let showProAlert = (classN, message) => {
+
+    // create an error div
+    let alertDiv = document.createElement('div');
+
+    // add error message and style
+    alertDiv.className = `alert ${classN}`;
+    alertDiv.textContent = message;
+
+    //insert before form and container
+    $(".profile_img").insertBefore(alertDiv, $(".alert"));
+
+    // Timeout after 5s
+    setTimeout(function () {
+        $('.alert').remove();
+    }, 5000);
 }
