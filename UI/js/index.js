@@ -382,13 +382,6 @@ if($('#retract_sent')){
     });
 }
 
-if($('#userProfile')){
-    const userData = localStorage.getItem("userData"); 
-    const userDataObj = JSON.parse(userData);
-    $("#userProfile").src = userDataObj.image;
-    $("#user_name").innerHTML = userDataObj.first_name;
-    $("#user_email").innerHTML = userDataObj.email;
-}
 
 let sentData;
 // fetch all sent messages
@@ -1159,4 +1152,69 @@ let showCreateAlert = (classN, message) => {
     setTimeout(function () {
         $('.alert').remove();
     }, 5000);
+}
+
+
+/**
+ * 
+ * User profile
+ */
+
+ if($('#userProfile')){
+    const userData = localStorage.getItem("userData"); 
+    const userDataObj = JSON.parse(userData);
+    $("#userProfile").src = userDataObj.image;
+    $("#user_name").innerHTML = userDataObj.first_name;
+    $("#user_email").innerHTML = userDataObj.email;
+}
+
+if($('.profile_details')){
+    const userData = localStorage.getItem("userData"); 
+    const userDataObj = JSON.parse(userData);
+    $("#profile_img").src = userDataObj.image;
+    $(".user_name").innerHTML = `${userDataObj.first_name} ${ userDataObj.last_name}`;
+    $(".email").innerHTML = userDataObj.email;
+}
+
+// upload picture
+if($('.upload_picture')){
+      
+    $('.upload_picture').addEventListener('click', async (e)=>{
+       e.preventDefault();
+        // get user's input
+        const data = new FormData();
+        data.append('avatar', $("#upload_file").files[0])
+         // make network request
+         const { uploadResult } = await Samios.uploadProfile(data);
+
+         if (uploadResult.error) {
+             let errMsg;
+             if (uploadResult.status === 400) {
+                 errMsg = Object.values(uploadResult.error).join(' \n \n');
+             }
+
+             if (uploadResult.status === 401) {
+                 errMsg = uploadResult.error;
+             }
+
+              if (uploadResult.status === 404) {
+                  errMsg = uploadResult.error;
+              }
+             showAlert('error', errMsg);
+             // enable button
+             $('.upload_picture').disabled = false;
+             $('.upload_picture').style.backgroundColor = '#e68016';
+         } else {
+             if (uploadResult.status === 201) {
+                 // clear input
+                 $("#upload_file").value = '';
+                
+                 // enable button
+                 $('.upload_picture').disabled = false;
+                 $('.upload_picture').style.backgroundColor = '#e68016';
+
+                 
+             }
+            }
+    });
 }
