@@ -382,6 +382,14 @@ if($('#retract_sent')){
     });
 }
 
+if($('#userProfile')){
+    const userData = localStorage.getItem("userData"); 
+    const userDataObj = JSON.parse(userData);
+    $("#userProfile").src = userDataObj.image;
+    $("#user_name").innerHTML = userDataObj.first_name;
+    $("#user_email").innerHTML = userDataObj.email;
+}
+
 let sentData;
 // fetch all sent messages
 if ($('.sent-section')) {
@@ -494,6 +502,7 @@ const signUp = async (body) => {
         $('#signup_btn').style.backgroundColor = '#c0c0c0';
         // make network request
         const { signupResult } = await Samios.signUp(body);
+      
 
         if(signupResult.error){
             let errMsg;
@@ -510,6 +519,9 @@ const signUp = async (body) => {
         } else{
             // store token into localstorage
             localStorage.setItem('token', signupResult.data.token);
+            const { userResult } = await Samios.getUser();
+            console.log(userResult)
+            localStorage.setItem('userData', JSON.stringify(userResult.data));
             showAlertSignup("success", `Successfully Registered`);
             // enable button
             $('#signup_btn').disabled = false;
