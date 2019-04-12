@@ -29,9 +29,21 @@ if(closeSidebar) {
     });
 }
 
-
-
-
+// retrieve cookie
+const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+class Cookie{
+    static createCookie(name, value, days){
+       let expires;
+    if(days){
+        let date = new Date();
+        date.setTime(date.getTime()+(days*24*3600*1000))
+        expires = "; expires="+date.toGMTString();
+    }else{
+        expires = '';
+    }
+         document.cookie = `${name}=${value}${expires}; path=/`;
+   }
+}
 
 // API library
 class Samios {   
@@ -73,14 +85,14 @@ class Samios {
         }
     }
 
-    static async getUser() {
+    static async getUser(tokenId) {
         const userR = await fetch('https://epic-mail-devp.herokuapp.com/api/v1/auth/user', {
             method: "get",
             mode: "cors",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": tokenId
             }
         });
 
@@ -97,7 +109,7 @@ class Samios {
             mode: "cors",
             headers: {
                 Accept: "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             },
             body: payload
         });
@@ -134,7 +146,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             },
             body: JSON.stringify(payload)
         });
@@ -153,7 +165,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             },
             body: JSON.stringify({subject: payload.subject, message: payload.message})
         });
@@ -172,7 +184,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             },
             body: JSON.stringify(payload)
         });
@@ -191,7 +203,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             }
         });
 
@@ -209,7 +221,7 @@ class Samios {
              headers: {
                  Accept: "application/json",
                  "Content-Type": "application/json",
-                 "x-access-token": localStorage.getItem('token')
+                 "x-access-token": token
              }
          });
 
@@ -227,7 +239,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             }
         });
 
@@ -245,7 +257,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             }
         });
 
@@ -262,7 +274,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             }
         });
 
@@ -279,7 +291,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             }
         });
 
@@ -296,7 +308,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             }
         });
 
@@ -313,7 +325,7 @@ class Samios {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "x-access-token": localStorage.getItem('token')
+                "x-access-token": token
             },
             body: JSON.stringify(payload)
         });
@@ -332,7 +344,7 @@ class Samios {
              headers: {
                  Accept: "application/json",
                  "Content-Type": "application/json",
-                 "x-access-token": localStorage.getItem('token')
+                 "x-access-token": token
              }
          });
 
@@ -349,7 +361,7 @@ class Samios {
              headers: {
                  Accept: "application/json",
                  "Content-Type": "application/json",
-                 "x-access-token": localStorage.getItem('token')
+                 "x-access-token": token
              }
          });
 
@@ -367,7 +379,7 @@ class Samios {
               headers: {
                   Accept: "application/json",
                   "Content-Type": "application/json",
-                  "x-access-token": localStorage.getItem('token'),
+                  "x-access-token": token,
               },
               body: JSON.stringify({name: payload.name})
           });
@@ -385,7 +397,7 @@ class Samios {
               headers: {
                   Accept: "application/json",
                   "Content-Type": "application/json",
-                  "x-access-token": localStorage.getItem('token'),
+                  "x-access-token": token,
               }
           });
           const groupResult = await groupR.json()
@@ -401,7 +413,7 @@ class Samios {
               headers: {
                   Accept: "application/json",
                   "Content-Type": "application/json",
-                  "x-access-token": localStorage.getItem('token'),
+                  "x-access-token": token,
               },
               body: JSON.stringify({email: payload.email})
           });
@@ -418,7 +430,7 @@ class Samios {
              headers: {
                  Accept: "application/json",
                  "Content-Type": "application/json",
-                 "x-access-token": localStorage.getItem('token')
+                 "x-access-token": token
              }
          });
 

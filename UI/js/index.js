@@ -510,20 +510,21 @@ const signUp = async (body) => {
            $('#signup_btn').disabled = false;
            $('#signup_btn').style.backgroundColor = '#e68016';
         } else{
-            // store token into localstorage
-            localStorage.setItem('token', signupResult.data.token);
+            // store token into cookies
+            Cookie.createCookie("token", signupResult.data.token, 2);
             const { userResult } = await Samios.getUser();
-          
             localStorage.setItem('userData', JSON.stringify(userResult.data));
             showAlertSignup("success", `Successfully Registered`);
             // enable button
             $('#signup_btn').disabled = false;
             $('#signup_btn').style.backgroundColor = '#e68016';
             // Timeout after 5s
-            setTimeout(function () {
-                window.location = 'inbox.html';
+            if(userResult.data){
+            setTimeout(function() {
+            window.location = "inbox.html";
             }, 3000);
-        }
+            }
+    }
     } else {
         showAlertSignup('error', 'Something is wrong with your credentials')
     }
@@ -552,20 +553,23 @@ const logIn = async (body) => {
            $('#signin_btn').disabled = false;
            $('#signin_btn').style.backgroundColor = '#e68016';
         } else{
-            // store token into localstorage
-            localStorage.setItem('token', signinResult.data.token);
-            const { userResult } = await Samios.getUser();
-          
+             // store token into cookies
+            Cookie.createCookie("token", signinResult.data.token, 2);
+            
+            const { userResult } = await Samios.getUser(signinResult.data.token);
             localStorage.setItem('userData', JSON.stringify(userResult.data));
             showAlert("success", `Sign in was successful`);
             // enable button
             $('#signin_btn').disabled = false;
             $('#signin_btn').style.backgroundColor = '#e68016';
             // Timeout after 5s
-            setTimeout(function () {
-                window.location = 'inbox.html';
+            if(userResult.data){
+            setTimeout(function() {
+            window.location = "inbox.html";
             }, 3000);
-        }
+            }
+            }
+        
     } else {
         showAlert('error', 'Something is wrong with your credentials')
     }
@@ -1217,7 +1221,7 @@ if($('.upload_picture')){
                     // clear input
                     $("#upload_file").value = '';
 
-                    const { userResult } = await Samios.getUser();
+                    const { userResult } = await Samios.getUser(document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
             
                     localStorage.setItem('userData', JSON.stringify(userResult.data));
                     
@@ -1227,10 +1231,13 @@ if($('.upload_picture')){
                     $('.upload_picture').style.backgroundColor = '#e68016';
                     
                     // Timeout after 4s
-                    setTimeout(function () {
-                    // reload
-                    window.location.reload();
-                    }, 4000);
+                    if(userResult.data){
+                        setTimeout(function () {
+                            // reload
+                            window.location.reload();
+                            }, 4000);
+                    }
+                    
                     
                 }
                 }
