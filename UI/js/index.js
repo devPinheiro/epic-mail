@@ -512,14 +512,16 @@ const signUp = async (body) => {
         } else{
             // store token into cookies
             Cookie.createCookie("token", signupResult.data.token, 2);
-            const { userResult } = await Samios.getUser();
-            localStorage.setItem('userData', JSON.stringify(userResult.data));
+
+            const { userResult } = await Samios.getUser(signupResult.data.token);
+            
             showAlertSignup("success", `Successfully Registered`);
             // enable button
             $('#signup_btn').disabled = false;
             $('#signup_btn').style.backgroundColor = '#e68016';
             // Timeout after 5s
             if(userResult.data){
+            localStorage.setItem('userData', JSON.stringify(userResult.data));
             setTimeout(function() {
             window.location = "inbox.html";
             }, 3000);
@@ -1269,3 +1271,16 @@ let showProAlert = (classN, message) => {
         $('.alert').remove();
     }, 5000);
 }
+// logout user
+if($('.logout')){
+    $('.logout').addEventListener('click', (e)=>{
+        e.preventDefault()
+        // remove user data
+        localStorage.removeItem('userData');
+        // remove cookies
+        Cookie.createCookie('token',' ', -1);
+        //redirect
+        location = 'index.html';
+    });
+}
+    
