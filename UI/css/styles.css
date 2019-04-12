@@ -983,6 +983,8 @@ a {
     .container-grid-3 .contact {
         width: 100%;
     }
+
+    
 }
 
 @media(min-width:700px) and (max-width:800px){
@@ -991,7 +993,7 @@ a {
   }
 }
 
-@media(max-width:650px) {
+@media(min-width:380px) and (max-width:650px) {
     .container-signup {
         display: grid;
         grid-gap: 1px;
@@ -1053,6 +1055,28 @@ a {
         border: 1px solid rgb(238, 238, 238);
     }
 
+    .main-brand {
+        display: inline-flex;
+        padding: 5px 20px;
+        margin: -13px auto;
+    }
+    .open-sidebar {
+        margin: 0px auto;
+        position: relative;
+        top: -13px;
+    }
+    .close-sidebar {
+        margin: 0px auto;
+        position: relative;
+        top: -13px;
+    }
+    .main-brand p {
+        text-align: center;
+        padding: 0 85px;
+        margin: -13px auto;
+    }
+    
+
 }
 @media(min-width:351px) and (max-width:380px) {
     .navbar .form-group input {
@@ -1066,16 +1090,32 @@ a {
         border: none;
         background-color: #eeeded;
     }
-
+    .main-brand {
+        display: inline-flex;
+        padding: 5px 20px;
+        margin: -13px auto;
+    }
+    .open-sidebar {
+        margin: 0px auto;
+        position: relative;
+        top: -13px;
+    }
+    .close-sidebar {
+        margin: 0px auto;
+        position: relative;
+        top: -13px;
+    }
+    .main-brand p {
+        text-align: center;
+        padding: 0 52px;
+        margin: -13px auto;
+    }
     .nav-link .link-item {
         padding: 15px 15px 10px 30px;
         list-style-type: none;
         margin-left: 50px;
     }
 
-    .main-brand p {
-        padding: 0 100px;
-    }
     #showGroups {
         width: 100%;
         height: 40px;
@@ -1085,6 +1125,7 @@ a {
         border-radius: 2px;
         border: 1px solid rgb(238, 238, 238);
     }
+    
 }
 
 @media(min-width:320px) and (max-width:350px) {
@@ -1129,4 +1170,31 @@ a {
       border-radius: 2px;
       border: 1px solid rgb(238, 238, 238);
   }
+
+   .main-brand {
+        display: inline-flex;
+        padding: 5px 20px;
+        margin: -13px auto;
+    }
+    .open-sidebar {
+        margin: 0px auto;
+        position: relative;
+        top: -13px;
+    }
+    .close-sidebar {
+        margin: 0px auto;
+        position: relative;
+        top: -13px;
+    }
+    .main-brand p {
+        text-align: center;
+        padding: 0 52px;
+        margin: -13px auto;
+    }
+    .navlink {
+        padding-left: 0;
+    }
+    .nav-link{
+        padding: 0;
+    }
 }
