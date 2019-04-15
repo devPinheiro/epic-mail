@@ -22,6 +22,8 @@ an email web app that helps people exchange messages/information over the intern
 
 ###  UI View
 
+<a href="https://devpinheiro.github.io/epic-mail/UI">https://devpinheiro.github.io/epic-mail/UI</a>
+
 ![](epic.gif)
 
 
@@ -85,6 +87,12 @@ all working API endpoints
 </tr>
 
 <tr>
+   <td>DELETE</td>
+   <td>/api/v1/messages/retract/message-id</td>
+   <td>user can retract mails through this endpoint</td>
+</tr>
+
+<tr>
    <td>POST</td>
    <td>/api/v1/reset</td>
    <td>user can reset password</td>
@@ -97,8 +105,66 @@ all working API endpoints
 </tr>
 
 <tr>
+   <td>POST</td>
+   <td>/api/v1/auth/upload</td>
+   <td>user can upload profile picture </td>
+</tr>
+
+
+<tr>
+   <td>GET</td>
+   <td>/api/v1/groups</td>
+   <td>user can fetch all groups through this endpoint</td>
+</tr>
+
+<tr>
+   <td>POST</td>
+   <td>/api/v1/groups</td>
+   <td>user can create groups through this endpoint</td>
+</tr>
+
+<tr>
+   <td>POST</td>
+   <td>/api/v1/groupsgroup-id/messages</td>
+   <td>user can send mail to group through this endpoint</td>
+</tr>
+
+<tr>
+   <td>GET</td>
+   <td>/api/v1/groups</td>
+   <td>user can fetch all groups through this endpoint</td>
+</tr>
+
+<tr>
+   <td>GET</td>
+   <td>/api/v1/groups/group-id</td>
+   <td>user can fetch a single group through this endpoint</td>
+</tr>
+
+<tr>
+   <td>PATCH</td>
+   <td>/api/v1/groups/group-id</td>
+   <td>user can edit group name through this endpoint</td>
+</tr>
+
+<tr>
+   <td>DELETE</td>
+   <td>/api/v1/groups/group-id/users/user-id</td>
+   <td>user can delete group member through this endpoint</td>
+</tr>
+
+
+<tr>
+   <td>POST</td>
+   <td>/api/v1/groups/group-id/users</td>
+   <td>user can add group member through this endpoint</td>
+</tr>
+
+<tr>
    <td>GET</td>
    <td>/api/v1/api-docs</td>
    <td>Swagger API documentation</td>
 </tr>
 </table>
+
+

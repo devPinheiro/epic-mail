@@ -3,43 +3,44 @@
     "info": {
         "title": "EPIC Mail API",
         "description": "This is an email web app that helps people exchange messages/information over the internet.",
-        "version": "2.0.0"
+        "version": "1.0.0"
     },
     "explore": "true",
     "host": "epic-mail-devp.herokuapp.com",
     "basePath": "/api/v1",
-    "tags": [{
-            "name": "Messages",
-            "description": "API endpoints for all messages"
-        },
-        {
-            "name": "Users",
-            "description": "API endpoints for users"
-        }
-    ],
     "schemes": [
         "http"
     ],
     "consumes": [
-        "application/json"
+        "application/json",
+        "multipart/form-data"
     ],
     "produces": [
         "application/json"
     ],
+    "security":[{
+        "ApiKeyAuth":[]
+      }],
     "paths": {
         "/auth/login": {
+            
             "post": {
                 "tags": [
-                    "User Login"
+                    "Login"
                 ],
                 "summary": "POST API endpoint for user login",
                 "description": "User Login",
-                "parameters": [{
-                    "name": "login",
-                    "description": "Login params ",
-                    "in": "body",
-                    "required": "true"
-                }],
+                "parameters": [
+                    {
+                        "name": "login",
+                        "description": "Login params ",
+                        "in": "body",
+                        "required": "true",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -57,12 +58,17 @@
                 ],
                 "summary": "POST API endpoint for creating new user",
                 "description": "Create new users",
-                "parameters": [{
-                    "name": "user",
-                    "description": "User params to create new user",
-                    "in": "body",
-                    "required": "true"
-                }],
+                "parameters": [
+                    {
+                        "name": "user",
+                        "description": "User params to create new user",
+                        "in": "body",
+                        "required": "true",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -73,68 +79,96 @@
                 }
             }
         },
+        "/auth/reset": {
+            "post": {
+                "tags": [
+                    "Reset password"
+                ],
+                "summary": "POST API endpoint for resetting user's password",
+                "description": "reset a user's password",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "description": "User email for reset passwrod",
+                        "in": "body",
+                        "required": "true",
+                        "schema": {
+                            "$ref": "#/definitions/Reset Password"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Passsword reset was successfull"
+                    }
+                }
+            }
+        },
+        "/auth/upload": {
+            "post": {
+                "tags": [
+                    "Upload picture"
+                ],
+                "summary": "POST API endpoint for setting user's profile picture",
+                "description": "set user's profile picture",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "parameters": [
+                    {
+                        "name": "avatar",
+                        "type":"file",
+                        "description": "profile picture upload",
+                        "in": "formData",
+                        "required": "true"
+                    }
+                ],
+                
+                "responses": {
+                    "201": {
+                        "description": "Profile picture upload was successfull"
+                    }
+                }
+            }
+        },
+        "/auth/user": {
+            "get": {
+                "tags": [
+                    "User details"
+                ],
+                "summary": "GET API endpoint for fetching user's data",
+                "description": "fetch user's data",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user's data fetch successfully"
+                    }
+                }
+            }
+        },
         "/messages": {
             "post": {
                 "tags": [
-                    "Messages"
+                    "Compose Mail"
                 ],
                 "summary": "POST API endpoint for creating new messages",
                 "description": "Create email and send",
-                "content": {
-                    "application/json": {
+                "parameters": [
+                    {
+                        "name": "message",
+                        "description": "Message params to create new message",
+                        "in": "body",
+                        "required": "true",
                         "schema": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "integer",
-                                    "example": 1
-                                },
-                                "createdOn": {
-                                    "type": "Datetime",
-                                    "example": "Datetime"
-                                },
-                                "subject": {
-                                    "type": "string",
-                                    "example": "Andela"
-                                },
-                                "message": {
-                                    "type": "string",
-                                    "example": "You have made it to the Fellowship"
-                                },
-                                "senderId": {
-                                    "type": "integer",
-                                    "example": 2
-                                },
-                                "receiverId": {
-                                    "type": "integer",
-                                    "example": 2
-                                },
-                                "parentMessageId": {
-                                    "type": "integer",
-                                    "example": 1
-                                },
-                                "status": {
-                                    "type": "string",
-                                    "example": "sent"
-                                }
-                            },
-                            "example": {
-                                "subject": "I have a serious bug again",
-                                "message": "You have been accepted into the fellowship",
-                                "status": "sent",
-                                "parentMessageId": 1,
-                                "senderId": 2
-                            }
+                            "$ref": "#/definitions/Messages"
                         }
                     }
-                },
-
-                "parameters": [{
-                    "name": "message",
-                    "description": "Message params to create new message",
-                    "in": "body",
-                    "required": "true"
-                }],
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -142,20 +176,25 @@
                     "201": {
                         "description": "new message created"
                     }
-                }
+                },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
             },
             "get": {
                 "tags": [
-                    "Messages"
+                    "Inbox"
                 ],
                 "summary": "GET API endpoint for getting all received mails",
                 "description": "Get all received mails",
-                "parameters": [{
-                    "name": "messages",
-                    "type": "string",
-                    "description": "fetch all received message/mail fom database",
-                    "in": "path"
-                }],
+                "parameters": [
+                    {
+                        "name": "messages",
+                        "type": "string",
+                        "description": "fetch all received message/mail fom database",
+                        "in": "path"
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -163,19 +202,24 @@
                     "200": {
                         "description": "all received mails"
                     }
-                }
+                },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
             }
         },
         "/messages/sent": {
-            "parameters": [{
-                "name": "messages",
-                "type": "string",
-                "in": "path",
-                "description": "status of the message/mail"
-            }],
+            "parameters": [
+                {
+                    "name": "messages",
+                    "type": "string",
+                    "in": "path",
+                    "description": "status of the message/mail"
+                }
+            ],
             "get": {
                 "tags": [
-                    "Messages"
+                    "Sent"
                 ],
                 "summary": "GET API endpoint for getting all sent message/mail",
                 "description": "fetch all sent message/mail fom database",
@@ -186,19 +230,52 @@
                     "200": {
                         "description": "found sent message/mail"
                     }
+                },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
+            }
+        },
+        "/messages/draft": {
+            "parameters": [
+                {
+                    "name": "messages",
+                    "type": "string",
+                    "in": "path",
+                    "description": "status of the message/mail"
                 }
+            ],
+            "get": {
+                "tags": [
+                    "Draft"
+                ],
+                "summary": "GET API endpoint for getting all draft message/mail",
+                "description": "fetch all draft message/mail fom database",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "found draft message/mail"
+                    }
+                },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
             }
         },
         "/messages/unread": {
-            "parameters": [{
-                "name": "messages",
-                "type": "string",
-                "in": "path",
-                "description": "status of the message/mail"
-            }],
+            "parameters": [
+                {
+                    "name": "messages",
+                    "type": "string",
+                    "in": "path",
+                    "description": "status of the message/mail"
+                }
+            ],
             "get": {
                 "tags": [
-                    "Messages"
+                    "Unread Messages"
                 ],
                 "summary": "GET API endpoint for getting all unread message/mail",
                 "description": "fetch all unread message/mail fom database",
@@ -209,20 +286,25 @@
                     "200": {
                         "description": "found unread message/mail"
                     }
-                }
+                },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
             }
         },
         "/messages/{id}": {
-            "parameters": [{
-                "name": "id",
-                "type": "string",
-                "in": "path",
-                "required": "true",
-                "description": "id of the message"
-            }],
+            "parameters": [
+                {
+                    "name": "id",
+                    "type": "string",
+                    "in": "path",
+                    "required": "true",
+                    "description": "id of the message"
+                }
+            ],
             "get": {
                 "tags": [
-                    "Messages"
+                    "Get One Mail"
                 ],
                 "summary": "GET API endpoint for getting one message/mail",
                 "description": "fetch one message/mail fom database",
@@ -233,11 +315,14 @@
                     "200": {
                         "description": "Found new message/mail"
                     }
-                }
+                },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
             },
             "delete": {
                 "tags": [
-                    "Messages"
+                    "Delete Mail"
                 ],
                 "summary": "DELETE API endpoint for deleting one message/mail",
                 "description": "delete one message/mail fom database",
@@ -250,132 +335,409 @@
                     }
                 }
             }
-        }
-    },
-    "components": {
-        "schemas": {
-            "Login": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    }
+        },
+        "/messages/retract/{id}": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "type": "string",
+                    "in": "path",
+                    "required": "true",
+                    "description": "id of the message"
                 }
-            },
-            "LoginR": {
-                "properties": {
-                    "status": {
-                        "type": "integer"
-                    },
-                    "data": {
-                        "token": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "SignupR": {
-                "properties": {
-                    "status": {
-                        "type": "integer"
-                    },
-                    "data": {
-                        "token": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "User": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "firstName": {
-                        "type": "string"
-                    },
-                    "lastName": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    },
-                    "role": {
-                        "type": "integer"
-                    }
-                }
-            },
-            "Message": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "createdOn": {
-                        "type": "Datetime"
-                    },
-                    "subject": {
-                        "type": "string"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "senderId": {
-                        "type": "integer"
-                    },
-                    "receiverId": {
-                        "type": "integer"
-                    },
-                    "parentMessageId": {
-                        "type": "integer"
-                    },
-                    "status": {
-                        "type": "string"
-                    }
-                }
-            },
-            "Messages": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "createdOn": {
-                        "type": "Datetime"
-                    },
-                    "subject": {
-                        "type": "string"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "senderId": {
-                        "type": "integer",
-                        "example": 2
-                    },
-                    "receiverId": {
-                        "type": "integer"
-                    },
-                    "parentMessageId": {
-                        "type": "integer"
-                    },
-                    "status": {
-                        "type": "string"
+            ],
+            "delete": {
+                "tags": [
+                    "Retract Mail"
+                ],
+                "summary": "GET API endpoint for retracting one message/mail",
+                "description": "retract a message/mail fom database",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Message/mail retracted"
                     }
                 },
-                "example": {
-                    "subject": "I have a serious bug again",
-                    "message": "You have been accepted into the fellowship",
-                    "status": "sent",
-                    "parentMessageId": 1,
-                    "senderId": 2
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
+            }
+        },
+        "/groups": {
+            "post": {
+                "tags": [
+                    "Create Group"
+                ],
+                "summary": "POST API endpoint for creating new groups",
+                "description": "Creating a group",
+                "parameters": [
+                    {
+                        "name": "groups",
+                        "description": "params to create new group",
+                        "in": "body",
+                        "required": "true",
+                        "schema": {
+                            "$ref": "#/definitions/Groups" 
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "new message created"
+                    }
+                },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
+            },
+            "get": {
+                "tags": [
+                    "All Groups"
+                ],
+                "summary": "GET API endpoint for getting all groups",
+                "description": "Get all groups",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "all created groups"
+                    }
+                },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
+            },
+                "security":[{
+                    "ApiKeyAuth":[]
+                  }]
+            },
+        "/groups/{id}": {
+                
+                "get": {
+                    "tags": [
+                        "One Group"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "type": "string",
+                            "in": "path",
+                            "required": "true",
+                            "description": "id of the group"
+                        }
+                    ],
+                    "summary": "GET API endpoint for getting one group",
+                    "description": "Get one group",
+                    "produces": [
+                        "application/json"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "group fetched successfully"
+                        }
+                    }
+                },
+                "patch": {
+                    "tags": [
+                        "Update Group Name"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "id",
+                           
+                            "in": "path",
+                            "required": "true",
+                            "description": "id of the group"
+                        },
+                        {
+                            "name":"group name",
+                         
+                            "required":"true",
+                            "in":"body",
+                            "description":"new group name",
+                            "schema": {
+                                "$ref": "#/definitions/Groups" 
+                            }
+                        }
+                    ],
+                    "summary": "PATCH API endpoint for updating group name",
+                    "description": "Update group name",
+                    "produces": [
+                        "application/json"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "groups name updated"
+                        }
+                    }
+                },
+                "delete": {
+                    "tags": [
+                        "Delete Group"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "id",
+                            "type": "string",
+                            "in": "path",
+                            "required": "true",
+                            "description": "id of the group"
+                        }
+                    ],
+                    "summary": "DELETE API endpoint for deleting groups",
+                    "description": "Delete groups",
+                    "produces": [
+                        "application/json"
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "group deleted"
+                        }
+                    }
+                }
+            
+            
+        },
+        "/groups/{id}/users": {
+                "post":{
+                    "tags": [
+                        "Add User to Group"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "id",
+                           
+                            "in": "path",
+                            "required": "true",
+                            "description": "id of the group"
+                        },
+                        {
+                            "name":"user email",
+                        
+                            "in":"body",
+                            "required":"true",
+                            "description":"user email",
+                            "schema": {
+                                "$ref": "#/definitions/Group Member"
+                            }
+                        }
+                    ],
+                    "summary": "POST API endpoint for adding users to group",
+                    "description": "add user to group",
+                    "produces": [
+                        "application/json"
+                    ],
+                    "responses": {
+                        "201": {
+                            "description": "user added"
+                        }
+                    }
+           }
+        },
+        "/groups/{id}/users/{userId}": {
+            "delete":{
+                "tags": [
+                    "Delete User from Group"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": "true",
+                        "description": "id of the group"
+                    },
+                    {
+                        "name":"userId",
+                        "in":"path",
+                        "required":"true",
+                        "description":"user id"
+                    }
+                ],
+                "summary": "DELETE API endpoint for deleting users from group",
+                "description": "delete user to group",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user deleted successfully"
+                    }
+                }
+       }
+        },
+        "/groups/{id}/messages": {
+            "post":{
+                "tags": [
+                    "Compose Group Message"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": "true",
+                        "description": "id of the group"
+                    },
+                    {
+                        "name":"message",
+                        "in":"body",
+                        "required":"true",
+                        "description":"mail content",
+                        "schema": {
+                            "$ref": "#/definitions/Group Messages"
+                        }
+                    }
+                ],
+                "summary": "POST API endpoint for composing group message",
+                "description": "compose group message",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "message sent successfully"
+                    }
+                }
+       }
+    }
+
+    },
+       
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "x-access-token"
+        }
+    },
+    "definitions": {
+        "Login": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": 1
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "Andela"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "EPIC"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "epic@andela.com"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Messages": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "createdOn": {
+                    "type": "Datetime",
+                    "example": "Datetime"
+                },
+                "subject": {
+                    "type": "string",
+                    "example": "Andela"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "You have made it to the Fellowship"
+                },
+                "parentMessageId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "email": {
+                    "type": "string",
+                    "example": "test@gmail.com"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "message status",
+                    "enum": [
+                        "sent",
+                        "draft",
+                        "unread",
+                        "read"
+                    ]
+                }
+            }
+        },
+        "Reset Password":{
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "test@gmail.com"
+                }
+            }
+        },
+        "Groups": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Andela"
+                }
+            }
+        },
+        "Group Member":{
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "email": {
+                    "type": "string",
+                    "example": "test@gmail.com"
+                }
+            }
+        },
+        "Group Messages":{
+            "type": "object",
+            "properties": {
+                "subject": {
+                    "type": "string",
+                    "example": "You have made it to the Fellowship"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "test@gmail.com You have made it to the Fellowshi"
                 }
             }
         }
