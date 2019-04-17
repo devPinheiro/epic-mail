@@ -12,9 +12,11 @@ if($('#checkGroup')){
   $('#checkGroup').addEventListener('change', ()=>{
       if($('#checkGroup').checked === true){
             $("#receiverInput").style.display = "none";
+            $('#draft_btn').style.display = "none";
             $(".dropdownGroup").style.display = "block"; 
       }else {
             $("#receiverInput").style.display = "block";
+            $('#draft_btn').style.display = "block";
             $(".dropdownGroup").style.display = "none"; 
       }
     
@@ -560,7 +562,7 @@ const logIn = async (body) => {
             
             const { userResult } = await Samios.getUser(signinResult.data.token);
             localStorage.setItem('userData', JSON.stringify(userResult.data));
-            showAlert("success", `Sign in was successful`);
+            showAlert("success", `Sign in was successfull`);
             // enable button
             $('#signin_btn').disabled = false;
             $('#signin_btn').style.backgroundColor = '#e68016';
