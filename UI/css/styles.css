@@ -993,6 +993,13 @@ a {
   }
 }
 
+@media (max-width: 650px) and (min-width: 380px){
+    .main-brand p {
+        text-align: center;
+        padding: 0 72px !important;
+        margin: -13px auto;
+    }
+}
 @media(min-width:380px) and (max-width:650px) {
     .container-signup {
         display: grid;
@@ -1072,7 +1079,7 @@ a {
     }
     .main-brand p {
         text-align: center;
-        padding: 0 85px;
+        padding: 0 45px;
         margin: -13px auto;
     }
     
@@ -1107,7 +1114,7 @@ a {
     }
     .main-brand p {
         text-align: center;
-        padding: 0 52px;
+        padding: 0 15px 0px 67px;
         margin: -13px auto;
     }
     .nav-link .link-item {
@@ -1188,7 +1195,7 @@ a {
     }
     .main-brand p {
         text-align: center;
-        padding: 0 52px;
+        padding: 0 40px;
         margin: -13px auto;
     }
     .navlink {
